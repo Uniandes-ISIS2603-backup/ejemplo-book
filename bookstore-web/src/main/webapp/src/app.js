@@ -1,6 +1,10 @@
 (function (ng) {
 
-    var mod = ng.module("mainApp", ["ui.router"]);
+    var mod = ng.module("mainApp", [
+        "ui.router",
+        "bookModule",
+        "mockModule"
+    ]);
 
     mod.config(['$logProvider', function ($logProvider) {
             $logProvider.debugEnabled(true);
@@ -11,6 +15,8 @@
             $stateProvider
                     .state('book', {
                         url: '/book',
+                        controller: "bookCtrl",
+                        controllerAs: "ctrl",
                         templateUrl: "src/modules/book/book.tpl.html"
                     })
                     .state('editorial', {
