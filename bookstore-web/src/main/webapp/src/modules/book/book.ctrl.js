@@ -58,13 +58,26 @@
             this.readOnly = false;
             this.editMode = false;
 
-            this.showSuccess("Esto es una prueba para generar mensajes exitosos");
-            this.showError("Esto es una prueba para generar mensajes de error");
+            /*
+             * Ejemplos para usar las alertas.
+             * Alerta Success
+             * Alerta Error
+             */
+            this.showSuccess("Esto es un ejemplo para generar mensajes exitosos");
+            this.showError("Esto es un ejemplo para generar mensajes de error");
 
 
             this.changeTab = function (tab) {
                 $scope.tab = tab;
             };
+            
+            /*
+             * Funcion createRecord emite un evento a los $scope hijos del controlador por medio de la 
+             * sentencia &broadcast ("nombre del evento", record), esto con el fin cargar la información de modulos hijos 
+             * al actual modulo.
+             * Habilita el modo de edicion. El template de la lista cambia por el formulario.
+             * 
+             */
 
             this.createRecord = function () {
                 $scope.$broadcast("pre-create", $scope.currentRecord);
@@ -72,6 +85,14 @@
                 $scope.currentRecord = {};
                 $scope.$broadcast("post-create", $scope.currentRecord);
             };
+            
+             /*
+             * Funcion editRecord emite el evento ("pre-edit") a los $Scope hijos del controlador por medio de la 
+             * sentencia &broadcast ("nombre del evento", record), esto con el fin cargar la información de modulos hijos 
+             * al actual modulo.
+             * Habilita el modo de edicion.  Carga el template de formulario con los datos del record a editar.
+             * 
+             */
 
             this.editRecord = function (record) {
                 $scope.$broadcast("pre-edit", $scope.currentRecord);
@@ -82,6 +103,13 @@
                     return response;
                 }, responseError);
             };
+            
+            /*
+             * Funcion fetchRecords consulta el servicio svc.fetchRecords con el fin de consultar 
+             * todos los registros del modulo book.
+             * Guarda los registros en la variable $scope.records
+             * Muestra el template de la lista de records.
+             */
 
             this.fetchRecords = function () {
                 return svc.fetchRecords().then(function (response) {
@@ -91,17 +119,33 @@
                     return response;
                 }, responseError);
             };
+            
+            /*
+             * Funcion saveRecord hace un llamado al servicio svc.saveRecord con el fin de
+             * persistirlo en base de datos.
+             * Muetra el template de la lista de records al finalizar la operación saveRecord
+             */
             this.saveRecord = function () {
                 return svc.saveRecord($scope.currentRecord).then(function () {
                     self.fetchRecords();
                 }, responseError);
             };
+            
+            /*
+             * Funcion deleteRecord hace un llamado al servicio svc.deleteRecord con el fin
+             * de eliminar el registro asociado.
+             * Muestra el template de la lista de records al finalizar el borrado del registro.
+             */
             this.deleteRecord = function (record) {
                 return svc.deleteRecord(record.id).then(function () {
                     self.fetchRecords();
                 }, responseError);
             };
 
+            /*
+             * Funcion fetchRecords consulta todos los registros del módulo book en base de datos
+             * para desplegarlo en el template de la lista.
+             */
             this.fetchRecords();
 
         }]);
