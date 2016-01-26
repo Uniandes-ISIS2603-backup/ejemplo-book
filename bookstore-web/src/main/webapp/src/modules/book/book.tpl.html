@@ -46,8 +46,8 @@
         </div>
     </div>
 </div>
-<div ng-show="ctrl.editMode" class="well">
-    <form novalidate name="form" id="book-form" role="form" ng-submit="form.$valid && ctrl.saveRecord()">
+<div ng-show="ctrl.editMode" class="col-md-6 well">
+    <form novalidate name="form" id="book-form" role="form" ng-submit="ctrl.saveRecord(form.$valid)">
         <fieldset>
             <input id="id" class="form-control" type="hidden" ng-model="currentRecord.id"/>
             <div class="form-group col-md-12" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && (form.name.$dirty || form.$submitted)}" >
@@ -72,7 +72,7 @@
             <div class="form-group col-md-12" ng-class="{'has-success': form.image.$valid && form.image.$dirty, 'has-error': form.image.$invalid && (form.image.$dirty || form.$submitted)}" >
                 <label for="image" class="col-md-2 control-label">Image</label>
                 <div class="col-md-10">
-                    <input id="imageurl" name="imageurl" class="form-control" type="text" ng-model="currentRecord.image" required />
+                    <input id="image" name="image" class="form-control" type="text" ng-model="currentRecord.image" required />
                 </div>
             </div>
             <div>

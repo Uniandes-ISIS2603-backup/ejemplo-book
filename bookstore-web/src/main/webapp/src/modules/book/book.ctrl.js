@@ -58,19 +58,10 @@
             this.readOnly = false;
             this.editMode = false;
 
-            /*
-             * Ejemplos para usar las alertas.
-             * Alerta Success
-             * Alerta Error
-             */
-            this.showSuccess("Esto es un ejemplo para generar mensajes exitosos");
-            this.showError("Esto es un ejemplo para generar mensajes de error");
-
-
             this.changeTab = function (tab) {
                 $scope.tab = tab;
             };
-            
+
             /*
              * Funcion createRecord emite un evento a los $scope hijos del controlador por medio de la 
              * sentencia &broadcast ("nombre del evento", record), esto con el fin cargar la información de modulos hijos 
@@ -85,8 +76,8 @@
                 $scope.currentRecord = {};
                 $scope.$broadcast("post-create", $scope.currentRecord);
             };
-            
-             /*
+
+            /*
              * Funcion editRecord emite el evento ("pre-edit") a los $Scope hijos del controlador por medio de la 
              * sentencia &broadcast ("nombre del evento", record), esto con el fin cargar la información de modulos hijos 
              * al actual modulo.
@@ -103,7 +94,7 @@
                     return response;
                 }, responseError);
             };
-            
+
             /*
              * Funcion fetchRecords consulta el servicio svc.fetchRecords con el fin de consultar 
              * todos los registros del modulo book.
@@ -119,18 +110,22 @@
                     return response;
                 }, responseError);
             };
-            
+
             /*
              * Funcion saveRecord hace un llamado al servicio svc.saveRecord con el fin de
              * persistirlo en base de datos.
-             * Muetra el template de la lista de records al finalizar la operación saveRecord
+             * Muestra el template de la lista de records al finalizar la operación saveRecord
              */
-            this.saveRecord = function () {
-                return svc.saveRecord($scope.currentRecord).then(function () {
-                    self.fetchRecords();
-                }, responseError);
+            this.saveRecord = function (isValid) {
+                if (isValid) {
+                    return svc.saveRecord($scope.currentRecord).then(function () {
+                        self.fetchRecords();
+                    }, responseError);
+                } else {
+                    self.showError("Please, Fill the required fields!");
+                }
             };
-            
+
             /*
              * Funcion deleteRecord hace un llamado al servicio svc.deleteRecord con el fin
              * de eliminar el registro asociado.
