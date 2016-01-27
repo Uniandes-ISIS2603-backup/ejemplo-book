@@ -61,6 +61,10 @@
             this.changeTab = function (tab) {
                 $scope.tab = tab;
             };
+            
+            //Ejemplo alerta
+            showMessage("Bienvenido!, Esto es un ejemplo para mostrar un mensaje de información","info");
+            
 
             /*
              * Funcion createRecord emite un evento a los $scope hijos del controlador por medio de la 
@@ -116,14 +120,10 @@
              * persistirlo en base de datos.
              * Muestra el template de la lista de records al finalizar la operación saveRecord
              */
-            this.saveRecord = function (isValid) {
-                if (isValid) {
+            this.saveRecord = function () {
                     return svc.saveRecord($scope.currentRecord).then(function () {
                         self.fetchRecords();
-                    }, responseError);
-                } else {
-                    self.showError("Please, Fill the required fields!");
-                }
+                    }, responseError);                
             };
 
             /*

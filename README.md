@@ -1,2 +1,1 @@
-# ejemplo-book
-Ejemplo paso a paso para la creación de una aplicación con AngularJS y JavaEE
+[Documentación Ejemplo book web](https://github.com/Uniandes-isis2603-201520/ejemplo-book/wiki)

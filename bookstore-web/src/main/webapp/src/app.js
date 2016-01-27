@@ -3,7 +3,8 @@
     var mod = ng.module("mainApp", [
         "ui.router",
         "bookModule",
-        "mockModule"
+        "mockModule",
+        "ngMessages"
     ]);
 
     mod.config(['$logProvider', function ($logProvider) {
