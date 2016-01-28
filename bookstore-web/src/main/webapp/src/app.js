@@ -16,6 +16,9 @@
                     .state('editorial', {
                         url: '/editorial',
                         templateUrl: "src/modules/editorial/editorial.tpl.html"
+                    }).state('author',{
+                        url:'/author',
+                        templateUrl: "src/modules/author/author.tpl.html"
                     });
         }]);
 })(window.angular);
