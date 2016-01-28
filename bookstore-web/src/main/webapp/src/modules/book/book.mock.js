@@ -5,7 +5,7 @@
  */
 (function (ng) {
 
-    var mod = ng.module('mockModule', ['ngMockE2E']);
+    var mod = ng.module('bookMock', ['ngMockE2E']);
 
 
     mod.run(['$httpBackend', function ($httpBackend) {
@@ -16,7 +16,7 @@
          * api/(cualquierpalabra)/(numero)
          * ej: api/books/1
          */
-        var recordUrl = new RegExp('api/(\\w+)/([0-9]+)');
+        var recordUrl = new RegExp('api/books/([0-9]+)');
         
         /*
          * @type Array

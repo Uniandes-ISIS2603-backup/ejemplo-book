@@ -3,7 +3,11 @@
     var mod = ng.module("mainApp", [
         "ui.router",
         "bookModule",
-        "mockModule",
+        "editorialModule",
+        "authorModule",
+        "bookMock",
+        "editorialMock",
+        "authorMock",
         "ngMessages"
     ]);
 
@@ -22,7 +26,15 @@
                     })
                     .state('editorial', {
                         url: '/editorial',
+                        controller: "editorialCtrl",
+                        controllerAs: "ctrl",
                         templateUrl: "src/modules/editorial/editorial.tpl.html"
+                    })
+                    .state('author', {
+                        url: '/author',
+                        controller: "authorCtrl",
+                        controllerAs: "ctrl",
+                        templateUrl: "src/modules/author/author.tpl.html"
                     });
         }]);
 })(window.angular);
