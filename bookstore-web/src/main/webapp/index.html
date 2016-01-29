@@ -1,20 +1,27 @@
 <!DOCTYPE html>
+<!-- Debemos indicar a AngularJS cuál es el nombre de nuestro módulo principal. Esto se hace a través de la directiva ng-app-->
 <html ng-app="mainApp">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
         <title>Book Store</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+        <!-- Las 3 siguientes etiquetas: link y script son necesarias para cargar las dependencias de Bootstrap, 
+        dado que Bootstrap depende de JQuery, es necesario cargarlo-->
         <link href="resources/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-
         <script src="resources/js/jquery-1.12.0.min.js" type="text/javascript"></script>
-        <script src="resources/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="resources/js/bootstrap.min.js" type="text/javascript"></script>}
+
+        <!-- Las 2 siguientes estiquetas: script son necesarias para cargar AngularJS al igual que el paso anterior con Bootstrap
+        UI-Router es una librería para AngularJS que permite manejar la navegación de la aplicación de manera flexible a partir de estados de la interfaz.-->
         <script src="resources/js/angular.min.js" type="text/javascript"></script>
         <script src="resources/js/angular-ui-router.min.js" type="text/javascript"></script>
 
+        <!-- La siguiente etiqueta carga el modulo que hemos creado-->
         <script src="src/app.js" type="text/javascript"></script>
 
     </head>
@@ -35,6 +42,9 @@
                         </div>
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
+                        <!--  Usamos la directiva ui-sref. Esta directiva es parte de ui-router y permite 
+                        crear un link en el navegador que lleve a la URL correspondiente a un estado específico. 
+                        De esta manera, es fácil crear botones o enlaces que faciliten la navegación.-->
                         <div class="collapse navbar-collapse" id="main-bar">
                             <ul class="nav navbar-nav">
                                 <li><a ui-sref="book">Book</a></li>
