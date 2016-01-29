@@ -32,6 +32,9 @@
                     .state('author', {
                         url: '/author',
                         templateUrl: "src/modules/author/author.tpl.html"
+                    }).state('review', {
+                        url: '/review',
+                        templateUrl: "src/modules/review/review.tpl.html"
             });
         }]);
     

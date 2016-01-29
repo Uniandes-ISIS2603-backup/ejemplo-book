@@ -1,0 +1,100 @@
+<!-- La directiva ng-init define valores iniciales para una aplicación AngularJS.-->
+<div ng-init="list = true">
+    <div id="navbar">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#editorial-navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">Reviews</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <!-- En el siguiente bloque se definen los botones a usar para crear una Review-->
+                <div class="collapse navbar-collapse" id="editorial-navbar">
+                    <button id="create-review" class="btn btn-default navbar-btn" ng-show="list" ng-click="list = false"><span class="glyphicon glyphicon-plus"></span> Create</button>
+                    <button id="refresh-review" class="btn btn-default navbar-btn" ng-show="list" ng-click="list = true"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+                    <button id="save-review" class="btn btn-default navbar-btn" ng-hide="list" ng-click="list = true"><span class="glyphicon glyphicon-save"></span> Save</button>
+                    <button id="cancel-review" class="btn btn-default navbar-btn" ng-hide="list" ng-click="list = true"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- El siguiente bloque DIV contiene los review para mostrar -->
+    <div class="col-md-12" ng-if="list">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Source</th>
+                    <th>Descrption</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button id="edit-author-1" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+                        <button id="delete-author-1" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button id="edit-author-2" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+                        <button id="delete-author-2" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button id="edit-author-3" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+                        <button id="delete-author-3" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span> Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Bloque que se activa cuando se presiona el boton Create, el cual permite crear Review-->
+    <div ng-if="!list" class="well">
+        <form novalidate name="form" id="author-form" role="form">
+            <fieldset>
+                <input id="id" class="form-control" type="hidden"/>
+                <div class="form-group col-md-12"> 
+                    <label for="name" class="col-md-2 control-label">Name</label>
+                    <div class="col-md-10">
+                        <input id="name" name="name" class="form-control" type="text" required />
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="sourceReview" class="col-md-2 control-label">Source</label>
+                    <div class="col-md-10">
+                        <input id="sourceReview" name="sourceReview" class="form-control" type="text" required />
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="descriptionReview" class="col-md-2 control-label">Description</label>
+                    <div class="col-md-10">
+                        <textarea id="descriptionReview" name="descriptionReview" class="form-control" required ></textarea>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
