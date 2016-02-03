@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 (function (ng) {
-    var mod = ng.module("bookModule", ["ui.bootstrap"]);
+    var mod = ng.module("bookModule", ["ui.bootstrap", "ngMessages"]);
     mod.constant("bookContext", "api/books");
 
 })(window.angular);

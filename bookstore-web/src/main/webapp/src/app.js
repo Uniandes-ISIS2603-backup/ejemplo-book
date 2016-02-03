@@ -2,13 +2,14 @@
 
     var mod = ng.module("mainApp", [
         "ui.router",
+        "authModule",
         "bookModule",
         "editorialModule",
         "authorModule",
+        "authMock",
         "bookMock",
         "editorialMock",
-        "authorMock",
-        "ngMessages"
+        "authorMock"
     ]);
 
     mod.config(['$logProvider', function ($logProvider) {
@@ -16,7 +17,6 @@
         }]);
 
     mod.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise("/book");
             $stateProvider
                     .state('book', {
                         url: '/book',
@@ -36,5 +36,17 @@
                         controllerAs: "ctrl",
                         templateUrl: "src/modules/author/author.tpl.html"
                     });
+
         }]);
+
+    mod.config(['authServiceProvider', function (auth) {
+            auth.setValues({
+                apiUrl: 'api/users/',
+                successState: 'editorial'
+            });
+            auth.setRoles({'user': [{id: 'indexUser', label: 'Author', icon: 'list-alt', state: 'author'}],
+                'admin': [{id: 'indexAdmin', label: 'Admin', icon: 'list-alt', state: 'editorial'}]});
+        }]);
+
+
 })(window.angular);

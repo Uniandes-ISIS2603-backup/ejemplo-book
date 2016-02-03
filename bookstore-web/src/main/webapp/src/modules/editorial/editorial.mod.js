@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-(function(ng){
-    
-    var mod = ng.module("editorialModule", ["ui.bootstrap"]);
-    
+(function (ng) {
+
+    var mod = ng.module("editorialModule", ["ui.bootstrap", "ngMessages"]);
+
     mod.constant("editorialContext", "api/editorials");
-    
+
 })(window.angular);
 
