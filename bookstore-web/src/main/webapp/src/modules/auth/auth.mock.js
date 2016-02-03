@@ -67,14 +67,15 @@
              */
             $httpBackend.whenPOST('api/users/login').respond(function (method, url, data) {
                 var record = ng.fromJson(data);
+                var state = 401;
+                var response = "The Password you've entered is incorrect!";
                 ng.forEach(users, function (value) {
                     if (value.userName === record.userName && value.password === record.password) {
-                        userConnected = ng.copy(value);
-                        return [200, userConnected, {}];
-                    }else{
-                        return [401, userConnected];
+                        response = ng.copy(value);
+                        state = 200;
                     }
                 });
+                return [state, response];
             });
             /*
              * Esta funcion se ejecuta al invocar una solicitud DELETE a la url "api/books/[numero]"
@@ -84,7 +85,7 @@
              */
 
             $httpBackend.whenGET('api/users/logout').respond(function (method, url) {
-                userConnected = {};
+                userConnected = "";
                 return [204, null, {}];
             });
 
