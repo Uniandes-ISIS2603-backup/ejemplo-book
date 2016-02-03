@@ -9,6 +9,7 @@
     var mod = ng.module("bookModule");
 
     mod.controller("bookCtrl", ["$scope", "bookService", function ($scope, svc) {
+           //Se almacenan todas las alertas 
             $scope.alerts = [];
             $scope.currentRecord = {};
             $scope.records = [];
@@ -33,6 +34,7 @@
                 $scope.alerts.splice(index, 1);
             };
 
+            // Función showMessage: Recibe el mensaje en String y su tipo con el fin de almacenarlo en el array $scope.alerts.
             function showMessage(msg, type) {
                 var types = ["info", "danger", "warning", "success"];
                 if (types.some(function (rc) {
@@ -54,6 +56,7 @@
             function responseError(response) {
                 self.showError(response.data);
             }
+            
             //Variables para el controlador
             this.readOnly = false;
             this.editMode = false;
