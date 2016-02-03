@@ -5,9 +5,11 @@
         "bookModule",
         "editorialModule",
         "authorModule",
+        "reviewModule",
         "bookMock",
         "editorialMock",
         "authorMock",
+        "reviewMock",
         "ngMessages"
     ]);
 
@@ -35,6 +37,12 @@
                         controller: "authorCtrl",
                         controllerAs: "ctrl",
                         templateUrl: "src/modules/author/author.tpl.html"
+                    })
+                    .state('review', {
+                        url: '/review',
+                        controller: "reviewCtrl",
+                        controllerAs: "ctrl",
+                        templateUrl: "src/modules/review/review.tpl.html"
                     });
         }]);
 })(window.angular);
