@@ -27,6 +27,7 @@
 
             var userConnected = "";
 
+            var forgotPassEmails = [];
             /*
              * Ignora las peticiones GET, no contempladas en la Exp regular ignore_regexp
              */
@@ -77,10 +78,16 @@
                 });
                 return [state, response];
             });
+            
+            $httpBackend.whenPOST('api/users/forgot').respond(function (method, url, data) {
+                var response = ng.fromJson(data);
+                forgotPassEmails.push(response);                
+                return [204, null];
+            });
+            
             /*
-             * Esta funcion se ejecuta al invocar una solicitud DELETE a la url "api/books/[numero]"
-             * Obtiene el id del la url y el registro asociado dentro del array records.
-             * Luego realiza un splice "eliminar registro del array".
+             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/logout"
+             * Elimina la información del usuario conectado
              * Response: 204, no retorna ningun dato ni headers.
              */
 

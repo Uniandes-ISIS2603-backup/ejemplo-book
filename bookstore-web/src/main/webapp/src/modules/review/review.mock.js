@@ -5,7 +5,7 @@
  */
 (function (ng) {
 
-    var mod = ng.module('editorialMock', ['ngMockE2E']);
+    var mod = ng.module('reviewMock', ['ngMockE2E']);
 
 
     mod.run(['$httpBackend', function ($httpBackend) {
@@ -14,9 +14,9 @@
              * @type RegExp
              * recordUrl acepta cualquier url con el formato 
              * api/(cualquierpalabra)/(numero)
-             * ej: api/editorials/1
+             * ej: api/reviews/1
              */
-            var recordUrl = new RegExp('api/editorials/([0-9]+)');
+            var recordUrl = new RegExp('api/reviews/([0-9]+)');
 
             /*
              * @type Array
@@ -24,11 +24,17 @@
              */
             var records = [{
                     id: 1,
-                    name: 'Norma'
+                    name: 'Para los amantes de la lectura',
+                    source: 'El Tiempo',
+                    description: 'El periódico El Tiempo recomienda a sus lectores más seleccionados este ejemplar. '
+                   
                 },
                 {
                     id: 2,
-                    name: 'Castellana'
+                    name: 'Solo para programadores',
+                    source: 'Universidad de Los Andes',
+                    description: 'Se recomienda el libro únicamente para programadores.'
+                   
                 }];
 
             function getQueryParams(url) {
@@ -47,13 +53,13 @@
             $httpBackend.whenGET(ignore_regexp).passThrough();
 
             /*
-             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/editorials"
+             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/reviews"
              * Obtiene los parámetros de consulta "queryParams" para establecer 
              * la pagina y la maxima cantida de records. Con los anteriores parametros 
              * se realiza la simulacion de la paginacion.
              * Response: 200 -> Status ok, array de libros y los headers.
              */
-            $httpBackend.whenGET('api/editorials').respond(function (method, url) {
+            $httpBackend.whenGET('api/reviews').respond(function (method, url) {
                 var queryParams = getQueryParams(url);
                 var responseObj = [];
                 var page = queryParams.page;
@@ -70,7 +76,7 @@
                 return [200, responseObj, headers];
             });
             /*
-             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/editorials/[numero]"
+             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/reviews/[numero]"
              * Obtiene el id de la url y el registro asociado dentro del array records.
              * Response: 200 -> Status ok, record -> libro y ningún header.
              */
@@ -85,13 +91,13 @@
                 return [200, record, {}];
             });
             /*
-             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/editorials"
+             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/reviews"
              * Obtiene el record de libro desde el cuerpo de la peticion
              * Genera un id aleatorio y lo asocia al record de libro y lo guarda en el 
              * array de records.
              * Response: 201 -> Status created, record -> libro y ningún header.
              */
-            $httpBackend.whenPOST('api/editorials').respond(function (method, url, data) {
+            $httpBackend.whenPOST('api/reviews').respond(function (method, url, data) {
                 var record = ng.fromJson(data);
                 record.id = Math.floor(Math.random() * 10000);
                 records.push(record);
@@ -99,7 +105,7 @@
             });
 
             /*
-             * Esta funcion se ejecuta al invocar una solicitud DELETE a la url "api/editorials/[numero]"
+             * Esta funcion se ejecuta al invocar una solicitud DELETE a la url "api/reviews/[numero]"
              * Obtiene el id del la url y el registro asociado dentro del array records.
              * Luego realiza un splice "eliminar registro del array".
              * Response: 204, no retorna ningun dato ni headers.
@@ -116,7 +122,7 @@
             });
 
             /*
-             * Esta funcion se ejecuta al invocar una solicitud PUT a la url "api/editorials/[numero]"
+             * Esta funcion se ejecuta al invocar una solicitud PUT a la url "api/reviews/[numero]"
              * Obtiene el id del la url y el record de libro desde el cuerpo de la peticion
              * Busca y reemplaza el anterior registro por el enviado en el cuerpo de la solicitud
              * Response: 204, no retorna ningun dato ni headers. 

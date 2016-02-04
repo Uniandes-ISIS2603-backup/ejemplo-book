@@ -6,10 +6,13 @@
         "bookModule",
         "editorialModule",
         "authorModule",
+        "reviewModule",
         "authMock",
         "bookMock",
         "editorialMock",
-        "authorMock"
+        "authorMock",
+        "reviewMock",
+        "ngMessages"
     ]);
 
     mod.config(['$logProvider', function ($logProvider) {
@@ -35,6 +38,12 @@
                         controller: "authorCtrl",
                         controllerAs: "ctrl",
                         templateUrl: "src/modules/author/author.tpl.html"
+                    })
+                    .state('review', {
+                        url: '/review',
+                        controller: "reviewCtrl",
+                        controllerAs: "ctrl",
+                        templateUrl: "src/modules/review/review.tpl.html"
                     });
 
         }]);

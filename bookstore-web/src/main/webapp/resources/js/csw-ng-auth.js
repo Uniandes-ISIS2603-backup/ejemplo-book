@@ -1,13 +1,6 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 (function (ng) {
 
-    var mod = ng.module('authModule', ['ngCookies', 'ui.router', 'checklist-model', 'ngMessages']);
-    mod.constant('defaultStatus', {status: false});
+    var mod = ng.module('authModule', ['ngCookies', 'ui.router', 'checklist-model', 'ngMessages', 'ui.bootstrap']);
 
     mod.config(['$stateProvider', 'authServiceProvider', function ($stateProvider, auth) {
         var authConfig = auth.getValues();
@@ -85,8 +78,8 @@
 
     var mod = ng.module('authModule');
 
-    mod.controller('authController', ['$scope', '$cookies', 'authService', 'defaultStatus', '$log', function ($scope, $cookies, authSvc, defaultStatus, $log) {
-        this.errorctrl = defaultStatus;
+    mod.controller('authController', ['$scope', '$cookies', 'authService', '$log', function ($scope, $cookies, authSvc, $log) {
+        $scope.alerts = [];
         $scope.roles = authSvc.getRoles();
         authSvc.userAuthenticated().then(function (data) {
             $scope.currentUser = data.data;
@@ -103,7 +96,7 @@
         $scope.setMenu = function (user) {
             $scope.menuitems = [];
                 for (var rol in $scope.roles) {
-                    if (user.roles.indexOf(rol)!= -1 ) {
+                    if (user.roles.indexOf(rol)!== -1 ) {
                         for (var menu in $scope.roles[rol])
                             $scope.menuitems.push($scope.roles[rol][menu]);
                     }
@@ -114,6 +107,28 @@
             return !!$scope.currentUser;
         };
 
+        //Alerts
+        this.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        function showMessage(msg, type) {
+            var types = ["info", "danger", "warning", "success"];
+            if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                $scope.alerts.push({ type: type, msg: msg });
+            }
+        }
+
+        this.showError = function (msg) {
+            showMessage(msg, "danger");
+        };
+
+        this.showSuccess = function (msg) {
+            showMessage(msg, "success");
+        };
+
 
         this.login = function (user) {
             var self = this;
@@ -121,7 +136,7 @@
                 $scope.loading = true;
                 authSvc.login(user).then(function (data) {
                 }, function (data) {
-                    self.errorctrl = {status: true, type: "danger", msg: ":" + data.data};
+                    self.showError(data.data);
                     $log.error("Error", data);
                 }).finally(function () {
                     $scope.loading = false;
@@ -140,34 +155,21 @@
             $log.debug(obj);
         };
 
-        this.close = function () {
-            this.errorctrl = defaultStatus;
-        };
 
         this.registration = function () {
             authSvc.registration();
         };
 
+        var self = this;
         this.register = function (newUser) {
-            var self = this;
-            if (!!newUser && newUser.hasOwnProperty('userName') && newUser.hasOwnProperty('password')
-                && newUser.hasOwnProperty('confirmPassword') && newUser.hasOwnProperty('email')
-                && newUser.hasOwnProperty('givenName') && newUser.hasOwnProperty('surName')) {
-                if (newUser.password !== newUser.confirmPassword) {
-                    this.errorctrl = {status: true, type: "warning", msg: ": Passwords must be equals"};
-                } else {
-                    $scope.loading = true;
-                    authSvc.register(newUser).then(function (data) {
-                        self.errorctrl = {status: true, type: "success", msg: ": " + " User registered successfully"};
-                    }, function (data) {
-                        self.errorctrl = {status: true, type: "danger", msg: ": " + data.data.substring(66)};
-                    }).finally(function () {
-                        $scope.loading = false;
-                    });
-                }
-            } else {
-                self.errorctrl = {status: true, type: "danger", msg: ": " + "You must complete all fields"};
-            }
+            $scope.loading = true;
+            authSvc.register(newUser).then(function (data) {
+                self.showSuccess("User registered successfully");
+            }, function (data) {
+                self.showError(data.data.substring(66));
+            }).finally(function () {
+                $scope.loading = false;
+            });
         };
 
         this.goToForgotPass = function () {
@@ -180,13 +182,11 @@
                 $scope.loading = true;
                 authSvc.forgotPass(user).then(function (data) {
                     }, function (data) {
-                        self.errorctrl = {status: true, type: "danger", msg: ":" + data.data.substring(66)};
+                        self.showError(data.data.substring(66));
                     }
                 ).finally(function () {
                     $scope.loading = false;
                 });
-            } else {
-                self.errorctrl = {status: true, type: "danger", msg: ":" + "You must to enter an email address"}
             }
         };
 
@@ -337,17 +337,17 @@ angular.module('authModule').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('src/templates/forgotPass.html',
-    "<div><div class=\"col-md-5 col-md-offset-4\"><div class=\"col-md-12\" ng-show=\"authCtrl.errorctrl.status\" ng-message=\"show\"><div class=\"alert alert-{{authCtrl.errorctrl.type}}\" role=\"alert\"><button type=\"button\" class=\"close\" ng-click=\"authCtrl.close()\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button> <strong>{{authCtrl.errorctrl.type| uppercase}}</strong> {{authCtrl.errorctrl.msg}}</div></div><div class=\"col-md-12\"><div class=\"panel panel-default\"><div class=\"panel-heading\"><h2 class=\"panel-title\">Password assistance</h2></div><div class=\"panel-body\"><p>Enter the email address associated with your account, then click <strong>Send Email</strong>. We'll send you a link to a page where you can easily create a new password.</p><form name=\"forgotPassform\" accept-charset=\"UTF-8\" role=\"form\"><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.email\" placeholder=\"Email\" name=\"email\" type=\"email\"></div><input class=\"btn btn-lg btn-success btn-block\" ng-click=\"authCtrl.forgotPass(user)\" type=\"submit\" value=\"Send Email\"> <input class=\"btn btn-lg btn-default btn-block\" ng-click=\"authCtrl.goBack()\" type=\"submit\" value=\"Go Back\"></form><div class=\"spinner text-center\" ng-show=\"loading\"><img src=\"http://www.lectulandia.com/wp-content/themes/ubook/images/spinner.gif\" alt=\"Loading\" style=\"width:48px;height:48px\"></div></div></div></div></div></div>"
+    "<div><div class=\"col-md-5 col-md-offset-4\"><div class=\"col-md-12\"><alert ng-repeat=\"alert in alerts\" type=\"{{alert.type}}\" close=\"authCtrl.closeAlert($index)\">{{alert.msg}}</alert><div class=\"panel panel-default\"><div class=\"panel-heading\"><h2 class=\"panel-title\">Password assistance</h2></div><div class=\"panel-body\"><alert ng-messages=\"forgotPassform.$error\" type=\"danger\" close=\"\" ng-hide=\"!forgotPassform.$error.required && !forgotPassform.email.$invalid \"><div ng-message=\"required\">Please, Fill the required field!</div><div ng-message=\"email\">Your email address is invalid!</div></alert><p>Enter the email address associated with your account, then click <strong>Send Email</strong>. We'll send you a link to a page where you can easily create a new password.</p><form name=\"forgotPassform\" accept-charset=\"UTF-8\" role=\"form\" ng-submit=\"authCtrl.forgotPass(user)\"><div class=\"form-group\" ng-class=\"{'has-success': forgotPassform.username.$valid && forgotPassform.name.$dirty, 'has-error': forgotPassform.name.$invalid && forgotPassform.$submitted }\"><input class=\"form-control\" required ng-model=\"user.email\" placeholder=\"Email\" name=\"email\" type=\"email\"></div><input class=\"btn btn-lg btn-success btn-block\" type=\"submit\" value=\"Send Email\"> <input class=\"btn btn-lg btn-default btn-block\" ng-click=\"authCtrl.goBack()\" type=\"submit\" value=\"Go Back\"></form><div class=\"spinner text-center\" ng-show=\"loading\"><img src=\"http://www.lectulandia.com/wp-content/themes/ubook/images/spinner.gif\" alt=\"Loading\" style=\"width:48px;height:48px\"></div></div></div></div></div></div>"
   );
 
 
   $templateCache.put('src/templates/login.html',
-    "<div><div class=\"col-md-5 col-md-offset-4\"><div class=\"col-md-12\" ng-show=\"authCtrl.errorctrl.status\" ng-message=\"show\"><div class=\"alert alert-{{authCtrl.errorctrl.type}}\" role=\"alert\"><button type=\"button\" class=\"close\" ng-click=\"authCtrl.close()\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button> <strong>{{authCtrl.errorctrl.type| uppercase}}</strong> {{authCtrl.errorctrl.msg}}</div></div><div class=\"col-md-12\"><div class=\"panel panel-default\"><div class=\"panel-heading\"><h3 class=\"panel-title\">Please Login</h3></div><div class=\"panel-body\"><form name=\"loginform\" accept-charset=\"UTF-8\" role=\"form\"><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.userName\" placeholder=\"Username or Email\" name=\"username\" type=\"text\"></div><div class=\"form-group\"><div class=\"text-right\"><a align=\"right\" ng-click=\"authCtrl.goToForgotPass()\">Forgot your password?</a></div><input class=\"form-control\" required ng-model=\"user.password\" placeholder=\"Password\" name=\"password\" type=\"password\"></div><div class=\"checkbox\"><label><input name=\"rememberMe\" type=\"checkbox\" ng-model=\"user.rememberMe\" value=\"false\"> Remember Me</label></div><input class=\"btn btn-lg btn-success btn-block\" ng-click=\"authCtrl.login(user)\" type=\"submit\" value=\"Login\"></form><button class=\"btn btn-lg btn-default btn-block\" ng-click=\"authCtrl.registration()\">Create an account</button><div class=\"spinner text-center\" ng-show=\"loading\"><img src=\"http://www.lectulandia.com/wp-content/themes/ubook/images/spinner.gif\" alt=\"Loading\" style=\"width:48px;height:48px\"></div></div></div></div></div></div>"
+    "<div><div class=\"col-md-5 col-md-offset-4\"><alert ng-repeat=\"alert in alerts\" type=\"{{alert.type}}\" close=\"authCtrl.closeAlert($index)\">{{alert.msg}}</alert><div class=\"col-md-12\"><div class=\"panel panel-default\"><div class=\"panel-heading\"><h3 class=\"panel-title\">Please Login</h3></div><div class=\"panel-body\"><form name=\"loginform\" accept-charset=\"UTF-8\" role=\"form\"><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.userName\" placeholder=\"Username or Email\" name=\"username\" type=\"text\"></div><div class=\"form-group\"><div class=\"text-right\"><a align=\"right\" ng-click=\"authCtrl.goToForgotPass()\">Forgot your password?</a></div><input class=\"form-control\" required ng-model=\"user.password\" placeholder=\"Password\" name=\"password\" type=\"password\"></div><div class=\"checkbox\"><label><input name=\"rememberMe\" type=\"checkbox\" ng-model=\"user.rememberMe\" value=\"false\"> Remember Me</label></div><input class=\"btn btn-lg btn-success btn-block\" ng-click=\"authCtrl.login(user)\" type=\"submit\" value=\"Login\"></form><button class=\"btn btn-lg btn-default btn-block\" ng-click=\"authCtrl.registration()\">Create an account</button><div class=\"spinner text-center\" ng-show=\"loading\"><img src=\"http://www.lectulandia.com/wp-content/themes/ubook/images/spinner.gif\" alt=\"Loading\" style=\"width:48px;height:48px\"></div></div></div></div></div></div>"
   );
 
 
   $templateCache.put('src/templates/register.html',
-    "<div><div class=\"col-md-5 col-md-offset-4\"><div class=\"panel panel-default\"><div class=\"panel-heading\"><h3 class=\"panel-title\">Please Register</h3><div style=\"padding-top: 30px\" class=\"col-md-12\" ng-show=\"authCtrl.errorctrl.status\" ng-message=\"show\"><div class=\"alert alert-{{authCtrl.errorctrl.type}}\" role=\"alert\"><button type=\"button\" class=\"close\" ng-click=\"authCtrl.close()\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button> <strong>{{authCtrl.errorctrl.type| uppercase}}</strong> {{authCtrl.errorctrl.msg}}</div></div></div><div class=\"panel-body\"><form name=\"loginform\" accept-charset=\"UTF-8\" role=\"form\"><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.userName\" placeholder=\"Username\" name=\"username\" type=\"text\"></div><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.password\" placeholder=\"Password\" name=\"password\" type=\"password\"></div><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.confirmPassword\" placeholder=\"Confirm Password\" name=\"confirmpassword\" type=\"password\"></div><div class=\"row\"><div class=\"form-group col-xs-6\"><input class=\"form-control\" align=\"left\" required ng-model=\"user.givenName\" placeholder=\"First name\" name=\"firstname\" type=\"text\"></div><div class=\"form-group col-xs-6\"><input class=\"form-control\" align=\"right\" ng-model=\"user.middleName\" placeholder=\"Middle name\" name=\"middlename\" type=\"text\"></div></div><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.surName\" placeholder=\"Last Name\" name=\"lastname\" type=\"text\"></div><div class=\"form-group\"><label>Please select your roles:</label><br><div class=\"row\"><div class=\"col-xs-6\" ng-repeat=\"(key,value) in roles\"><p><strong>{{key}}</strong></p><input type=\"checkbox\" checklist-model=\"user.roles\" checklist-value=\"key\"></div></div></div><div class=\"form-group\"><input class=\"form-control\" required ng-model=\"user.email\" placeholder=\"email\" name=\"email\" type=\"email\"></div><input class=\"btn btn-lg btn-primary btn-block\" ng-click=\"authCtrl.register(user)\" type=\"submit\" value=\"Register\"> <input class=\"btn btn-lg btn-default btn-block\" ng-click=\"authCtrl.goBack()\" type=\"submit\" value=\"Go Back\"></form><div class=\"spinner text-center\" ng-show=\"loading\"><img src=\"http://www.lectulandia.com/wp-content/themes/ubook/images/spinner.gif\" alt=\"Loading\" style=\"width:48px;height:48px\"></div></div></div></div></div>"
+    "<div><div class=\"col-md-5 col-md-offset-4\"><div class=\"panel panel-default\"><alert ng-repeat=\"alert in alerts\" type=\"{{alert.type}}\" close=\"authCtrl.closeAlert($index)\">{{alert.msg}}</alert><div class=\"panel-heading\"><h3 class=\"panel-title\">Please Register</h3></div><div class=\"panel-body\"><alert ng-messages=\"loginform.$error\" type=\"danger\" close=\"\" ng-hide=\"!loginform.$error.required && !loginform.$error.minlength && !loginform.email.$invalid \"><div ng-message=\"required\">Please, Fill the required fields!</div><div ng-message=\"minlength\">Your password must be 6 and 10 characters long!</div><div ng-message=\"email\">Your email address is invalid!</div></alert><form novalidate name=\"loginform\" accept-charset=\"UTF-8\" role=\"form\" ng-submit=\"loginform.$valid && authCtrl.register(user)\"><fieldset><div class=\"form-group\" ng-class=\"{'has-success': loginform.username.$valid && loginform.name.$dirty, 'has-error': loginform.name.$invalid && loginform.$submitted }\"><input class=\"form-control\" required ng-model=\"user.userName\" placeholder=\"Username\" name=\"username\" type=\"text\"></div><div class=\"form-group\" ng-class=\"{'has-success': loginform.password.$valid && loginform.password.$dirty, 'has-error': loginform.password.$invalid && loginform.$submitted }\"><input class=\"form-control\" minlength=\"6\" required ng-model=\"user.password\" placeholder=\"Password\" name=\"password\" type=\"password\"></div><div class=\"form-group\" ng-class=\"{'has-success': loginform.confirmpassword.$valid && loginform.confirmpassword.$dirty, 'has-error': loginform.confirmpassword.$invalid && loginform.$submitted }\"><input class=\"form-control\" minlength=\"6\" required ng-model=\"user.confirmPassword\" placeholder=\"Confirm Password\" name=\"confirmpassword\" type=\"password\"></div><div class=\"row\"><div class=\"form-group col-xs-6\" ng-class=\"{'has-success': loginform.firstname.$valid && loginform.firstname.$dirty, 'has-error': loginform.firstname.$invalid && loginform.$submitted }\"><input class=\"form-control\" align=\"left\" required ng-model=\"user.givenName\" placeholder=\"First name\" name=\"firstname\" type=\"text\"></div><div class=\"form-group col-xs-6\" ng-class=\"{'has-success': loginform.middlename.$valid && loginform.middlename.$dirty, 'has-error': loginform.middlename.$invalid && loginform.$submitted }\"><input class=\"form-control\" align=\"right\" ng-model=\"user.middleName\" placeholder=\"Middle name\" name=\"middlename\" type=\"text\"></div></div><div class=\"form-group\" ng-class=\"{'has-success': loginform.lastname.$valid && loginform.lastname.$dirty, 'has-error': loginform.lastname.$invalid && loginform.$submitted }\"><input class=\"form-control\" required ng-model=\"user.surName\" placeholder=\"Last Name\" name=\"lastname\" type=\"text\"></div><div class=\"form-group\"><label>Please select your roles:</label><br><div class=\"row\"><div class=\"col-xs-6\" ng-repeat=\"(key,value) in roles\"><p><strong>{{key}}</strong></p><input type=\"checkbox\" name=\"roles\" checklist-model=\"user.roles\" checklist-value=\"key\"></div></div></div><div class=\"form-group\" ng-class=\"{'has-success': loginform.email.$valid && loginform.email.$dirty, 'has-error': loginform.email.$invalid && loginform.$submitted }\"><input class=\"form-control\" required ng-model=\"user.email\" placeholder=\"email\" name=\"email\" type=\"email\"></div></fieldset><input class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" value=\"Register\"> <input class=\"btn btn-lg btn-default btn-block\" ng-click=\"authCtrl.goBack()\" type=\"submit\" value=\"Go Back\"></form><div class=\"spinner text-center\" ng-show=\"loading\"><img src=\"http://www.lectulandia.com/wp-content/themes/ubook/images/spinner.gif\" alt=\"Loading\" style=\"width:48px;height:48px\"></div></div></div></div></div>"
   );
 
 }]);

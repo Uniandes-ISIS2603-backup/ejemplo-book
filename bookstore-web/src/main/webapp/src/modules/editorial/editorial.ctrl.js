@@ -59,6 +59,7 @@
             //Variables para el controlador
             this.readOnly = false;
             this.editMode = false;
+            
 
             this.changeTab = function (tab) {
                 $scope.tab = tab;
