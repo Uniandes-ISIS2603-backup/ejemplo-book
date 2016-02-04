@@ -34,9 +34,9 @@
             $httpBackend.whenGET(ignore_regexp).passThrough();
 
             /*
-             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/books/[numero]"
-             * Obtiene el id de la url y el registro asociado dentro del array records.
-             * Response: 200 -> Status ok, record -> libro y ningún header.
+             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/users/me"
+             * Retorna el usuario conectado actualmente.
+             * Response: 200 -> Status ok, record -> usuario conectado y ningún header.
              */
             $httpBackend.whenGET('api/users/me').respond(function (method, url) {
                 if (userConnected === "") {
@@ -46,11 +46,9 @@
                 }
             });
             /*
-             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/books"
-             * Obtiene el record de libro desde el cuerpo de la peticion
-             * Genera un id aleatorio y lo asocia al record de libro y lo guarda en el 
-             * array de records.
-             * Response: 201 -> Status created, record -> libro y ningún header.
+             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/users/register"
+             * Guarda en memoria (Array users) el usuario registrado
+             * Response: 201 -> Status created, record -> usuario registrado y ningún header.
              */
             $httpBackend.whenPOST('api/users/register').respond(function (method, url, data) {
                 var record = ng.fromJson(data);
@@ -60,11 +58,9 @@
                 return [201, record, {}];
             });
             /*
-             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/books"
-             * Obtiene el record de libro desde el cuerpo de la peticion
-             * Genera un id aleatorio y lo asocia al record de libro y lo guarda en el 
-             * array de records.
-             * Response: 201 -> Status created, record -> libro y ningún header.
+             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/user/login"
+             * Inicia sesion en la aplicacion, valida respecto al Array users 
+             * Response: 200 -> Status ok, record -> usuario y nungun header.
              */
             $httpBackend.whenPOST('api/users/login').respond(function (method, url, data) {
                 var record = ng.fromJson(data);
@@ -79,6 +75,14 @@
                 return [state, response];
             });
             
+            
+            /*
+             * Esta funcion se ejecuta al invocar una solicitud POST a la url "api/users/forgot"
+             * Guarda en un array las direcciones de correo de los usuarios que olvidaron el password
+             * Response: 204, no retorna ningun dato ni headers.
+             */
+            
+            
             $httpBackend.whenPOST('api/users/forgot').respond(function (method, url, data) {
                 var response = ng.fromJson(data);
                 forgotPassEmails.push(response);                
@@ -86,7 +90,7 @@
             });
             
             /*
-             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/logout"
+             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/users/logout"
              * Elimina la información del usuario conectado
              * Response: 204, no retorna ningun dato ni headers.
              */
