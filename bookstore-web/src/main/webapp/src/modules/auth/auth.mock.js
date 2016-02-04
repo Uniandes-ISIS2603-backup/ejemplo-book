@@ -5,9 +5,9 @@
  */
 (function (ng) {
 
-    var mod = ng.module('authMock', ['ngMockE2E']);
+    var mod = ng.module('authMock', ['ngMockE2E', 'ngCookies']);
 
-    mod.run(['$httpBackend', '$log', function ($httpBackend, $log) {
+    mod.run(['$httpBackend', '$log', '$cookies', function ($httpBackend, $log, $cookies) {
             var ignore_regexp = new RegExp('^((?!api).)*$');
             var messages =  { debug: "You Called ", 
                               wrong_pass: "The Password you've entered is incorrect!",
@@ -79,6 +79,7 @@
                     if (value.userName === record.userName && value.password === record.password) {
                         response = ng.copy(value);
                         state = 200;
+                        $cookies.put("Token","UN14ND3S");
                     }
                 });
                 return [state, response];
@@ -109,9 +110,10 @@
             $httpBackend.whenGET(urls.logout).respond(function (method, url) {
                 $log.debug(messages.debug + urls.logout);
                 userConnected = "";
+                $cookies.remove("Token");
                 return [204, null, {}];
             });
-
+            
 
         }]);
 })(window.angular);
