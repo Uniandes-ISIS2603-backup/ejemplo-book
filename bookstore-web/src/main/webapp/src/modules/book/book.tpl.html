@@ -79,11 +79,11 @@
                 <div class="col-md-10">
                     <input id="image" name="image" class="form-control" type="text" ng-model="currentRecord.image" required />
                 </div>
-            </div>
+            </div>         
             <div class="form-group col-md-12" ng-class="{'has-success': form.editorial.$valid && form.editorial.$dirty, 'has-error': form.editorial.$invalid && (form.editorial.$dirty || form.$submitted)}" >
                 <label for="editorial" class="col-md-2 control-label">Editorial</label>
                 <div class="col-md-10">
-                    <select id="editorial" name="editorial" ng-options="rc.name for rc in editorials track by rc.id" class="form-control" type="text" ng-model="currentRecord.editorial" ></select>
+                    <select id="editorial" name="editorial" ng-options="rc.name for rc in editorials track by rc.id" class="form-control" type="text" ng-model="currentRecord.editorial" required ></select>
                 </div>
             </div>
             <div class="form-group col-md-12" ng-class="{'has-success': !form.publishDate.$error.required && form.publishDate.$dirty, 'has-error': form.publishDate.$error.required && (form.publishDate.$dirty || form.$submitted)}" >
@@ -99,4 +99,38 @@
             </div>
         </fieldset>
     </form>
+</div>
+<div id="childs" ng-show="ctrl.editMode" class="col-md-10">
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{active: tab === 'reviews'}">
+            <a href ng-click="ctrl.changeTab('reviews')">Reviews</a>
+        </li>
+        <li ng-show="currentRecord.id" role="presentation" ng-class="{active: tab === 'authors'}">
+            <a href ng-click="ctrl.changeTab('authors')">Authors</a>
+        </li>
+    </ul>
+    <!-- Aqui incluye el template del modulo de reviews e indica el controlador correspondiente reviewCtrl-->
+    <div ng-show="tab === 'reviews'">
+        <div ng-controller="reviewCtrl as ctrl" ng-include="'src/modules/review/review.tpl.html'"></div>
+    </div>
+    <!-- Aqui se necesita el template de la seleccion de los autores al libro -->
+    <div ng-show="tab === 'authors'" ng-controller="authorsCtrl as ctrl">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="record in records">
+                        <td>{{record.name}}</td>
+                        <td><button id="{{$index}}-delete-btn" class="btn btn-default btn-sm" ng-click="ctrl.removeAuthor($index)"><span class="glyphicon glyphicon-minus"></span> Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

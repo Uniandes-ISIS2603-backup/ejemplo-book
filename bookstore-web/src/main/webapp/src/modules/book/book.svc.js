@@ -58,6 +58,42 @@
         this.deleteRecord = function (id) {
             return $http.delete(context + "/" + id);
         };
+        
+                /**
+         * Hace una petición PUT a /books/:id/authors para reemplazar los
+         * author asociados a un book
+         * @param {number} bookId Identificador de la instancia de book
+         * @param {array} authors Colección de authors nueva
+         * @returns {promise} promise para leer la respuesta del servidor
+         * Devuelve un array de objetos de authors con los nuevos autores
+         */
+        this.replaceAuthors = function (bookId, authors) {
+            return $http.put(context + "/" + bookId + "/authors", authors);
+        };
+
+        /**
+         * Hace una petición GET a /books/:id/authors para obtener la colección
+         * de author asociados a un book
+         * @param {number} id Identificador de la instancia de book
+         * @returns {promise} promise para leer la respuesta del servidor
+         * Devuelve un array de objetos de authors.
+         */
+        this.getAuthors = function (id) {
+            return $http.get(context + "/" + id + "/authors");
+        };
+
+        /**
+         * Hace una petición DELETE a /books/:id/authors/:id para remover
+         * un author de un book
+         * @param {number} bookId Identificador de la instancia de book
+         * @param {number} authorId Identificador de la instancia de author
+         * @returns {promise} promise para leer la respuesta del servidor
+         * No devuelve datos.
+         */
+        this.removeAuthor = function (bookId, authorId) {
+            return $http.delete(context + "/" + bookId + "/authors/" + authorId);
+        };
+        
     }]);
     
     

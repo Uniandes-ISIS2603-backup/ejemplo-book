@@ -26,7 +26,7 @@
                     id: 1,
                     name: 'Para los amantes de la lectura',
                     source: 'El Tiempo',
-                    description: 'El periódico El Tiempo recomienda a sus lectores más seleccionados este ejemplar. '
+                    description: 'El periódico El Tiempo recomienda a sus lectores este ejemplar. '
                    
                 },
                 {

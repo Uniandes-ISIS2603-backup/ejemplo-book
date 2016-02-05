@@ -138,6 +138,31 @@
                 });
                 return [204, null, {}];
             });
+            
+            
+               /*
+             * Esta funcion se ejecuta al invocar una solicitud GET a la url "api/books/[numero]"
+             * Obtiene el id de la url y el registro asociado dentro del array records.
+             * Response: 200 -> Status ok, record -> libro y ningún header.
+             */
+            $httpBackend.whenGET(recordUrl + "/authors").respond(function (method, url) {               
+                var queryParams = getQueryParams(url);
+                var responseObj = [];
+                var page = queryParams.page;
+                var maxRecords = queryParams.maxRecords;
+                var headers = {};
+                if (page && maxRecords) {
+                    var start_index = (page - 1) * maxRecords;
+                    var end_index = start_index + maxRecords;
+                    responseObj = records.slice(start_index, end_index);
+                    headers = {"X-Total-Count": records.length};
+                } else {
+                    responseObj = records;
+                }
+                return [200, responseObj, headers];
+            });
+            
+            
 
         }]);
 })(window.angular);
