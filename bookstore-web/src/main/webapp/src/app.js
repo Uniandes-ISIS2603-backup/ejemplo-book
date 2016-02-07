@@ -2,12 +2,10 @@
 
     var mod = ng.module("mainApp", [
         "ui.router",
-        "authModule",
         "bookModule",
         "editorialModule",
         "authorModule",
         "reviewModule",
-        "authMock",
         "bookMock",
         "editorialMock",
         "authorMock",
@@ -46,15 +44,6 @@
                         templateUrl: "src/modules/review/review.tpl.html"
                     });
 
-        }]);
-
-    mod.config(['authServiceProvider', function (auth) {
-            auth.setValues({
-                apiUrl: 'api/users/',
-                successState: 'editorial'
-            });
-            auth.setRoles({'user': [{id: 'indexUser', label: 'Author', icon: 'list-alt', state: 'author'}],
-                'admin': [{id: 'indexAdmin', label: 'Admin', icon: 'list-alt', state: 'editorial'}]});
         }]);
 
 
