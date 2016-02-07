@@ -8,7 +8,7 @@
     var mod = ng.module('editorialMock', ['ngMockE2E']);
 
 
-    mod.run(['$httpBackend', function ($httpBackend) {
+    mod.run(['$httpBackend','$log', function ($httpBackend, $log) {
             var ignore_regexp = new RegExp('^((?!api).)*$');
             /*
              * @type RegExp
@@ -16,7 +16,8 @@
              * api/(cualquierpalabra)/(numero)
              * ej: api/editorials/1
              */
-            var recordUrl = new RegExp('api/editorials/([0-9]+)');
+            var recordUrl = new RegExp('api/editorials/([0-9]+)*$');
+            var recordsBook = new RegExp('api/editorials/([0-9]+)/books');
 
             /*
              * @type Array
@@ -24,11 +25,13 @@
              */
             var records = [{
                     id: 1,
-                    name: 'Norma'
+                    name: 'Norma',
+                    books: []
                 },
                 {
                     id: 2,
-                    name: 'Castellana'
+                    name: 'Castellana',
+                    books: []
                 }];
 
             function getQueryParams(url) {
@@ -123,6 +126,7 @@
              * 
              */
             $httpBackend.whenPUT(recordUrl).respond(function (method, url, data) {
+                $log.debug("POST" + recordUrl + data);
                 var id = parseInt(url.split('/').pop());
                 var record = ng.fromJson(data);
                 ng.forEach(records, function (value, key) {
@@ -131,6 +135,55 @@
                     }
                 });
                 return [204, null, {}];
+            });
+
+            /*Completar
+             */
+            $httpBackend.whenPUT(recordsBook).respond(function (method, url, data) {
+                var id = parseInt(url.split('/')[2]);
+                $log.debug(url);
+                var list;
+                var response = ng.fromJson(data);
+                ng.forEach(records, function (value, key) {
+                    if (value.id === id) {
+                        value.books = response;
+                        list = ng.copy(value.books);
+                        records[value].books = list;
+                    }
+                });
+                return [204, list, {}];
+            });
+
+            /*Completar
+             */
+            $httpBackend.whenGET(recordsBook).respond(function (method, url) {
+                var id = parseInt(url.split('/')[2]);
+                $log.debug(id);
+                var responseObj;
+                ng.forEach(records, function (value, key) {
+                    if (value.id === id) {
+                        responseObj = value.books;
+                    }
+                });
+                return [200, responseObj];
+            });
+
+
+            $httpBackend.whenDELETE(recordsBook).respond(function (method, url) {
+                var id = parseInt(url.split('/')[2]);
+                var idBook = parseInt(url.split('/').pop());
+                $log.debug(idBook);
+                var responseObj;
+                ng.forEach(records, function (value) {
+                    if (value.id === id) {
+                        ng.forEach(value.books, function (valueBook, keyBook) {
+                            if (valueBook.id === idBook) {
+                                value.books.splice(keyBook, 1);
+                            }
+                        });
+                    }
+                });
+                return [200, responseObj];
             });
 
         }]);

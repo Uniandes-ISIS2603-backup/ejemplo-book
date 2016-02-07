@@ -148,7 +148,7 @@
                 return [204, list, {}];
             });
 
-             /*Completar
+            /*Completar
              */
             $httpBackend.whenGET(recordsBook).respond(function (method, url) {
                 var id = parseInt(url.split('/')[2]);
@@ -162,6 +162,23 @@
                 return [200, responseObj];
             });
 
+
+            $httpBackend.whenDELETE(recordsBook).respond(function (method, url) {
+                var id = parseInt(url.split('/')[2]);
+                var idBook = parseInt(url.split('/').pop());
+                $log.debug(idBook);
+                var responseObj;
+                ng.forEach(records, function (value) {
+                    if (value.id === id) {
+                        ng.forEach(value.books, function (valueBook, keyBook) {
+                            if (valueBook.id === idBook) {
+                                value.books.splice(keyBook, 1);
+                            }
+                        });
+                    }
+                });
+                return [200, responseObj];
+            });
 
         }]);
 })(window.angular);

@@ -60,5 +60,24 @@
             this.deleteRecord = function (id) {
                 return $http.delete(context + "/" + id);
             };
+            /**
+             * Hace una petición PUT a /editorials/:id/books para reemplazar los
+             * libros asociados a una editorial
+             * @param {number} editorialId Identificador de la instancia de editorial
+             * @param {array}  Colección de books nueva
+             * @returns {promise} promise para leer la respuesta del servidor.
+             * Devuelve el objeto de editorials con sus nuevos datos.
+             */
+            this.replaceBooks = function (editorialId, books) {
+                return $http.put(context + "/" + editorialId + "/books", books);
+            };
+
+            this.getBooks = function (id) {
+                return $http.get(context + "/" + id + "/books");
+            };
+
+            this.removeBook = function (editorialId, bookId) {
+                return $http.delete(context + "/" + editorialId + "/books/" + bookId);
+            };
         }]);
 })(window.angular);
