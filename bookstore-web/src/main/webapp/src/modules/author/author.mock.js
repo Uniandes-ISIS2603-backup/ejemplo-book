@@ -25,7 +25,8 @@
             var records = [{
                     id: 1,
                     name: 'Alvaro Mutis',
-                    birthDate: '1940-01-22'
+                    birthDate: '1940-01-22',
+                    books: []
                 }];
 
             function getQueryParams(url) {
@@ -141,9 +142,10 @@
                     if (value.id === id) {
                         value.books = response;
                         list = ng.copy(value.books);
+                        records[key].books = list;
                     }
                 });
-                return [204, list, {}];
+                return [200, list, {}];
             });
 
             /*Completar

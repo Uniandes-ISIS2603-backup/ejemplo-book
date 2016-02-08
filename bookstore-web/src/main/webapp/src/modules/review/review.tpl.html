@@ -47,7 +47,7 @@
     </table>
 </div>
 <div ng-show="ctrl.editMode" class="col-md-6 well">
-    <form novalidate name="form" id="review-form" role="form" ng-submit="form.$valid && ctrl.saveRecord()">
+    <form novalidate name="form" id="review-form" role="form" ng-submit="form.$valid && ctrl.saveReview()">
         <alert ng-messages="form.$error" type="danger" close="" ng-hide="!form.$error.required">
             <div ng-message="required">
                 Please, Fill the required field!
