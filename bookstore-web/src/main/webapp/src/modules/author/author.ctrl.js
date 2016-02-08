@@ -92,7 +92,13 @@
                 }, responseError);
             };
             
-        this.fetchRecords();    
+        this.fetchRecords();  
+        
+        function updateBooks(event, args){
+          $scope.currentRecord.books =  args;
+        };
+        
+        $scope.$on('updateBooks', updateBooks);
 
         }]);
 
@@ -207,6 +213,7 @@
                     authorSvc.replaceBooks($scope.refId, data).then(function (response) {
                         $scope.records.splice(0, $scope.records.length);
                         $scope.records.push.apply($scope.records, response.data);
+                        $scope.$emit("updateBooks", $scope.records);
                     }, responseError);
                 });
             };

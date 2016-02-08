@@ -102,11 +102,11 @@
 </div>
 <div id="childs" ng-show="ctrl.editMode">
     <ul class="nav nav-tabs">
-        <li role="presentation" ng-class="{active: tab === 'reviews'}">
-            <a href ng-click="ctrl.changeTab('reviews')">Reviews</a>
-        </li>
         <li ng-show="currentRecord.id" role="presentation" ng-class="{active: tab === 'authors'}">
             <a href ng-click="ctrl.changeTab('authors')">Authors</a>
+        </li>
+        <li ng-show="currentRecord.id" role="presentation" ng-class="{active: tab === 'reviews'}">
+            <a href ng-click="ctrl.changeTab('reviews')">Reviews</a>
         </li>
     </ul>
     <!-- Aqu� incluye el template del m�dulo de reviews e indica el controlador correspondiente reviewCtrl-->

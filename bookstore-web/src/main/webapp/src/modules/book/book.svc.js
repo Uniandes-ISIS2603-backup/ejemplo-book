@@ -159,7 +159,7 @@
             this.saveReview = function (idBook, currentRecord) {
                 if (currentRecord.id) {
                     $log.debug("PUT" + context + "/" + idBook + "/reviews/" + currentRecord.id);
-                    return $http.post(context + "/" + idBook + "/reviews" + currentRecord.id, currentRecord);
+                    return $http.put(context + "/" + idBook + "/reviews/" + currentRecord.id, currentRecord);
                 } else {
                     $log.debug("POST" + context + "/" + idBook + "/reviews/");
                     return $http.post(context + "/" + idBook + "/reviews", currentRecord);

@@ -149,6 +149,19 @@
              * para desplegarlo en el template de la lista.
              */
             this.fetchRecords();
+            
+            
+            function updateReview(event, args){
+                $scope.currentRecord.reviews = args;
+            };
+            
+            
+            function updateAuthors(event, args){
+              $scope.currentRecord.authors = args;  
+            };
+            
+            $scope.$on('updateReview', updateReview);
+            $scope.$on('updateAuthors', updateAuthors);
 
         }]);
 
@@ -261,13 +274,14 @@
                     bookSvc.replaceAuthors($scope.refId, data).then(function (response) {
                         $scope.records.splice(0, $scope.records.length);
                         $scope.records.push.apply($scope.records, response.data);
+                        $scope.$emit("updateAuthors", $scope.records);
                     }, responseError);
                 });
             };
         }]);
 
 
-    mod.controller("reviewsCtrl", ["$scope", "reviewService", "bookService", function ($scope, svc, bookSvc) {
+    mod.controller("reviewsCtrl", ["$scope", "bookService", function ($scope, bookSvc) {
             $scope.currentRecord = {};
             $scope.records = [];
             $scope.refName = "reviews";
@@ -316,7 +330,7 @@
             $scope.$on("post-create", onCreateOrEdit);
             $scope.$on("post-edit", onCreateOrEdit);
 
-            
+
 
             this.createRecord = function () {
                 this.editMode = true;
@@ -324,13 +338,18 @@
             };
 
             var self = this;
-            this.saveReview = function () {
+            this.saveRecord = function () {
                 bookSvc.saveReview($scope.refId, $scope.currentRecord).then(function (response) {
                     $scope.records.push(response.data);
-                    bookSvc.getReviews($scope.refId).then(function (response) {
-                        $scope.records = response.data;
-                        self.editMode = false;
-                    }, responseError);
+                    self.fetchRecords();
+                    $scope.$emit("updateReview", $scope.records);
+                }, responseError);
+            };
+
+            this.fetchRecords = function () {
+                return bookSvc.getReviews($scope.refId).then(function (response) {
+                    $scope.records = response.data;
+                    self.editMode = false;
                 }, responseError);
             };
 
@@ -345,9 +364,7 @@
             this.deleteRecord = function (record) {
                 bookSvc.removeReview($scope.refId, record.id).then(function () {
                     $scope.records.splice(record, 1);
-                    bookSvc.getReviews($scope.refId).then(function (response) {
-                        self.editMode = false;
-                    }, responseError);
+                    self.fetchRecords();
                 }, responseError);
             };
 

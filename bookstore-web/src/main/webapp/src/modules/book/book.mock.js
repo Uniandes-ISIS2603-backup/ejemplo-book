@@ -18,7 +18,8 @@
              */
             var recordUrl = new RegExp('api/books/([0-9]+)$');
             var recordsAuthor = new RegExp('api/books/([0-9]+)/authors');
-            var recordsReview = new RegExp('api/books/([0-9]+)/reviews');
+            var recordsReview = new RegExp('api/books/([0-9]+)/reviews$');
+            var recordReview = new RegExp('api/books/([0-9]+)/reviews/([0-9]+)');
 
             /*
              * @type Array
@@ -221,7 +222,7 @@
                 return [201, response, {}];
             });
             
-            $httpBackend.whenDELETE(recordsReview).respond(function (method, url) {
+            $httpBackend.whenDELETE(recordReview).respond(function (method, url) {
                 var id = parseInt(url.split('/')[2]);
                 var idReview = parseInt(url.split('/').pop());
                 $log.debug(idReview);
@@ -239,7 +240,7 @@
             });
             
             
-            $httpBackend.whenGET(recordsReview).respond(function (method, url) {
+            $httpBackend.whenGET(recordReview).respond(function (method, url) {
                 var id = parseInt(url.split('/')[2]);
                 var idReview = parseInt(url.split('/').pop());
                 var record;
@@ -257,15 +258,15 @@
             
             
             
-            $httpBackend.whenPUT(recordsReview).respond(function (method, url, data) {
+            $httpBackend.whenPUT(recordReview).respond(function (method, url, data) {
                 var id = parseInt(url.split('/')[2]);
                 var idReview = parseInt(url.split('/').pop());
                 var record = ng.fromJson(data);
-                ng.forEach(records, function (value) {
+                ng.forEach(records, function (value, key) {
                     if (value.id === id) {
                         ng.forEach(value.reviews, function (valueReview, keyReview) {
                             if (valueReview.id === idReview) {
-                                records.slice(keyReview, 1, record);
+                                records[key].reviews.splice(keyReview, 1, record);
                             }
                         });
                     }
