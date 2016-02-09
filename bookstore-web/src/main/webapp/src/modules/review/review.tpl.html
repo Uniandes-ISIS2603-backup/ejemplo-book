@@ -46,7 +46,7 @@
         </tbody>
     </table>
 </div>
-<div ng-show="ctrl.editMode" class="col-md-6 well">
+<div ng-show="ctrl.editMode" class="col-md-12 well">
     <form novalidate name="form" id="review-form" role="form" ng-submit="form.$valid && ctrl.saveRecord()">
         <alert ng-messages="form.$error" type="danger" close="" ng-hide="!form.$error.required">
             <div ng-message="required">
