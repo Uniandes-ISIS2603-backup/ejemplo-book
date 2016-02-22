@@ -3,9 +3,6 @@ package co.edu.uniandes.csw.bookstore.dtos;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * @generated
- */
 @XmlRootElement
 public class BookDTO {
 
