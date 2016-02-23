@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-(function (ng) {
+(function (ng, Math) {
 
     var mod = ng.module("bookModule");
 
@@ -149,18 +149,19 @@
              * para desplegarlo en el template de la lista.
              */
             this.fetchRecords();
-            
-            
-            function updateReview(event, args){
+
+
+            function updateReview(event, args) {
                 $scope.currentRecord.reviews = args;
-            };
-            
-            
-            function updateAuthors(event, args){
-              $scope.currentRecord.authors = args;  
-            };
-            
-            $scope.$on('updateReview', updateReview);
+            }
+            ;
+
+
+            function updateAuthors(event, args) {
+                $scope.currentRecord.authors = args;
+            }
+            ;
+
             $scope.$on('updateAuthors', updateAuthors);
 
         }]);
@@ -207,9 +208,7 @@
                 }
                 $scope.records = [];
                 $scope.refId = args.id;
-                bookSvc.getAuthors(args.id).then(function (response) {
-                    $scope.records = response.data;
-                }, responseError);
+                $scope.records = args.authors;                
             }
 
             $scope.$on("post-create", onCreateOrEdit);
@@ -322,9 +321,7 @@
                 }
                 $scope.records = [];
                 $scope.refId = args.id;
-                bookSvc.getReviews(args.id).then(function (response) {
-                    $scope.records = response.data;
-                }, responseError);
+                $scope.records = args.reviews;
             }
 
             $scope.$on("post-create", onCreateOrEdit);
@@ -339,37 +336,41 @@
 
             var self = this;
             this.saveRecord = function () {
-                bookSvc.saveReview($scope.refId, $scope.currentRecord).then(function (response) {
-                    $scope.records.push(response.data);
-                    self.fetchRecords();
-                    $scope.$emit("updateReview", $scope.records);
-                }, responseError);
+                var rec = $scope.currentRecord;
+                if (rec.id || rec.tid) {
+                    ng.forEach($scope.records, function (value, key) {
+                        if (value.id === rec.tid || value.id === rec.id ) {
+                            $scope.records.splice(key, 1, rec);
+                        }
+                    });
+                } else {
+                    rec.tid = Math.floor(Math.random() * 10000);
+                    $scope.records.push(rec);
+                }
+                self.fetchRecords();
             };
 
             this.fetchRecords = function () {
-                return bookSvc.getReviews($scope.refId).then(function (response) {
-                    $scope.records = response.data;
-                    self.editMode = false;
-                }, responseError);
+                self.editMode = false;
+                return $scope.records;
             };
 
             this.editRecord = function (record) {
-                return bookSvc.getReview($scope.refId, record.id).then(function (response) {
-                    $scope.currentRecord = response.data;
-                    self.editMode = true;
-                    return response;
-                }, responseError);
+                self.editMode = true;
+                $scope.currentRecord = record;
             };
 
             this.deleteRecord = function (record) {
-                bookSvc.removeReview($scope.refId, record.id).then(function () {
-                    $scope.records.splice(record, 1);
-                    self.fetchRecords();
-                }, responseError);
+                ng.forEach($scope.records, function (value, key) {
+                    if (value.id === record.id) {
+                        $scope.records.splice(key, 1);
+                    }
+                });
+                self.fetchRecords();
             };
 
 
 
         }]);
 
-})(window.angular);
+})(window.angular, window.Math);

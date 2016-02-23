@@ -55,17 +55,17 @@
         </alert>
         <fieldset>
             <input id="id" class="form-control" type="hidden" ng-model="currentRecord.id"/>
-            <div class="form-group col-md-12" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && (form.name.$dirty || form.$submitted)}" >
+            <div class="form-group col-md-12" >
                 <label for="name" class="col-md-2 control-label">Name</label>
-                <div class="col-md-10">
+                <div class="col-md-10" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && (form.name.$dirty || form.$submitted)}">
                     <input id="name" name="name" class="form-control" type="text" ng-model="currentRecord.name" required />
                 </div>
                 <label for="source" class="col-md-2 control-label">Source</label>
-                <div class="col-md-10">
+                <div class="col-md-10" ng-class="{'has-success': form.source.$valid && form.source.$dirty, 'has-error': form.source.$invalid && (form.source.$dirty || form.$submitted)}">
                     <input id="source" name="source" class="form-control" type="text" ng-model="currentRecord.source" required />
                 </div>
                 <label for="description" class="col-md-2 control-label">Description</label>
-                <div class="col-md-10">
+                <div class="col-md-10" ng-class="{'has-success': form.description.$valid && form.description.$dirty, 'has-error': form.description.$invalid && (form.description.$dirty || form.$submitted)}">
                     <input id="description" name="description" class="form-control" type="text" ng-model="currentRecord.description" required />
                 </div>
             </div>

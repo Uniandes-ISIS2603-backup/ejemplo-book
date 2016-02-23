@@ -18,8 +18,6 @@
              */
             var recordUrl = new RegExp('api/books/([0-9]+)$');
             var recordsAuthor = new RegExp('api/books/([0-9]+)/authors');
-            var recordsReview = new RegExp('api/books/([0-9]+)/reviews$');
-            var recordReview = new RegExp('api/books/([0-9]+)/reviews/([0-9]+)');
 
             /*
              * @type Array
@@ -33,7 +31,13 @@
                     image: 'http://unlibrocadadia.es/wp-content/uploads/2013/05/La_nieve_del_almirante_alvaro_mutis.jpg',
                     publishDate: '2016-01-22',
                     authors: [],
-                    reviews: []
+                    reviews: [{
+                            id: 1,
+                            name: 'Review',
+                            source: 'El Espectador',
+                            description: 'El Espectador lo recomienda'
+
+                        }]
                 },
                 {id: 2,
                     name: 'Java 8',
@@ -42,7 +46,13 @@
                     image: 'http://image.casadellibro.com/a/l/t0/55/9788441536555.jpg',
                     publishDate: '2015-01-22',
                     authors: [],
-                    reviews: []
+                    reviews: [{
+                            id: 2,
+                            name: 'Review',
+                            source: 'El Tiempo',
+                            description: 'El Tiempo lo recomienda.'
+
+                        }]
                 }
             ];
 
@@ -194,87 +204,6 @@
                 });
                 return [200, responseObj];
             });
-
-            $httpBackend.whenGET(recordsReview).respond(function (method, url) {
-                var id = parseInt(url.split('/')[2]);
-                $log.debug(id);
-                var responseObj;
-                ng.forEach(records, function (value, key) {
-                    if (value.id === id) {
-                        responseObj = value.reviews;
-                    }
-                });
-                return [200, responseObj];
-            });
-            
-            $httpBackend.whenPOST(recordsReview).respond(function (method, url, data) {
-                var id = parseInt(url.split('/')[2]);
-                $log.debug(url);
-                var list;
-                var response = ng.fromJson(data);
-                ng.forEach(records, function (value, key) {
-                    if (value.id === id) {
-                        list = ng.copy(value.reviews);
-                        response.id = Math.floor(Math.random() * 10000);
-                        records[key].reviews.push(response);
-                    }
-                });
-                return [201, response, {}];
-            });
-            
-            $httpBackend.whenDELETE(recordReview).respond(function (method, url) {
-                var id = parseInt(url.split('/')[2]);
-                var idReview = parseInt(url.split('/').pop());
-                $log.debug(idReview);
-                var responseObj;
-                ng.forEach(records, function (value) {
-                    if (value.id === id) {
-                        ng.forEach(value.reviews, function (valueReview, keyReview) {
-                            if (valueReview.id === idReview) {
-                                value.reviews.splice(keyReview, 1);
-                            }
-                        });
-                    }
-                });
-                return [200, responseObj];
-            });
-            
-            
-            $httpBackend.whenGET(recordReview).respond(function (method, url) {
-                var id = parseInt(url.split('/')[2]);
-                var idReview = parseInt(url.split('/').pop());
-                var record;
-                ng.forEach(records, function (value) {
-                    if (value.id === id) {
-                        ng.forEach(value.reviews, function (valueReview, keyReview) {
-                            if (valueReview.id === idReview) {
-                                record = ng.copy(valueReview);
-                            }
-                        });
-                    }
-                });
-                return [200, record, {}];
-            });
-            
-            
-            
-            $httpBackend.whenPUT(recordReview).respond(function (method, url, data) {
-                var id = parseInt(url.split('/')[2]);
-                var idReview = parseInt(url.split('/').pop());
-                var record = ng.fromJson(data);
-                ng.forEach(records, function (value, key) {
-                    if (value.id === id) {
-                        ng.forEach(value.reviews, function (valueReview, keyReview) {
-                            if (valueReview.id === idReview) {
-                                records[key].reviews.splice(keyReview, 1, record);
-                            }
-                        });
-                    }
-                });
-                return [204, null, {}];
-            });
-            
-
         }]);
 })(window.angular);
 
