@@ -8,6 +8,24 @@
     </parent>
     <artifactId>bookstore-logic</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>co.edu.uniandes.csw</groupId>
+            <artifactId>crud-utils</artifactId>
+            <version>0.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
