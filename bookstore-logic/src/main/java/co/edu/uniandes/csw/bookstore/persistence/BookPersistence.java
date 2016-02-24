@@ -10,7 +10,7 @@ import javax.persistence.Query;
 @Stateless
 public class BookPersistence {
 
-    @PersistenceContext(unitName = "BookBasicoPU")
+    @PersistenceContext(unitName = "BookStorePU")
     protected EntityManager em;
 
     public BookEntity find(Long id) {

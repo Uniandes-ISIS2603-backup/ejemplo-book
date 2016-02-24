@@ -6,10 +6,10 @@
         "editorialModule",
         "authorModule",
         "reviewModule",
-        "bookMock",
-        "editorialMock",
-        "authorMock",
-        "reviewMock",
+//        "bookMock",
+//        "editorialMock",
+//        "authorMock",
+//        "reviewMock",
         "ngMessages"
     ]);
 
