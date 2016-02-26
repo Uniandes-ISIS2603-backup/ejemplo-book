@@ -8,8 +8,8 @@
 
     var mod = ng.module("bookModule");
 
-    mod.controller("bookCtrl", ["$scope", "bookService", function ($scope, svc) {
-           //Se almacenan todas las alertas 
+    mod.controller("bookCtrl", ["$scope", "bookService", "editorialService", "authorService", "$modal", function ($scope, svc, editorialSvc, authorSvc, $modal) {
+            //Se almacenan todas las alertas 
             $scope.alerts = [];
             $scope.currentRecord = {};
             $scope.records = [];
@@ -56,7 +56,7 @@
             function responseError(response) {
                 self.showError(response.data);
             }
-            
+
             //Variables para el controlador
             this.readOnly = false;
             this.editMode = false;
@@ -64,10 +64,10 @@
             this.changeTab = function (tab) {
                 $scope.tab = tab;
             };
-            
+
             //Ejemplo alerta
-            showMessage("Bienvenido!, Esto es un ejemplo para mostrar un mensaje de información","info");
-            
+            showMessage("Bienvenido!, Esto es un ejemplo para mostrar un mensaje de información", "info");
+
 
             /*
              * Funcion createRecord emite un evento a los $scope hijos del controlador por medio de la 
@@ -124,9 +124,9 @@
              * Muestra el template de la lista de records al finalizar la operación saveRecord
              */
             this.saveRecord = function () {
-                    return svc.saveRecord($scope.currentRecord).then(function () {
-                        self.fetchRecords();
-                    }, responseError);                
+                return svc.saveRecord($scope.currentRecord).then(function () {
+                    self.fetchRecords();
+                }, responseError);
             };
 
             /*
@@ -140,11 +140,235 @@
                 }, responseError);
             };
 
+            editorialSvc.fetchRecords().then(function (response) {
+                $scope.editorials = response.data;
+            });
+
             /*
              * Funcion fetchRecords consulta todos los registros del módulo book en base de datos
              * para desplegarlo en el template de la lista.
              */
             this.fetchRecords();
+            
+            
+            function updateReview(event, args){
+                $scope.currentRecord.reviews = args;
+            };
+            
+            
+            function updateAuthors(event, args){
+              $scope.currentRecord.authors = args;  
+            };
+            
+            $scope.$on('updateReview', updateReview);
+            $scope.$on('updateAuthors', updateAuthors);
+
+        }]);
+
+
+    mod.controller("authorsCtrl", ["$scope", "authorService", "$modal", "bookService", function ($scope, svc, $modal, bookSvc) {
+            $scope.currentRecord = {};
+            $scope.records = [];
+            $scope.refName = "authors";
+            $scope.alerts = [];
+
+            //Alertas
+            this.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+
+            function showMessage(msg, type) {
+                var types = ["info", "danger", "warning", "success"];
+                if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                    $scope.alerts.push({type: type, msg: msg});
+                }
+            }
+
+            this.showError = function (msg) {
+                showMessage(msg, "danger");
+            };
+
+            var self = this;
+            function responseError(response) {
+                self.showError(response.data);
+            }
+
+            //Variables para el controlador
+            this.readOnly = false;
+            this.editMode = false;
+
+            //Escucha de evento cuando se selecciona un registro maestro
+            function onCreateOrEdit(event, args) {
+                var childName = "authors";
+                if (args[ childName ] === undefined) {
+                    args[ childName ] = [];
+                }
+                $scope.records = [];
+                $scope.refId = args.id;
+                bookSvc.getAuthors(args.id).then(function (response) {
+                    $scope.records = response.data;
+                }, responseError);
+            }
+
+            $scope.$on("post-create", onCreateOrEdit);
+            $scope.$on("post-edit", onCreateOrEdit);
+
+            this.removeAuthor = function (index) {
+                bookSvc.removeAuthor($scope.refId, $scope.records[ index ].id).then(function () {
+                    $scope.records.splice(index, 1);
+                }, responseError);
+            };
+
+            this.showList = function () {
+                var modal = $modal.open({
+                    animation: true,
+                    templateUrl: "src/modules/book/authorModal.tpl.html",
+                    controller: ["$scope", "$modalInstance", "items", "currentItems", function ($scope, $modalInstance, items, currentItems) {
+                            $scope.records = items.data;
+                            $scope.allChecked = false;
+
+                            function loadSelected(list, selected) {
+                                ng.forEach(selected, function (selectedValue) {
+                                    ng.forEach(list, function (listValue) {
+                                        if (listValue.id === selectedValue.id) {
+                                            listValue.selected = true;
+                                        }
+                                    });
+                                });
+                            }
+
+                            $scope.checkAll = function (flag) {
+                                this.records.forEach(function (item) {
+                                    item.selected = flag;
+                                });
+                            };
+
+                            loadSelected($scope.records, currentItems);
+
+                            function getSelectedItems() {
+                                return $scope.records.filter(function (item) {
+                                    return !!item.selected;
+                                });
+                            }
+
+                            $scope.ok = function () {
+                                $modalInstance.close(getSelectedItems());
+                            };
+
+                            $scope.cancel = function () {
+                                $modalInstance.dismiss("cancel");
+                            };
+                        }],
+                    resolve: {
+                        items: function () {
+                            return svc.fetchRecords();
+                        },
+                        currentItems: function () {
+                            return $scope.records;
+                        }
+                    }
+                });
+                modal.result.then(function (data) {
+                    bookSvc.replaceAuthors($scope.refId, data).then(function (response) {
+                        $scope.records.splice(0, $scope.records.length);
+                        $scope.records.push.apply($scope.records, response.data);
+                        $scope.$emit("updateAuthors", $scope.records);
+                    }, responseError);
+                });
+            };
+        }]);
+
+
+    mod.controller("reviewsCtrl", ["$scope", "bookService", function ($scope, bookSvc) {
+            $scope.currentRecord = {};
+            $scope.records = [];
+            $scope.refName = "reviews";
+            $scope.alerts = [];
+
+            //Alertas
+            this.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+
+            function showMessage(msg, type) {
+                var types = ["info", "danger", "warning", "success"];
+                if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                    $scope.alerts.push({type: type, msg: msg});
+                }
+            }
+
+            this.showError = function (msg) {
+                showMessage(msg, "danger");
+            };
+
+            var self = this;
+            function responseError(response) {
+                self.showError(response.data);
+            }
+
+            //Variables para el controlador
+            this.readOnly = false;
+            this.editMode = false;
+
+            //Escucha de evento cuando se selecciona un registro maestro
+            function onCreateOrEdit(event, args) {
+                var childName = "reviews";
+                if (args[ childName ] === undefined) {
+                    args[ childName ] = [];
+                }
+                $scope.records = [];
+                $scope.refId = args.id;
+                bookSvc.getReviews(args.id).then(function (response) {
+                    $scope.records = response.data;
+                }, responseError);
+            }
+
+            $scope.$on("post-create", onCreateOrEdit);
+            $scope.$on("post-edit", onCreateOrEdit);
+
+
+
+            this.createRecord = function () {
+                this.editMode = true;
+                $scope.currentRecord = {};
+            };
+
+            var self = this;
+            this.saveRecord = function () {
+                bookSvc.saveReview($scope.refId, $scope.currentRecord).then(function (response) {
+                    $scope.records.push(response.data);
+                    self.fetchRecords();
+                    $scope.$emit("updateReview", $scope.records);
+                }, responseError);
+            };
+
+            this.fetchRecords = function () {
+                return bookSvc.getReviews($scope.refId).then(function (response) {
+                    $scope.records = response.data;
+                    self.editMode = false;
+                }, responseError);
+            };
+
+            this.editRecord = function (record) {
+                return bookSvc.getReview($scope.refId, record.id).then(function (response) {
+                    $scope.currentRecord = response.data;
+                    self.editMode = true;
+                    return response;
+                }, responseError);
+            };
+
+            this.deleteRecord = function (record) {
+                bookSvc.removeReview($scope.refId, record.id).then(function () {
+                    $scope.records.splice(record, 1);
+                    self.fetchRecords();
+                }, responseError);
+            };
+
+
 
         }]);
 
