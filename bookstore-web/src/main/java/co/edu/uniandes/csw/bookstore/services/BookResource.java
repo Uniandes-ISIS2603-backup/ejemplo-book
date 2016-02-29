@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 @Path("books")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class BookService {
+public class BookResource {
 
     @Inject
     private IBookLogic bookLogic;
