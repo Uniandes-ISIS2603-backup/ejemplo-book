@@ -5,7 +5,7 @@ import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookConverter {
+public abstract class BookConverter {
 
     private BookConverter() {
     }
