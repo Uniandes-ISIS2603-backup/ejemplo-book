@@ -1,6 +1,8 @@
 package co.edu.uniandes.csw.bookstore.dtos;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -12,6 +14,12 @@ public class BookDTO {
     private String image;
     private Date publishDate;
     private String description;
+
+    private List<AuthorDTO> authors = new ArrayList<>();
+
+    private EditorialDTO editorial;
+
+    private List<ReviewDTO> reviews = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -59,5 +67,29 @@ public class BookDTO {
 
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public List<AuthorDTO> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<AuthorDTO> authors) {
+        this.authors = authors;
+    }
+
+    public EditorialDTO getEditorial() {
+        return editorial;
+    }
+
+    public void setEditorial(EditorialDTO editorial) {
+        this.editorial = editorial;
+    }
+
+    public List<ReviewDTO> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewDTO> reviews) {
+        this.reviews = reviews;
     }
 }
