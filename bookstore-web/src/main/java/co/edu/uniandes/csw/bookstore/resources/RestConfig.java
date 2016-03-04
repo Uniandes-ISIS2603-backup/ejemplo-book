@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookstore.services;
+package co.edu.uniandes.csw.bookstore.resources;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
