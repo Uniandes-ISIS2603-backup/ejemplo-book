@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookstore.services;
+package co.edu.uniandes.csw.bookstore.resources;
 
 import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.converters.AuthorConverter;
@@ -7,6 +7,7 @@ import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
+import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -49,7 +50,7 @@ public class BookResource {
      */
     @GET
     @Path("{id: \\d+}")
-    public BookDTO getBook(@PathParam("id") Long id) {
+    public BookDTO getBook(@PathParam("id") Long id) throws BusinessLogicException {
         return BookConverter.fullEntity2DTO(bookLogic.getBook(id));
     }
 

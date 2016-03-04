@@ -3,6 +3,7 @@ package co.edu.uniandes.csw.bookstore.ejbs;
 import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
+import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.persistence.AuthorPersistence;
 import co.edu.uniandes.csw.bookstore.persistence.BookPersistence;
 import java.util.List;
@@ -24,8 +25,12 @@ public class BookLogic implements IBookLogic {
     }
 
     @Override
-    public BookEntity getBook(Long id) {
-        return persistence.find(id);
+    public BookEntity getBook(Long id) throws BusinessLogicException {
+        BookEntity book = persistence.find(id);
+        if (book == null) {
+            throw new BusinessLogicException("There's no book with requested id");
+        }
+        return book;
     }
 
     @Override
