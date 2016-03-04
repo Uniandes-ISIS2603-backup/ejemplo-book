@@ -1,13 +1,9 @@
 package co.edu.uniandes.csw.bookstore.services;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
 @ApplicationPath("api")
-public class RestConfig extends ResourceConfig {
+public class RestConfig extends Application {
 
-    public RestConfig() {
-        packages("co.edu.uniandes.csw.bookstore.services");
-        packages("co.edu.uniandes.csw.bookstore.providers");
-    }
 }
