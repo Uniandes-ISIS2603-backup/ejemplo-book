@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookstore.services;
+package co.edu.uniandes.csw.bookstore.resources;
 
 import co.edu.uniandes.csw.bookstore.api.IEditorialLogic;
 import co.edu.uniandes.csw.bookstore.converters.BookConverter;
