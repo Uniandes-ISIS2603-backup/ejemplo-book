@@ -9,6 +9,8 @@ import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -25,6 +27,8 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class BookResource {
 
+    private static final Logger logger = Logger.getLogger(BookResource.class.getName());
+
     @Inject
     private IBookLogic bookLogic;
 
@@ -36,7 +40,8 @@ public class BookResource {
      * @generated
      */
     @GET
-    public List<BookDTO> getBooks() {
+    public List<BookDTO> getBook() {
+        logger.info("Se ejecuta método getBooks");
         return BookConverter.listEntity2DTO(bookLogic.getBooks());
     }
 
@@ -51,6 +56,7 @@ public class BookResource {
     @GET
     @Path("{id: \\d+}")
     public BookDTO getBook(@PathParam("id") Long id) throws BusinessLogicException {
+        logger.log(Level.INFO, "Se ejecuta método getBook con id={0}", id);
         return BookConverter.fullEntity2DTO(bookLogic.getBook(id));
     }
 
@@ -64,6 +70,7 @@ public class BookResource {
     @POST
     @StatusCreated
     public BookDTO createBook(BookDTO dto) {
+        logger.info("Se ejecuta método createBook");
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
         return BookConverter.fullEntity2DTO(bookLogic.createBook(entity));
     }
@@ -79,6 +86,7 @@ public class BookResource {
     @PUT
     @Path("{id: \\d+}")
     public BookDTO updateBook(@PathParam("id") Long id, BookDTO dto) {
+        logger.log(Level.INFO, "Se ejecuta método updateBook con id={0}", id);
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
         entity.setId(id);
         return BookConverter.fullEntity2DTO(bookLogic.updateBook(entity));
@@ -93,6 +101,7 @@ public class BookResource {
     @DELETE
     @Path("{id: \\d+}")
     public void deleteBook(@PathParam("id") Long id) {
+        logger.log(Level.INFO, "Se ejecuta método deleteBook con id={0}", id);
         bookLogic.deleteBook(id);
     }
 
