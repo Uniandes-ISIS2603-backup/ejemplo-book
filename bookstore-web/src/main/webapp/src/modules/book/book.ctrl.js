@@ -9,15 +9,16 @@
     var mod = ng.module("bookModule");
 
     mod.controller("bookCtrl", ["$scope", "bookService", function ($scope, svc) {
-           //Se almacenan todas las alertas
+            //Se almacenan todas las alertas
             $scope.alerts = [];
             $scope.currentRecord = {
-                name: undefined,
-                description: undefined,
-                isbn: undefined,
-                image: undefined,
-                editorial: undefined,
-                publishDate: undefined
+                id: 0 /*Tipo Long*/,
+                name: '' /*Tipo String*/,
+                description: '' /*Tipo String*/,
+                isbn: '' /*Tipo String*/,
+                image: '' /*Tipo String*/,
+                editorial: {} /*Objeto que representa instancia de Editorial*/,
+                reviews: [] /*Colección de registros de Review*/
             };
             $scope.records = [];
 
@@ -73,7 +74,7 @@
             };
 
             //Ejemplo alerta
-            showMessage("Bienvenido!, Esto es un ejemplo para mostrar un mensaje de información","info");
+            showMessage("Bienvenido!, Esto es un ejemplo para mostrar un mensaje de información", "info");
 
 
             /*
@@ -131,9 +132,9 @@
              * Muestra el template de la lista de records al finalizar la operación saveRecord
              */
             this.saveRecord = function () {
-                    return svc.saveRecord($scope.currentRecord).then(function () {
-                        self.fetchRecords();
-                    }, responseError);
+                return svc.saveRecord($scope.currentRecord).then(function () {
+                    self.fetchRecords();
+                }, responseError);
             };
 
             /*

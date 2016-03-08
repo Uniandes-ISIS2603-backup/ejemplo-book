@@ -13,7 +13,8 @@
 
             $scope.alerts = [];
             $scope.currentRecord = {
-                name: undefined
+                id: 0 /*Tipo Long*/,
+                name: '' /*Tipo String*/
             };
             $scope.records = [];
 

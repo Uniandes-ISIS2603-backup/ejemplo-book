@@ -3,8 +3,9 @@
 
     mod.controller("authorCtrl", ["$scope", "authorService", function ($scope, svc) {
             $scope.currentRecord = {
-                name: undefined,
-                birthDate: undefined
+                id: 0 /*Tipo Long*/,
+                name: '' /*Tipo String*/,
+                birthDate: '' /*Tipo String*/
             };
             $scope.records = [];
             $scope.alerts = [];
