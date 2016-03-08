@@ -2,7 +2,10 @@
     var mod = ng.module("authorModule");
 
     mod.controller("authorCtrl", ["$scope", "authorService", function ($scope, svc) {
-            $scope.currentRecord = {};
+            $scope.currentRecord = {
+                name: undefined,
+                birthDate: undefined
+            };
             $scope.records = [];
             $scope.alerts = [];
 
