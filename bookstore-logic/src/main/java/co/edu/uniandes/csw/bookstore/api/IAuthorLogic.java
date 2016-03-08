@@ -25,6 +25,4 @@ public interface IAuthorLogic {
     public List<BookEntity> getBooks(Long authorId);
 
     public BookEntity getBook(Long authorId, Long bookId);
-
-    public List<AuthorEntity> findByEditorial(Long editorialId);
 }

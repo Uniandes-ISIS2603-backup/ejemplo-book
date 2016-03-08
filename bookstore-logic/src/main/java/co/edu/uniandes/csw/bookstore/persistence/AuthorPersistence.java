@@ -2,6 +2,8 @@ package co.edu.uniandes.csw.bookstore.persistence;
 
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,35 +12,37 @@ import javax.persistence.Query;
 @Stateless
 public class AuthorPersistence {
 
+    private static final Logger logger = Logger.getLogger(AuthorPersistence.class.getName());
+
     @PersistenceContext(unitName = "BookStorePU")
     protected EntityManager em;
 
     public AuthorEntity create(AuthorEntity entity) {
+        logger.info("Creando un autor nuevo");
         em.persist(entity);
+        logger.info("Autor creado");
         return entity;
     }
 
     public AuthorEntity update(AuthorEntity entity) {
+        logger.log(Level.INFO, "Actualizando autor con id={0}", entity.getId());
         return em.merge(entity);
     }
 
     public void delete(Long id) {
+        logger.log(Level.INFO, "Borrando autor con id={0}", id);
         AuthorEntity entity = em.find(AuthorEntity.class, id);
         em.remove(entity);
     }
 
     public AuthorEntity find(Long id) {
+        logger.log(Level.INFO, "Consultando autor con id={0}", id);
         return em.find(AuthorEntity.class, id);
     }
 
     public List<AuthorEntity> findAll() {
+        logger.info("Consultando todos los autores");
         Query q = em.createQuery("select u from AuthorEntity u");
-        return q.getResultList();
-    }
-
-    public List<AuthorEntity> findByEditorial(Long editorialId) {
-        Query q = em.createNamedQuery("AuthorEntity.findByEditorial");
-        q.setParameter("editorial_id", editorialId);
         return q.getResultList();
     }
 }

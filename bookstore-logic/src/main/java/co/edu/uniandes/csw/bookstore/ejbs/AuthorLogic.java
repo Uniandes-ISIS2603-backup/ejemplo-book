@@ -93,9 +93,4 @@ public class AuthorLogic implements IAuthorLogic{
         }
         return null;
     }
-
-    @Override
-    public List<AuthorEntity> findByEditorial(Long editorialId){
-        return persistence.findByEditorial(editorialId);
-    }
 }
