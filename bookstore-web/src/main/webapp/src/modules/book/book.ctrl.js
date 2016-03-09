@@ -12,7 +12,7 @@
             //Se almacenan todas las alertas
             $scope.alerts = [];
             $scope.currentRecord = {
-                id: 0 /*Tipo Long*/,
+                id: undefined /*Tipo Long*/,
                 name: '' /*Tipo String*/,
                 description: '' /*Tipo String*/,
                 isbn: '' /*Tipo String*/,
