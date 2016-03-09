@@ -7,6 +7,7 @@ package co.edu.uniandes.csw.bookstore.api;
 
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.entities.EditorialEntity;
+import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface IEditorialLogic {
 
     public List<EditorialEntity> getEditorials();
 
-    public EditorialEntity getEditorial(Long id);
+    public EditorialEntity getEditorial(Long id) throws BusinessLogicException;
 
     public EditorialEntity createEditorial(EditorialEntity entity);
 

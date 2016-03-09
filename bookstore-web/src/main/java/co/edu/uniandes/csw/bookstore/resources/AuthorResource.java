@@ -6,6 +6,7 @@ import co.edu.uniandes.csw.bookstore.converters.BookConverter;
 import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
+import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -49,7 +50,7 @@ public class AuthorResource {
      */
     @GET
     @Path("{id: \\d+}")
-    public AuthorDTO getAuthor(@PathParam("id") Long id) {
+    public AuthorDTO getAuthor(@PathParam("id") Long id) throws BusinessLogicException {
         return AuthorConverter.fullEntity2DTO(authorLogic.getAuthor(id));
     }
 

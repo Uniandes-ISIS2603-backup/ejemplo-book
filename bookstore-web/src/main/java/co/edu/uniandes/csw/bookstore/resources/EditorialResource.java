@@ -6,6 +6,7 @@ import co.edu.uniandes.csw.bookstore.converters.EditorialConverter;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
 import co.edu.uniandes.csw.bookstore.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookstore.entities.EditorialEntity;
+import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -49,7 +50,7 @@ public class EditorialResource {
      */
     @GET
     @Path("{id: \\d+}")
-    public EditorialDTO getEditorial(@PathParam("id") Long id) {
+    public EditorialDTO getEditorial(@PathParam("id") Long id) throws BusinessLogicException {
         return EditorialConverter.fullEntity2DTO(editorialLogic.getEditorial(id));
     }
 

@@ -4,14 +4,19 @@ import co.edu.uniandes.csw.bookstore.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
+import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.persistence.AuthorPersistence;
 import co.edu.uniandes.csw.bookstore.persistence.BookPersistence;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 @Stateless
-public class AuthorLogic implements IAuthorLogic{
+public class AuthorLogic implements IAuthorLogic {
+
+    private static final Logger logger = Logger.getLogger(AuthorLogic.class.getName());
 
     @Inject
     private AuthorPersistence persistence;
@@ -24,29 +29,45 @@ public class AuthorLogic implements IAuthorLogic{
 
     @Override
     public List<AuthorEntity> getAuthors() {
-        return persistence.findAll();
+        logger.info("Inicia proceso de consultar todos los autores");
+        List<AuthorEntity> authors = persistence.findAll();
+        logger.info("Termina proceso de consultar todos los autores");
+        return authors;
     }
 
     @Override
-    public AuthorEntity getAuthor(Long id) {
-        return persistence.find(id);
+    public AuthorEntity getAuthor(Long id) throws BusinessLogicException {
+        logger.log(Level.INFO, "Inicia proceso de consultar autor con id={0}", id);
+        AuthorEntity author = persistence.find(id);
+        if (author == null) {
+            logger.log(Level.SEVERE, "El autor con el id {0} no existe", id);
+            throw new BusinessLogicException("El autor solicitado no existe");
+        }
+        logger.log(Level.INFO, "Termina proceso de consultar autor con id={0}", id);
+        return author;
     }
 
     @Override
     public AuthorEntity createAuthor(AuthorEntity entity) {
+        logger.info("Inicia proceso de creación de autor");
         persistence.create(entity);
+        logger.info("Termina proceso de creación de autor");
         return entity;
     }
 
     @Override
     public AuthorEntity updateAuthor(AuthorEntity entity) {
+        logger.log(Level.INFO, "Inicia proceso de actualizar autor con id={0}", entity.getId());
         persistence.update(entity);
+        logger.log(Level.INFO, "Termina proceso de actualizar autor con id={0}", entity.getId());
         return entity;
     }
 
     @Override
     public void deleteAuthor(Long id) {
+        logger.log(Level.INFO, "Inicia proceso de borrar autor con id={0}", id);
         persistence.delete(id);
+        logger.log(Level.INFO, "Termina proceso de borrar autor con id={0}", id);
     }
 
     @Override
