@@ -2,7 +2,11 @@
     var mod = ng.module("authorModule");
 
     mod.controller("authorCtrl", ["$scope", "authorService", function ($scope, svc) {
-            $scope.currentRecord = {};
+            $scope.currentRecord = {
+                id: 0 /*Tipo Long*/,
+                name: '' /*Tipo String*/,
+                birthDate: '' /*Tipo String*/
+            };
             $scope.records = [];
             $scope.alerts = [];
 
@@ -91,14 +95,15 @@
                     self.fetchRecords();
                 }, responseError);
             };
-            
-        this.fetchRecords();  
-        
-        function updateBooks(event, args){
-          $scope.currentRecord.books =  args;
-        };
-        
-        $scope.$on('updateBooks', updateBooks);
+
+            this.fetchRecords();
+
+            function updateBooks(event, args) {
+                $scope.currentRecord.books = args;
+            }
+            ;
+
+            $scope.$on('updateBooks', updateBooks);
 
         }]);
 
