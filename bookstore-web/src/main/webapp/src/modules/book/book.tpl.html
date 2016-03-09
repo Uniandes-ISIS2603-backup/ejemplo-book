@@ -46,13 +46,13 @@
         </div>
     </div>
 </div>
-<div ng-show="ctrl.editMode" class="col-md-6 well"> 
+<div ng-show="ctrl.editMode" class="col-md-6 well">
     <form novalidate name="form" id="book-form" role="form" ng-submit="ctrl.saveRecord()">
         <alert ng-messages="form.$error" type="danger" close="" ng-hide="!form.$error.required">
             <div ng-message="required">
                 Please, Fill the required fields!
             </div>
-        </alert>  
+        </alert>
         <fieldset>
             <input id="id" class="form-control" type="hidden" ng-model="currentRecord.id"/>
             <div class="form-group col-md-12" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && (form.name.$dirty || form.$submitted)}" >
@@ -78,12 +78,6 @@
                 <label for="image" class="col-md-2 control-label">Image</label>
                 <div class="col-md-10">
                     <input id="image" name="image" class="form-control" type="text" ng-model="currentRecord.image" required />
-                </div>
-            </div>
-            <div class="form-group col-md-12" ng-class="{'has-success': form.editorial.$valid && form.editorial.$dirty, 'has-error': form.editorial.$invalid && (form.editorial.$dirty || form.$submitted)}" >
-                <label for="editorial" class="col-md-2 control-label">Editorial</label>
-                <div class="col-md-10">
-                    <select id="editorial" name="editorial" ng-options="rc.name for rc in editorials track by rc.id" class="form-control" type="text" ng-model="currentRecord.editorial" ></select>
                 </div>
             </div>
             <div class="form-group col-md-12" ng-class="{'has-success': !form.publishDate.$error.required && form.publishDate.$dirty, 'has-error': form.publishDate.$error.required && (form.publishDate.$dirty || form.$submitted)}" >
