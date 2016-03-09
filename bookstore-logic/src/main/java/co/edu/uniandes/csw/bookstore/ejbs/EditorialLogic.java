@@ -54,9 +54,11 @@ public class EditorialLogic implements IEditorialLogic {
     @Override
     public EditorialEntity updateEditorial(EditorialEntity entity) {
         logger.log(Level.INFO, "Inicia proceso de actualizar editorial con id={0}", entity.getId());
-        entity = persistence.update(entity);
+        EditorialEntity oldEntity = persistence.find(entity.getId());
+        entity.setBooks(oldEntity.getBooks());
+        EditorialEntity newEntity = persistence.update(entity);
         logger.log(Level.INFO, "Termina proceso de actualizar editorial con id={0}", entity.getId());
-        return entity;
+        return newEntity;
     }
 
     @Override

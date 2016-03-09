@@ -54,6 +54,8 @@ public class BookLogic implements IBookLogic {
     @Override
     public BookEntity updateBook(BookEntity entity) {
         logger.log(Level.INFO, "Inicia proceso de actualizar libro con id={0}", entity.getId());
+        BookEntity oldEntity = persistence.find(entity.getId());
+        entity.setAuthors(oldEntity.getAuthors());
         BookEntity newEntity = persistence.update(entity);
         logger.log(Level.INFO, "Termina proceso de actualizar libro con id={0}", entity.getId());
         return newEntity;
