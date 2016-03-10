@@ -3,7 +3,7 @@
 
     mod.controller("authorCtrl", ["$scope", "authorService", function ($scope, svc) {
             $scope.currentRecord = {
-                id: 0 /*Tipo Long*/,
+                id: undefined /*Tipo Long. El valor se asigna en el backend*/,
                 name: '' /*Tipo String*/,
                 birthDate: '' /*Tipo String*/
             };
