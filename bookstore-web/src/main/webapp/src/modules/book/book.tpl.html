@@ -91,7 +91,7 @@
                 <label for="publishDate" class="col-md-2 control-label">Publish Date</label>
                 <div class="col-md-10">
                     <p class="input-group">
-                        <input type="text" id="publishDate" name="publishDate" class="form-control" ng-model="currentRecord.publishDate" ng-required="model.required" datepicker-popup is-open="opened" />
+                        <input type="text" id="publishDate" name="publishDate" class="form-control" ng-model="currentRecord.publishDate" ng-required="model.required" datepicker-popup is-open="opened" readonly/>
                         <span class="input-group-btn">
                             <button type="button" id="publishDate-datepicker" class="btn btn-default" ng-click="open($event)"><span class="glyphicon glyphicon-calendar"></span></button>
                         </span>

@@ -227,9 +227,11 @@
                 }
                 $scope.records = [];
                 $scope.refId = args.id;
-                bookSvc.getAuthors(args.id).then(function (response) {
-                    $scope.records = response.data;
-                }, responseError);
+                if (args.id) {
+                    bookSvc.getAuthors(args.id).then(function (response) {
+                        $scope.records = response.data;
+                    }, responseError);
+                }
             }
 
             $scope.$on("post-create", onCreateOrEdit);

@@ -110,7 +110,6 @@ public abstract class AuthorConverter {
     public static AuthorDTO fullEntity2DTO(AuthorEntity entity) {
         if (entity != null) {
             AuthorDTO dto = basicEntity2DTO(entity);
-            dto.setBooks(BookConverter.listEntity2DTO(entity.getBooks()));
             return dto;
         } else {
             return null;
@@ -128,7 +127,6 @@ public abstract class AuthorConverter {
     public static AuthorEntity fullDTO2Entity(AuthorDTO dto) {
         if (dto != null) {
             AuthorEntity entity = basicDTO2Entity(dto);
-            entity.setBooks(BookConverter.listDTO2Entity(dto.getBooks()));
             return entity;
         } else {
             return null;

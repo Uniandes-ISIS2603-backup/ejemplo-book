@@ -72,7 +72,8 @@ public class BookResource {
     public BookDTO createBook(BookDTO dto) {
         logger.info("Se ejecuta método createBook");
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
-        return BookConverter.fullEntity2DTO(bookLogic.createBook(entity));
+        BookEntity newEntity = bookLogic.createBook(entity);
+        return BookConverter.fullEntity2DTO(newEntity);
     }
 
     /**

@@ -15,8 +15,6 @@ public class BookDTO {
     private Date publishDate;
     private String description;
 
-    private List<AuthorDTO> authors = new ArrayList<>();
-
     private EditorialDTO editorial;
 
     private List<ReviewDTO> reviews = new ArrayList<>();
@@ -67,14 +65,6 @@ public class BookDTO {
 
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
-    }
-
-    public List<AuthorDTO> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<AuthorDTO> authors) {
-        this.authors = authors;
     }
 
     public EditorialDTO getEditorial() {

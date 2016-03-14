@@ -1,7 +1,6 @@
 package co.edu.uniandes.csw.bookstore.dtos;
 
 import java.util.Date;
-import java.util.List;
 
 public class AuthorDTO {
 
@@ -10,8 +9,6 @@ public class AuthorDTO {
     private String name;
 
     private Date birthDate;
-
-    private List<BookDTO> books;
 
     public Long getId() {
         return id;
@@ -35,13 +32,5 @@ public class AuthorDTO {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
-    }
-
-    public List<BookDTO> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<BookDTO> books) {
-        this.books = books;
     }
 }

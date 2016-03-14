@@ -113,7 +113,6 @@ public abstract class EditorialConverter {
     public static EditorialDTO fullEntity2DTO(EditorialEntity entity) {
         if (entity != null) {
             EditorialDTO dto = basicEntity2DTO(entity);
-            dto.setBooks(BookConverter.listEntity2DTO(entity.getBooks()));
             return dto;
         } else {
             return null;
@@ -132,7 +131,6 @@ public abstract class EditorialConverter {
     public static EditorialEntity fullDTO2Entity(EditorialDTO dto) {
         if (dto != null) {
             EditorialEntity entity = basicDTO2Entity(dto);
-            entity.setBooks(BookConverter.listDTO2Entity(dto.getBooks()));
             return entity;
         } else {
             return null;
