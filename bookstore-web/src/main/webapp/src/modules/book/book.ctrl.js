@@ -12,13 +12,23 @@
             //Se almacenan todas las alertas
             $scope.alerts = [];
             $scope.currentRecord = {
-                id: 0 /*Tipo Long*/,
+                id: undefined /*Tipo Long. El valor se asigna en el backend*/,
                 name: '' /*Tipo String*/,
                 description: '' /*Tipo String*/,
                 isbn: '' /*Tipo String*/,
                 image: '' /*Tipo String*/,
                 editorial: {} /*Objeto que representa instancia de Editorial*/,
-                reviews: [] /*Colección de registros de Review*/
+                reviews: [{/*Colección de registros de Review*/
+                        id: undefined /*Tipo Long. El backend asigna el valor*/,
+                        name: '' /*Tipo String*/,
+                        source: '' /*Tipo String*/,
+                        description: '' /*Tipo String*/
+                    }, {
+                        id: undefined /*Tipo Long. El backend asigna el valor*/,
+                        name: '' /*Tipo String*/,
+                        source: '' /*Tipo String*/,
+                        description: '' /*Tipo String*/
+                    }] /*Colección de registros de Review*/
             };
             $scope.records = [];
 
@@ -327,20 +337,28 @@
             //Escucha de evento cuando se selecciona un registro maestro
             function onCreateOrEdit(event, args) {
                 var childName = "reviews";
-                if (args[ childName ] === undefined) {
-                    args[ childName ] = [];
+                if (args[childName] === undefined) {
+                    args[childName] = [];
                 }
-                $scope.records = [];
+                $scope.records = args[childName];
                 $scope.refId = args.id;
-                bookSvc.getReviews(args.id).then(function (response) {
-                    $scope.records = response.data;
-                }, responseError);
             }
 
             $scope.$on("post-create", onCreateOrEdit);
             $scope.$on("post-edit", onCreateOrEdit);
 
-
+            //Función para encontrar un registro por ID o CID
+            function indexOf(rc) {
+                var field = rc.id !== undefined ? 'id' : 'cid';
+                for (var i in $scope.records) {
+                    if ($scope.records.hasOwnProperty(i)) {
+                        var current = $scope.records[i];
+                        if (current[field] === rc[field]) {
+                            return i;
+                        }
+                    }
+                }
+            }
 
             this.createRecord = function () {
                 this.editMode = true;
@@ -349,36 +367,31 @@
 
             var self = this;
             this.saveRecord = function () {
-                bookSvc.saveReview($scope.refId, $scope.currentRecord).then(function (response) {
-                    $scope.records.push(response.data);
-                    self.fetchRecords();
-                    $scope.$emit("updateReview", $scope.records);
-                }, responseError);
+                var rc = $scope.currentRecord;
+                if (rc.id || rc.cid) {
+                    var idx = indexOf(rc);
+                    $scope.records.splice(idx, 1, rc);
+                } else {
+                    rc.cid = -Math.floor(Math.random() * 10000);
+                    rc[$scope.parent] = {id: $scope.refId};
+                    $scope.records.push(rc);
+                }
+                this.fetchRecords();
             };
 
             this.fetchRecords = function () {
-                return bookSvc.getReviews($scope.refId).then(function (response) {
-                    $scope.records = response.data;
-                    self.editMode = false;
-                }, responseError);
+                $scope.currentRecord = {};
+                this.editMode = false;
             };
 
             this.editRecord = function (record) {
-                return bookSvc.getReview($scope.refId, record.id).then(function (response) {
-                    $scope.currentRecord = response.data;
-                    self.editMode = true;
-                    return response;
-                }, responseError);
+                $scope.currentRecord = ng.copy(record);
+                this.editMode = true;
             };
 
             this.deleteRecord = function (record) {
-                bookSvc.removeReview($scope.refId, record.id).then(function () {
-                    $scope.records.splice(record, 1);
-                    self.fetchRecords();
-                }, responseError);
+                var idx = indexOf(record);
+                $scope.records.splice(idx, 1);
             };
-
-
-
         }]);
 })(window.angular);

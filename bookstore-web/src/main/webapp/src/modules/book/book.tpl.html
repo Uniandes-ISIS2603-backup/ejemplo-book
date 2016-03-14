@@ -37,6 +37,7 @@
                     <p><strong>Description:</strong> <span id="{{$index}}-description">{{record.description}}</span></p>
                     <p><strong>ISBN:</strong> <span id="{{$index}}-isbn">{{record.isbn}}</span></p>
                     <p><strong>Publish Date:</strong> <span id="{{$index}}-publishDate">{{record.publishDate| date}}</span></p>
+                    <p><strong>Editorial:</strong> <span id="{{$index}}-publishDate">{{record.editorial.name}}</span></p>
                 </div>
                 <p class="text-center">
                     <button id="{{$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
@@ -46,13 +47,13 @@
         </div>
     </div>
 </div>
-<div ng-show="ctrl.editMode" class="col-md-6 well"> 
+<div ng-show="ctrl.editMode" class="col-md-6 well">
     <form novalidate name="form" id="book-form" role="form" ng-submit="ctrl.saveRecord()">
         <alert ng-messages="form.$error" type="danger" close="" ng-hide="!form.$error.required">
             <div ng-message="required">
                 Please, Fill the required fields!
             </div>
-        </alert>  
+        </alert>
         <fieldset>
             <input id="id" class="form-control" type="hidden" ng-model="currentRecord.id"/>
             <div class="form-group col-md-12" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && (form.name.$dirty || form.$submitted)}" >

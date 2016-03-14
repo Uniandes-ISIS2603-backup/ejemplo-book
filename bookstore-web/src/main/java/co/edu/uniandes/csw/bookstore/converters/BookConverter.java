@@ -33,6 +33,7 @@ public abstract class BookConverter {
             dto.setDescription(entity.getDescription());
             dto.setIsbn(entity.getIsbn());
             dto.setImage(entity.getImage());
+            dto.setPublishDate(entity.getPublishDate());
 
             return dto;
         } else {
@@ -76,6 +77,7 @@ public abstract class BookConverter {
             dto.setDescription(entity.getDescription());
             dto.setIsbn(entity.getIsbn());
             dto.setImage(entity.getImage());
+            dto.setPublishDate(entity.getPublishDate());
             dto.setEditorial(EditorialConverter.refEntity2DTO(entity.getEditorial()));
 
             return dto;
@@ -101,6 +103,7 @@ public abstract class BookConverter {
             entity.setDescription(dto.getDescription());
             entity.setIsbn(dto.getIsbn());
             entity.setImage(dto.getImage());
+            entity.setPublishDate(dto.getPublishDate());
             entity.setEditorial(EditorialConverter.refDTO2Entity(dto.getEditorial()));
 
             return entity;
