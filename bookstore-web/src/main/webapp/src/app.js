@@ -10,32 +10,35 @@
     mod.config(['$logProvider', function ($logProvider) {
             $logProvider.debugEnabled(true);
         }]);
-/* Para poder ver todos los estados disponibles, esta configuración la haremos en el módulo principal, 
- * sin embargo, puede hacerse en cualquier bloque de configuración de cualquier módulo, 
- * mientras éste tenga la dependencia a ui.router, sea de manera directa o transitiva. 
- * Se registra por defecto la ruta /book, lo cual implica que cuando se solicite una ruta que no corresponda
- * a ningún estado, el navegador será redireccionado a la ruta por defecto. 
- * Después se crea un estado llamado book, el cual está configurado para llevar al navegador a la url /book y
- * cargar la plantilla en la ruta src/modules/book/book.tpl.html.
- */
+    /* Para poder ver todos los estados disponibles, esta configuración la haremos en el módulo principal, 
+     * sin embargo, puede hacerse en cualquier bloque de configuración de cualquier módulo, 
+     * mientras éste tenga la dependencia a ui.router, sea de manera directa o transitiva. 
+     * Se registra por defecto la ruta /book, lo cual implica que cuando se solicite una ruta que no corresponda
+     * a ningún estado, el navegador será redireccionado a la ruta por defecto. 
+     * Después se crea un estado llamado book, el cual está configurado para llevar al navegador a la url /book y
+     * cargar la plantilla en la ruta src/modules/book/book.tpl.html.
+     */
     mod.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise("/book");
             $stateProvider
                     .state('book', {
                         url: '/book',
-                        templateUrl: "src/modules/book/book.tpl.html"
-                    })
-                    .state('editorial', {
-                        url: '/editorial',
-                        templateUrl: "src/modules/editorial/editorial.tpl.html"
+                        views: {
+                          
+                           "viewCenter": {templateUrl: "src/modules/book/book.tpl.html"},
+                           "":  {templateUrl: "src/views/promotion.tpl.html"},
+                           "viewRight":   {templateUrl: "src/views/bestseller.tpl.html"}
+                        }
                     })
                     .state('author', {
                         url: '/author',
-                        templateUrl: "src/modules/author/author.tpl.html"
-                    }).state('review', {
-                        url: '/review',
-                        templateUrl: "src/modules/review/review.tpl.html"
-            });
+                        views: {
+                          
+                           "viewCenter": {templateUrl: "src/modules/author/author.tpl.html"},
+                           "":  {templateUrl: "src/views/promotion.tpl.html"},
+                           "viewRight":   {templateUrl: "src/views/mostread.tpl.html"}
+                        }
+                    });
         }]);
-    
+
 })(window.angular);

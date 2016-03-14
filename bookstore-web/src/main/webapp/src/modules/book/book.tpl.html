@@ -1,116 +1,114 @@
-<div ng-init="list = true" >
+<div ng-init="list = true" class="center-block">
     <div id="navbar">
         <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#book-navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand">Books</a>
-            </div>
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#book-navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">Books</a>
+                </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <!-- En el siguiente bloque se definen los botones a usar para crear un Book-->
-            <div class="collapse navbar-collapse" id="book-navbar">
-                <button id="create-book" class="btn btn-default navbar-btn" ng-show="list" ng-click="list = false"><span class="glyphicon glyphicon-plus"></span> Create</button>
-                <button id="refresh-book" class="btn btn-default navbar-btn" ng-show="list" ng-click="list = true"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
-                <button id="save-book" class="btn btn-default navbar-btn" ng-hide="list" ng-click="list = true"><span class="glyphicon glyphicon-save"></span> Save</button>
-                <button id="cancel-book" class="btn btn-default navbar-btn" ng-hide="list" ng-click="list = true"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <!-- En el siguiente bloque se definen los botones a usar para crear un Book-->
+                <div class="collapse navbar-collapse" id="book-navbar">
+                    <div class="row">
+                        <div class="col-xs-1">
+                        </div>
+                        <div class="col-xs-9">
+                            <form novalidate class="navbar-form" role="search">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" style="width: 30vmax;" placeholder="Search Books" required>
+                                </div>
+                                <button type="submit" class="btn btn glyphicon glyphicon-search"></button>
+                            </form>
+                        </div>
+                        <div class="col-xs-2">
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
     </div>
-    <!-- El siguiente bloque DIV contiene los libros para mostrar -->
-    <div class="col-sm-12" ng-if="list">
-        <!-- El siguiente bloque es el primer DIV para el primer libro-->
-        <div class="col-md-4 col-sm-6 col-lg-3 well">
-            <div class="col-md-12">
-                <div class="img-thumbnail" id="image">
-                    <img class="img-responsive" style="height: 20vmax;" src="http://ecx.images-amazon.com/images/I/61KaCYPW28L._AA160_.jpg" alt="">
+    <!--Libros-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-xs-2"></div>
+                    <div class="col-md-10" >
+                        <div class="img-thumbnail" id="image">
+                            <img class="img-responsive" style="height: 15vmax;" src="http://ecx.images-amazon.com/images/I/61KaCYPW28L._AA160_.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="caption col-md-9" >
+                        <p><strong>Name:</strong> The Life We Bury</p>
+                        <p><strong>Description:</strong> College student Joe Talbert has the modest goal of completing a writing assignment for an English class.</p>
+                        <p><strong>ISBN:</strong> 1616149981</p>
+                        <p><strong>Publish Date:</strong> October, 2014</p>
+                        <p>
+                            <a class="btn btn-default" href="#" role="button">View details »</a>
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-1"></div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-xs-2"></div>
+                    <div class="col-md-10" >
+                        <div class="img-thumbnail" id="image">
+                            <img class="img-responsive" style="height: 15vmax;" src="http://teropa.info/images/byoa/books2.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="caption col-md-9" >
+                        <p><strong>Name:</strong> Know Your AngularJS Inside Out</p>
+                        <p><strong>Description:</strong> Build Your Own AngularJS helps you understand everything there is to understand about Angular</p>
+                        <p><strong>ISBN:</strong> 123456</p>
+                        <p><strong>Publish Date:</strong> December, 2015</p>
+                        <p>
+                            <a class="btn btn-default" href="#" role="button">View details »</a>
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-1"></div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-xs-2"></div>
+                    <div class="col-md-10" >
+                        <div class="img-thumbnail" id="image">
+                            <img class="img-responsive" style="height: 19vmax;" src="http://www.apress.com/media/catalog/product/cache/9/image/9df78eab33525d08d6e5fb8d27136e95/A/9/A9781484206423-3d.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="caption col-md-9" >
+                        <p><strong>Name:</strong> Pro Java 8 Programming</p>
+                        <p><strong>Description:</strong> Pro Java 8 Programming covers the core Java development kit. It takes advantage of the finer points of the core standard edition (SE) and development kit version 8.</p>
+                        <p><strong>ISBN:</strong> 10011002</p>
+                        <p><strong>Publish Date:</strong> May, 2015</p>
+                        <p>
+                            <a class="btn btn-default" href="#" role="button">View details »</a>
+                        </p>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-1"></div>
                 </div>
             </div>
-            <div class="caption" >
-                <p><strong>Name:</strong> The Life We Bury</p>
-                <p><strong>Description:</strong> College student Joe Talbert has the modest goal of completing a writing assignment for an English class.</p>
-                <p><strong>ISBN:</strong> 1616149981</p>
-                <p><strong>Publish Date:</strong> October, 2014</p>
-                <p>
-                    <button id="edit-book-1" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edit</button>
-                    <button id="delete-book-1" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span> Delete</button>
-                </p>
-            </div>
+            
         </div>
-        <!-- El siguiente bloque es el segundo DIV para el segundo libro-->
-        <div class="col-md-4 col-sm-6 col-lg-3 well">
-            <div class="col-md-12">
-                <div class="img-thumbnail" id="image">
-                    <img class="img-responsive" style="height: 20vmax;" src="http://ecx.images-amazon.com/images/I/51MfO0a70ZL._AA160_.jpg" alt="">
-                </div>
-            </div>
-            <div class="caption" >
-                <p><strong>Name:</strong> All the Light We Cannot See</p>
-                <p><strong>Description:</strong> Marie-Laure lives with her father in Paris near the Museum of Natural History, where he works as the master of its thousands of locks.</p>
-                <p><strong>ISBN:</strong> 1476746583</p>
-                <p><strong>Publish Date:</strong> May, 2014</p>
-                <p>
-                    <button id="edit-book-2" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edit</button>
-                    <button id="delete-book-2" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span> Delete</button>
-                </p>
-            </div>
-        </div>
-        <!-- El siguiente bloque es el tercer DIV para el tercer libro-->
-        <div class="col-md-4 col-sm-6 col-lg-3 well">
-            <div class="col-md-12">
-                <div class="img-thumbnail" id="image">
-                    <img class="img-responsive" style="height: 20vmax;" src="http://ecx.images-amazon.com/images/I/51OiLCU-zyL._AA160_.jpg" alt="">
-                </div>
-            </div>
-            <div class="caption" >
-                <p><strong>Name:</strong> What Alice Forgot</p>
-                <p><strong>Description:</strong> Alice Love is twenty-nine, crazy about her husband, and pregnant with her first child.</p>
-                <p><strong>ISBN:</strong> 9780425247440</p>
-                <p><strong>Publish Date:</strong> April, 2012</p>
-                <p>
-                    <button id="edit-book-3" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span> Edit</button>
-                    <button id="delete-book-3" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span> Delete</button>
-                </p>
-            </div>
-        </div>
-    </div>
-    <!-- Bloque que se activa cuando se presiona el boton Create, el cual permite crear un nuevo Book-->
-    <div ng-if="!list" class="well">
-        <form novalidate name="form" id="book-form" role="form">
-            <fieldset>
-                <input id="id" class="form-control" type="hidden"/>
-                <div class="form-group col-md-12">
-                    <label for="name" class="col-md-2 control-label">Name</label>
-                    <div class="col-md-10">
-                        <input id="name" name="name" class="form-control" type="text" required />
-                    </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="description" class="col-md-2 control-label">Description</label>
-                    <div class="col-md-10">
-                        <input id="description" name="description" class="form-control" type="text" required />
-                    </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="isbn" class="col-md-2 control-label">ISBN</label>
-                    <div class="col-md-10">
-                        <input id="isbn" name="isbn" class="form-control" type="text" required />
-                    </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="image" class="col-md-2 control-label">Image</label>
-                    <div class="col-md-10">
-                        <input id="image" name="image" class="form-control" type="text" required />
-                    </div>
-                </div>
-            </fieldset>
-        </form>
     </div>
 </div>
