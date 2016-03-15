@@ -9,6 +9,8 @@ import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,12 +20,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("authors")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthorResource {
+    
+    private static final Logger logger = Logger.getLogger(AuthorResource.class.getName());
 
     @Inject
     private IAuthorLogic authorLogic;
@@ -50,8 +56,13 @@ public class AuthorResource {
      */
     @GET
     @Path("{id: \\d+}")
-    public AuthorDTO getAuthor(@PathParam("id") Long id) throws BusinessLogicException {
-        return AuthorConverter.fullEntity2DTO(authorLogic.getAuthor(id));
+    public AuthorDTO getAuthor(@PathParam("id") Long id) {
+        try {
+            return AuthorConverter.fullEntity2DTO(authorLogic.getAuthor(id));
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, "El autor no existe", ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
+        }
     }
 
     /**

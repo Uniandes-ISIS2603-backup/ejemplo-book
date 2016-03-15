@@ -20,7 +20,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("books")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -55,9 +57,14 @@ public class BookResource {
      */
     @GET
     @Path("{id: \\d+}")
-    public BookDTO getBook(@PathParam("id") Long id) throws BusinessLogicException {
+    public BookDTO getBook(@PathParam("id") Long id) {
         logger.log(Level.INFO, "Se ejecuta método getBook con id={0}", id);
-        return BookConverter.fullEntity2DTO(bookLogic.getBook(id));
+        try {
+            return BookConverter.fullEntity2DTO(bookLogic.getBook(id));
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, "El libro no existe", ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
+        }
     }
 
     /**

@@ -9,6 +9,8 @@ import co.edu.uniandes.csw.bookstore.entities.EditorialEntity;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,12 +20,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("editorials")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EditorialResource {
+    
+    private static final Logger logger = Logger.getLogger(EditorialResource.class.getName());
 
     @Inject
     private IEditorialLogic editorialLogic;
@@ -50,8 +56,13 @@ public class EditorialResource {
      */
     @GET
     @Path("{id: \\d+}")
-    public EditorialDTO getEditorial(@PathParam("id") Long id) throws BusinessLogicException {
-        return EditorialConverter.fullEntity2DTO(editorialLogic.getEditorial(id));
+    public EditorialDTO getEditorial(@PathParam("id") Long id) {
+        try {
+            return EditorialConverter.fullEntity2DTO(editorialLogic.getEditorial(id));
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, "La editorial no existe", ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
+        }
     }
 
     /**
