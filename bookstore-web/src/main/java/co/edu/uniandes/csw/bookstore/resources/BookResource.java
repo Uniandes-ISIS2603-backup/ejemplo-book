@@ -40,9 +40,10 @@ public class BookResource {
      * @generated
      */
     @GET
-    public List<BookDTO> getBook() {
+    public List<BookDTO> getBooks() {
         logger.info("Se ejecuta método getBooks");
-        return BookConverter.listEntity2DTO(bookLogic.getBooks());
+        List<BookEntity> books = bookLogic.getBooks();
+        return BookConverter.listEntity2DTO(books);
     }
 
     /**
