@@ -5,6 +5,7 @@ import co.edu.uniandes.csw.bookstore.converters.AuthorConverter;
 import co.edu.uniandes.csw.bookstore.converters.BookConverter;
 import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
+import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
@@ -126,7 +127,8 @@ public class BookResource {
     @GET
     @Path("{bookId: \\d+}/authors")
     public List<AuthorDTO> listAuthors(@PathParam("bookId") Long bookId) {
-        return AuthorConverter.listEntity2DTO(bookLogic.getAuthors(bookId));
+        List<AuthorEntity> authors = bookLogic.getAuthors(bookId);
+        return AuthorConverter.listEntity2DTO(authors);
     }
 
     /**
@@ -139,7 +141,8 @@ public class BookResource {
     @GET
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public AuthorDTO getAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
-        return AuthorConverter.fullEntity2DTO(bookLogic.getAuthor(bookId, authorId));
+        AuthorEntity author = bookLogic.getAuthor(bookId, authorId);
+        return AuthorConverter.fullEntity2DTO(author);
     }
 
     /**
@@ -153,7 +156,8 @@ public class BookResource {
     @POST
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public AuthorDTO addAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
-        return AuthorConverter.fullEntity2DTO(bookLogic.addAuthor(bookId, authorId));
+        AuthorEntity author = bookLogic.addAuthor(bookId, authorId);
+        return AuthorConverter.fullEntity2DTO(author);
     }
 
     /**
@@ -168,7 +172,8 @@ public class BookResource {
     @PUT
     @Path("{bookId: \\d+}/authors")
     public List<AuthorDTO> replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
-        return AuthorConverter.listEntity2DTO(bookLogic.replaceAuthors(AuthorConverter.listDTO2Entity(authors), bookId));
+        List<AuthorEntity> newAuthors = bookLogic.replaceAuthors(AuthorConverter.listDTO2Entity(authors), bookId);
+        return AuthorConverter.listEntity2DTO(newAuthors);
     }
 
     /**
