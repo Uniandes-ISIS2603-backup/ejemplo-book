@@ -104,7 +104,6 @@ public class BookLogic implements IBookLogic {
     @Override
     public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId) {
         BookEntity bookEntity = persistence.find(bookId);
-        List<AuthorEntity> authorList = authorPersistence.findAll();
         bookEntity.setAuthors(authors);
         return bookEntity.getAuthors();
     }
