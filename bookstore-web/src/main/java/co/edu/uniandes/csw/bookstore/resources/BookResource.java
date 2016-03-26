@@ -62,7 +62,8 @@ public class BookResource {
     public BookDTO getBook(@PathParam("id") Long id) {
         logger.log(Level.INFO, "Se ejecuta método getBook con id={0}", id);
         try {
-            return BookConverter.fullEntity2DTO(bookLogic.getBook(id));
+            BookEntity book = bookLogic.getBook(id);
+            return BookConverter.fullEntity2DTO(book);
         } catch (BusinessLogicException ex) {
             logger.log(Level.SEVERE, "El libro no existe", ex);
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
