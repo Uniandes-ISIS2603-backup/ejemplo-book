@@ -100,7 +100,8 @@ public class BookResource {
         logger.log(Level.INFO, "Se ejecuta método updateBook con id={0}", id);
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
         entity.setId(id);
-        return BookConverter.fullEntity2DTO(bookLogic.updateBook(entity));
+        BookEntity savedBook = bookLogic.updateBook(entity);
+        return BookConverter.fullEntity2DTO(savedBook);
     }
 
     /**
