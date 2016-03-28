@@ -71,7 +71,7 @@ public class AuthorLogic implements IAuthorLogic {
     }
 
     @Override
-    public BookEntity addBook(Long bookId, Long authorId) {
+    public BookEntity addBook(Long bookId, Long authorId) throws BusinessLogicException {
         bookLogic.addAuthor(authorId, bookId);
         return bookPersistence.find(bookId);
     }
@@ -82,7 +82,7 @@ public class AuthorLogic implements IAuthorLogic {
     }
 
     @Override
-    public List<BookEntity> replaceBooks(List<BookEntity> books, Long authorId) {
+    public List<BookEntity> replaceBooks(List<BookEntity> books, Long authorId) throws BusinessLogicException {
         List<BookEntity> bookList = bookPersistence.findAll();
         AuthorEntity author = persistence.find(authorId);
         for (BookEntity book : bookList) {

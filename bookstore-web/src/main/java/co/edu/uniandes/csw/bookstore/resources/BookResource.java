@@ -96,7 +96,7 @@ public class BookResource {
      * Actualiza la información de una instancia de Book.
      *
      * @param id Identificador de la instancia de Book a modificar
-     * @param dto Instancia de BookDTO con los nuevos datos.
+     * @param dto Representación Basic de book con los nuevos datos
      * @return Instancia de BookDTO con los datos actualizados.
      * @generated
      */
@@ -140,8 +140,7 @@ public class BookResource {
      * instancia de Book
      *
      * @param bookId Identificador de la instancia de Book
-     * @return Colección de instancias de AuthorDTO asociadas a la instancia de
-     * Book
+     * @return Colección de objetos de AuthorDTO en representación basic
      * @generated
      */
     @GET
@@ -176,8 +175,13 @@ public class BookResource {
     @POST
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public AuthorDTO addAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
+        try {
         AuthorEntity author = bookLogic.addAuthor(bookId, authorId);
         return AuthorConverter.fullEntity2DTO(author);
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
     }
 
     /**

@@ -21,7 +21,7 @@ public interface IBookLogic {
 
     public AuthorEntity getAuthor(Long bookId, Long authorId);
 
-    public AuthorEntity addAuthor(Long authorId, Long bookId);
+    public AuthorEntity addAuthor(Long authorId, Long bookId) throws BusinessLogicException;
 
     public void removeAuthor(Long authorId, Long bookId);
 

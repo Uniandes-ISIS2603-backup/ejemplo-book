@@ -6,6 +6,7 @@ import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.persistence.AuthorPersistence;
 import co.edu.uniandes.csw.bookstore.persistence.BookPersistence;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,9 +91,12 @@ public class BookLogic implements IBookLogic {
     }
 
     @Override
-    public AuthorEntity addAuthor(Long authorId, Long bookId) {
+    public AuthorEntity addAuthor(Long authorId, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
         AuthorEntity authorEntity = authorPersistence.find(authorId);
+        if (bornBeforePublishDate(authorEntity.getBirthDate(), bookEntity.getPublishDate())) {
+            throw new BusinessLogicException("La fecha de publicación no puede ser anterior a la fecha de nacimiento del autor");
+        }
         bookEntity.getAuthors().add(authorEntity);
         return authorEntity;
     }
@@ -117,5 +121,14 @@ public class BookLogic implements IBookLogic {
             return false;
         }
         return true;
+    }
+    
+    private boolean bornBeforePublishDate(Date birthDate, Date publishDate){
+        if (publishDate != null && birthDate != null) {
+            if (birthDate.before(publishDate)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

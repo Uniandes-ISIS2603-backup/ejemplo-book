@@ -153,7 +153,12 @@ public class AuthorResource {
     @POST
     @Path("{authorId: \\d+}/books/{bookId: \\d+}")
     public BookDTO addBooks(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
-        return BookConverter.fullEntity2DTO(authorLogic.addBook(authorId, bookId));
+        try {
+            return BookConverter.fullEntity2DTO(authorLogic.addBook(authorId, bookId));
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
     }
 
     /**
@@ -168,7 +173,12 @@ public class AuthorResource {
     @PUT
     @Path("{authorId: \\d+}/books")
     public List<BookDTO> replaceBooks(@PathParam("authorId") Long authorId, List<BookDTO> books) {
-        return BookConverter.listEntity2DTO(authorLogic.replaceBooks(BookConverter.listDTO2Entity(books), authorId));
+        try {
+            return BookConverter.listEntity2DTO(authorLogic.replaceBooks(BookConverter.listDTO2Entity(books), authorId));
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
     }
 
     /**
