@@ -110,9 +110,14 @@ public class BookLogic implements IBookLogic {
     }
 
     @Override
-    public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId) {
+    public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
         bookEntity.setAuthors(authors);
+        for (AuthorEntity author : authors) {
+            if (bornBeforePublishDate(author.getBirthDate(), bookEntity.getPublishDate())) {
+                throw new BusinessLogicException("La fecha de publicación no puede ser anterior a la fecha de nacimiento del autor");
+            }
+        }
         return bookEntity.getAuthors();
     }
 

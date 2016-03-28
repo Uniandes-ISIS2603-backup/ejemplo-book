@@ -25,6 +25,6 @@ public interface IBookLogic {
 
     public void removeAuthor(Long authorId, Long bookId);
 
-    public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId);
+    public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId) throws BusinessLogicException;
 
 }

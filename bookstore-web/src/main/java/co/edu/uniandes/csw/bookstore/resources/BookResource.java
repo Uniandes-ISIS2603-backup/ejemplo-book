@@ -196,9 +196,14 @@ public class BookResource {
     @PUT
     @Path("{bookId: \\d+}/authors")
     public List<AuthorDTO> replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
-        List<AuthorEntity> authorList = AuthorConverter.listDTO2Entity(authors);
-        List<AuthorEntity> newAuthors = bookLogic.replaceAuthors(authorList, bookId);
-        return AuthorConverter.listEntity2DTO(newAuthors);
+        try {
+            List<AuthorEntity> authorList = AuthorConverter.listDTO2Entity(authors);
+            List<AuthorEntity> newAuthors = bookLogic.replaceAuthors(authorList, bookId);
+            return AuthorConverter.listEntity2DTO(newAuthors);
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
     }
 
     /**
