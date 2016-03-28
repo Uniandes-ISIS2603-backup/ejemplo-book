@@ -1,5 +1,8 @@
 package co.edu.uniandes.csw.bookstore.exceptions;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException(rollback = true)
 public class BusinessLogicException extends Exception {
 
     public BusinessLogicException() {

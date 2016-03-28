@@ -100,6 +100,13 @@ public class BookResource {
         logger.log(Level.INFO, "Se ejecuta método updateBook con id={0}", id);
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
         entity.setId(id);
+        try {
+            BookEntity oldEntity = bookLogic.getBook(id);
+            entity.setAuthors(oldEntity.getAuthors());
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, "El libro no existe", ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
+        }
         BookEntity savedBook = bookLogic.updateBook(entity);
         return BookConverter.fullEntity2DTO(savedBook);
     }

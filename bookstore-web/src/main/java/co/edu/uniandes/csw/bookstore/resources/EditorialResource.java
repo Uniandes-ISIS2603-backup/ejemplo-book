@@ -92,6 +92,13 @@ public class EditorialResource {
     public EditorialDTO updateEditorial(@PathParam("id") Long id, EditorialDTO dto) {
         EditorialEntity entity = EditorialConverter.fullDTO2Entity(dto);
         entity.setId(id);
+        try {
+            EditorialEntity oldEntity = editorialLogic.getEditorial(id);
+            entity.setBooks(oldEntity.getBooks());
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, "La editorial no existe", ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
+        }
         return EditorialConverter.fullEntity2DTO(editorialLogic.updateEditorial(entity));
     }
 

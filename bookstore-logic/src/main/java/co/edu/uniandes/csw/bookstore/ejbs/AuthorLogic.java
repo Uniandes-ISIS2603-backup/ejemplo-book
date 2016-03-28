@@ -58,8 +58,6 @@ public class AuthorLogic implements IAuthorLogic {
     @Override
     public AuthorEntity updateAuthor(AuthorEntity entity) {
         logger.log(Level.INFO, "Inicia proceso de actualizar autor con id={0}", entity.getId());
-        AuthorEntity oldEntity = persistence.find(entity.getId());
-        entity.setBooks(oldEntity.getBooks());
         AuthorEntity newEntity = persistence.update(entity);
         logger.log(Level.INFO, "Termina proceso de actualizar autor con id={0}", entity.getId());
         return newEntity;

@@ -92,6 +92,13 @@ public class AuthorResource {
     public AuthorDTO updateAuthor(@PathParam("id") Long id, AuthorDTO dto) {
         AuthorEntity entity = AuthorConverter.fullDTO2Entity(dto);
         entity.setId(id);
+        try {
+            AuthorEntity oldEntity = authorLogic.getAuthor(id);
+            entity.setBooks(oldEntity.getBooks());
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, "El autor no existe", ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
+        }
         return AuthorConverter.fullEntity2DTO(authorLogic.updateAuthor(entity));
     }
 
