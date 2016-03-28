@@ -44,16 +44,22 @@ public class BookLogic implements IBookLogic {
     }
 
     @Override
-    public BookEntity createBook(BookEntity entity) {
+    public BookEntity createBook(BookEntity entity) throws BusinessLogicException {
         logger.info("Inicia proceso de creación de libro");
+        if (!validateISBN(entity.getIsbn())) {
+            throw new BusinessLogicException("El ISBN es inválido");
+        }
         persistence.create(entity);
         logger.info("Termina proceso de creación de libro");
         return entity;
     }
 
     @Override
-    public BookEntity updateBook(BookEntity entity) {
+    public BookEntity updateBook(BookEntity entity) throws BusinessLogicException {
         logger.log(Level.INFO, "Inicia proceso de actualizar libro con id={0}", entity.getId());
+        if (!validateISBN(entity.getIsbn())) {
+            throw new BusinessLogicException("El ISBN es inválido");
+        }
         BookEntity newEntity = persistence.update(entity);
         logger.log(Level.INFO, "Termina proceso de actualizar libro con id={0}", entity.getId());
         return newEntity;
@@ -104,5 +110,12 @@ public class BookLogic implements IBookLogic {
         BookEntity bookEntity = persistence.find(bookId);
         bookEntity.setAuthors(authors);
         return bookEntity.getAuthors();
+    }
+
+    private boolean validateISBN(String isbn) {
+        if (isbn == null || isbn.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

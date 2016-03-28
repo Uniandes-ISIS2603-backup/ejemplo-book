@@ -11,9 +11,9 @@ public interface IBookLogic {
 
     public BookEntity getBook(Long id) throws BusinessLogicException;
 
-    public BookEntity createBook(BookEntity entity);
+    public BookEntity createBook(BookEntity entity) throws BusinessLogicException;
 
-    public BookEntity updateBook(BookEntity entity);
+    public BookEntity updateBook(BookEntity entity) throws BusinessLogicException;
 
     public void deleteBook(Long id);
 

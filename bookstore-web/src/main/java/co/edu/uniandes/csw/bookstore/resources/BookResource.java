@@ -65,7 +65,7 @@ public class BookResource {
             BookEntity book = bookLogic.getBook(id);
             return BookConverter.fullEntity2DTO(book);
         } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, "El libro no existe", ex);
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
         }
     }
@@ -82,7 +82,13 @@ public class BookResource {
     public BookDTO createBook(BookDTO dto) {
         logger.info("Se ejecuta método createBook");
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
-        BookEntity newEntity = bookLogic.createBook(entity);
+        BookEntity newEntity;
+        try {
+            newEntity = bookLogic.createBook(entity);
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
         return BookConverter.fullEntity2DTO(newEntity);
     }
 
@@ -104,11 +110,16 @@ public class BookResource {
             BookEntity oldEntity = bookLogic.getBook(id);
             entity.setAuthors(oldEntity.getAuthors());
         } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, "El libro no existe", ex);
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
         }
+        try {
         BookEntity savedBook = bookLogic.updateBook(entity);
         return BookConverter.fullEntity2DTO(savedBook);
+        } catch (BusinessLogicException ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
+        }
     }
 
     /**
