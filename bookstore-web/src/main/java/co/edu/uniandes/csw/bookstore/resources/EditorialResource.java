@@ -35,10 +35,9 @@ public class EditorialResource {
     private IEditorialLogic editorialLogic;
 
     /**
-     * Obtiene la lista de los registros de Book.
+     * Obtiene la lista de los objetos de Book.
      *
-     * @return Colección de objetos de EditorialDTO cada uno con sus respectivos
-     * Review
+     * @return Colección de objetos de EditorialDTO en representación basic
      * @generated
      */
     @GET
@@ -47,11 +46,10 @@ public class EditorialResource {
     }
 
     /**
-     * Obtiene los datos de una instancia de Book a partir de su ID.
+     * Obtiene los datos de una objeto de Book a partir de su ID.
      *
-     * @param id Identificador de la instancia a consultar
-     * @return Instancia de EditorialDTO con los datos del Book consultado y sus
-     * Review
+     * @param id Identificador de la objeto a consultar
+     * @return Objeto de EditorialDTO en representacion full
      * @generated
      */
     @GET
@@ -68,8 +66,8 @@ public class EditorialResource {
     /**
      * Se encarga de crear un book en la base de datos.
      *
-     * @param dto Objeto de EditorialDTO con los datos nuevos
-     * @return Objeto de EditorialDTO con los datos nuevos y su ID.
+     * @param dto Objeto de EditorialDTO en representación full
+     * @return Objeto de EditorialDTO en representación full
      * @generated
      */
     @POST
@@ -80,11 +78,11 @@ public class EditorialResource {
     }
 
     /**
-     * Actualiza la información de una instancia de Book.
+     * Actualiza la información de una objeto de Book.
      *
-     * @param id Identificador de la instancia de Book a modificar
-     * @param dto Instancia de EditorialDTO con los nuevos datos.
-     * @return Instancia de EditorialDTO con los datos actualizados.
+     * @param id Identificador de la objeto de Book a modificar
+     * @param dto Objeto de EditorialDTO en representación full.
+     * @return Objeto de EditorialDTO en representación full.
      * @generated
      */
     @PUT
@@ -103,9 +101,9 @@ public class EditorialResource {
     }
 
     /**
-     * Elimina una instancia de Book de la base de datos.
+     * Elimina una objeto de Book de la base de datos.
      *
-     * @param id Identificador de la instancia a eliminar.
+     * @param id Identificador de la objeto a eliminar.
      * @generated
      */
     @DELETE
@@ -115,12 +113,11 @@ public class EditorialResource {
     }
 
     /**
-     * Obtiene una colección de instancias de BookDTO asociadas a una instancia
+     * Obtiene una colección de objetos de BookDTO asociadas a una objeto
      * de Editorial
      *
-     * @param editorialId Identificador de la instancia de Editorial
-     * @return Colección de instancias de BookDTO asociadas a la instancia de
-     * Editorial
+     * @param editorialId Identificador de la objeto de Editorial
+     * @return Colección de objetos de BookDTO en representación basic
      * @generated
      */
     @GET
@@ -130,10 +127,11 @@ public class EditorialResource {
     }
 
     /**
-     * Obtiene una instancia de Book asociada a una instancia de Editorial
+     * Obtiene una objeto de Book asociada a una objeto de Editorial
      *
-     * @param editorialId Identificador de la instancia de Editorial
-     * @param bookId Identificador de la instancia de Book
+     * @param editorialId Identificador del objeto de Editorial
+     * @param bookId Identificador del objeto de Book
+     * @return Objeto de BookDTO en representación full
      * @generated
      */
     @GET
@@ -145,9 +143,9 @@ public class EditorialResource {
     /**
      * Asocia un Book existente a un Editorial
      *
-     * @param editorialId Identificador de la instancia de Editorial
-     * @param bookId Identificador de la instancia de Book
-     * @return Instancia de BookDTO que fue asociada a Editorial
+     * @param editorialId Identificador del objeto de Editorial
+     * @param bookId Identificador del objeto de Book
+     * @return Objeto de BookDTO en representación full
      * @generated
      */
     @POST
@@ -157,12 +155,12 @@ public class EditorialResource {
     }
 
     /**
-     * Remplaza las instancias de Book asociadas a una instancia de Editorial
+     * Remplaza los objetos de Book asociadas a una objeto de Editorial
      *
-     * @param editorialId Identificador de la instancia de Editorial
-     * @param books Colección de instancias de BookDTO a asociar a instancia de
-     * Editorial
-     * @return Nueva colección de BookDTO asociada a la instancia de Editorial
+     * @param editorialId Identificador del objeto de Editorial
+     * @param books Colección de objetos de BookDTO a asociar a objeto de
+     * Editorial en representación minimum
+     * @return Nueva colección de BookDTO en representación Basic
      * @generated
      */
     @PUT
@@ -174,8 +172,8 @@ public class EditorialResource {
     /**
      * Desasocia un Book existente de un Editorial existente
      *
-     * @param editorialId Identificador de la instancia de Editorial
-     * @param bookId Identificador de la instancia de Book
+     * @param editorialId Identificador del objeto de Editorial
+     * @param bookId Identificador del objeto de Book
      * @generated
      */
     @DELETE
