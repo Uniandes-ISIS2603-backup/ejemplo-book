@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthorResource {
-    
+
     private static final Logger logger = Logger.getLogger(AuthorResource.class.getName());
 
     @Inject
@@ -37,8 +37,7 @@ public class AuthorResource {
     /**
      * Obtiene la lista de los registros de Book.
      *
-     * @return Colección de objetos de AuthorDTO cada uno con sus respectivos
-     * Review
+     * @return Colección de objetos de AuthorDTO (representación full)
      * @generated
      */
     @GET
@@ -47,11 +46,11 @@ public class AuthorResource {
     }
 
     /**
-     * Obtiene los datos de una instancia de Book a partir de su ID.
+     * Obtiene los datos de un objeto de Book a partir de su ID.
      *
-     * @param id Identificador de la instancia a consultar
+     * @param id Identificador del objeto a consultar
      * @return Instancia de AuthorDTO con los datos del Book consultado y sus
-     * Review
+     * Review (representación full)
      * @generated
      */
     @GET
@@ -68,8 +67,8 @@ public class AuthorResource {
     /**
      * Se encarga de crear un book en la base de datos.
      *
-     * @param dto Objeto de AuthorDTO con los datos nuevos
-     * @return Objeto de AuthorDTO con los datos nuevos y su ID.
+     * @param dto Objeto de AuthorDTO con los datos nuevos (representación full)
+     * @return Objeto de AuthorDTO con los datos nuevos y su ID (representación full)
      * @generated
      */
     @POST
@@ -80,11 +79,11 @@ public class AuthorResource {
     }
 
     /**
-     * Actualiza la información de una instancia de Book.
+     * Actualiza la información de un objeto de Book.
      *
-     * @param id Identificador de la instancia de Book a modificar
-     * @param dto Instancia de AuthorDTO con los nuevos datos.
-     * @return Instancia de AuthorDTO con los datos actualizados.
+     * @param id Identificador del objeto de Book a modificar
+     * @param dto Instancia de AuthorDTO (representación full) con los nuevos datos.
+     * @return Instancia de AuthorDTO (representación full) con los datos actualizados.
      * @generated
      */
     @PUT
@@ -103,9 +102,9 @@ public class AuthorResource {
     }
 
     /**
-     * Elimina una instancia de Book de la base de datos.
+     * Elimina un objeto de Book de la base de datos.
      *
-     * @param id Identificador de la instancia a eliminar.
+     * @param id Identificador del objeto a eliminar.
      * @generated
      */
     @DELETE
@@ -115,12 +114,12 @@ public class AuthorResource {
     }
 
     /**
-     * Obtiene una colección de instancias de BookDTO asociadas a una instancia
-     * de Author
-     *
-     * @param authorId Identificador de la instancia de Author
-     * @return Colección de instancias de BookDTO asociadas a la instancia de
+     * Obtiene una colección de objetos de BookDTO asociadas a un objeto de
      * Author
+     *
+     * @param authorId Identificador del objeto de Author
+     * @return Colección de objetos de BookDTO (representación basic) asociadas
+     * al objeto de Author
      * @generated
      */
     @GET
@@ -130,10 +129,11 @@ public class AuthorResource {
     }
 
     /**
-     * Obtiene una instancia de Book asociada a una instancia de Author
+     * Obtiene un objeto de Book asociada a un objeto de Author
      *
-     * @param authorId Identificador de la instancia de Author
-     * @param bookId Identificador de la instancia de Book
+     * @param authorId Identificador del objeto de Author
+     * @param bookId Identificador del objeto de Book
+     * @return Objeto de BookDTO (representación full)
      * @generated
      */
     @GET
@@ -145,9 +145,10 @@ public class AuthorResource {
     /**
      * Asocia un Book existente a un Author
      *
-     * @param authorId Identificador de la instancia de Author
-     * @param bookId Identificador de la instancia de Book
-     * @return Instancia de BookDTO que fue asociada a Author
+     * @param authorId Identificador del objeto de Author
+     * @param bookId Identificador del objeto de Book
+     * @return Instancia de BookDTO (representación full) que fue asociada a
+     * Author
      * @generated
      */
     @POST
@@ -162,12 +163,13 @@ public class AuthorResource {
     }
 
     /**
-     * Remplaza las instancias de Book asociadas a una instancia de Author
+     * Remplaza los objetos de Book asociadas a un objeto de Author
      *
-     * @param authorId Identificador de la instancia de Author
-     * @param books Colección de instancias de BookDTO a asociar a instancia de
-     * Author
-     * @return Nueva colección de BookDTO asociada a la instancia de Author
+     * @param authorId Identificador del objeto de Author
+     * @param books Colección de objetos de BookDTO (representación minimum) a
+     * asociar a objeto de Author
+     * @return Nueva colección de BookDTO (representación basic) asociada al
+     * objeto de Author
      * @generated
      */
     @PUT
@@ -184,8 +186,8 @@ public class AuthorResource {
     /**
      * Desasocia un Book existente de un Author existente
      *
-     * @param authorId Identificador de la instancia de Author
-     * @param bookId Identificador de la instancia de Book
+     * @param authorId Identificador del objeto de Author
+     * @param bookId Identificador del objeto de Book
      * @generated
      */
     @DELETE

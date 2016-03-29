@@ -50,9 +50,9 @@ public class BookResource {
     }
 
     /**
-     * Obtiene los datos de una instancia de Book a partir de su ID.
+     * Obtiene los datos de un objeto de Book a partir de su ID.
      *
-     * @param id Identificador de la instancia a consultar
+     * @param id Identificador del objeto a consultar
      * @return Instancia de BookDTO con los datos del Book consultado y sus
      * Review
      * @generated
@@ -93,9 +93,9 @@ public class BookResource {
     }
 
     /**
-     * Actualiza la información de una instancia de Book.
+     * Actualiza la información de un objeto de Book.
      *
-     * @param id Identificador de la instancia de Book a modificar
+     * @param id Identificador del objeto de Book a modificar
      * @param dto Representación Basic de book con los nuevos datos
      * @return Instancia de BookDTO con los datos actualizados.
      * @generated
@@ -114,8 +114,8 @@ public class BookResource {
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
         }
         try {
-        BookEntity savedBook = bookLogic.updateBook(entity);
-        return BookConverter.fullEntity2DTO(savedBook);
+            BookEntity savedBook = bookLogic.updateBook(entity);
+            return BookConverter.fullEntity2DTO(savedBook);
         } catch (BusinessLogicException ex) {
             logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
@@ -123,9 +123,9 @@ public class BookResource {
     }
 
     /**
-     * Elimina una instancia de Book de la base de datos.
+     * Elimina un objeto de Book de la base de datos.
      *
-     * @param id Identificador de la instancia a eliminar.
+     * @param id Identificador del objeto a eliminar.
      * @generated
      */
     @DELETE
@@ -136,10 +136,10 @@ public class BookResource {
     }
 
     /**
-     * Obtiene una colección de instancias de AuthorDTO asociadas a una
-     * instancia de Book
+     * Obtiene una colección de objetos de AuthorDTO asociados a un objeto de
+     * Book
      *
-     * @param bookId Identificador de la instancia de Book
+     * @param bookId Identificador del objeto de Book
      * @return Colección de objetos de AuthorDTO en representación basic
      * @generated
      */
@@ -151,10 +151,10 @@ public class BookResource {
     }
 
     /**
-     * Obtiene una instancia de Author asociada a una instancia de Book
+     * Obtiene un objeto de Author asociada a un objeto de Book
      *
-     * @param bookId Identificador de la instancia de Book
-     * @param authorId Identificador de la instancia de Author
+     * @param bookId Identificador del objeto de Book
+     * @param authorId Identificador del objeto de Author
      * @generated
      */
     @GET
@@ -167,17 +167,18 @@ public class BookResource {
     /**
      * Asocia un Author existente a un Book
      *
-     * @param bookId Identificador de la instancia de Book
-     * @param authorId Identificador de la instancia de Author
-     * @return Instancia de AuthorDTO que fue asociada a Book
+     * @param bookId Identificador del objeto de Book
+     * @param authorId Identificador del objeto de Author
+     * @return Objeto de AuthorDTO en representación full que fue asociado a
+     * Book
      * @generated
      */
     @POST
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public AuthorDTO addAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
         try {
-        AuthorEntity author = bookLogic.addAuthor(bookId, authorId);
-        return AuthorConverter.fullEntity2DTO(author);
+            AuthorEntity author = bookLogic.addAuthor(bookId, authorId);
+            return AuthorConverter.fullEntity2DTO(author);
         } catch (BusinessLogicException ex) {
             logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.BAD_REQUEST);
@@ -185,12 +186,12 @@ public class BookResource {
     }
 
     /**
-     * Remplaza las instancias de Author asociadas a una instancia de Book
+     * Remplaza los objetos de Author asociados a un objeto de Book
      *
-     * @param bookId Identificador de la instancia de Book
-     * @param authors Colección de instancias de AuthorDTO a asociar a instancia
-     * de Book
-     * @return Nueva colección de AuthorDTO asociada a la instancia de Book
+     * @param bookId Identificador del objeto de Book
+     * @param authors Colección de objetos de AuthorDTO en representación
+     * minimum a asociar a objeto de Book
+     * @return Nueva colección de AuthorDTO en representación Basic
      * @generated
      */
     @PUT
@@ -209,8 +210,8 @@ public class BookResource {
     /**
      * Desasocia un Author existente de un Book existente
      *
-     * @param bookId Identificador de la instancia de Book
-     * @param authorId Identificador de la instancia de Author
+     * @param bookId Identificador del objeto de Book
+     * @param authorId Identificador del objeto de Author
      * @generated
      */
     @DELETE
