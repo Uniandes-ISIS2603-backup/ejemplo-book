@@ -35,7 +35,9 @@
             this.readOnly = false;
             this.editMode = false;
 
-            //Escucha de evento cuando se selecciona un registro maestro
+            /* Escucha de evento cuando se selecciona un registro maestro.
+             * args corresponde a currentRecord del controlador padre
+             */
             function onCreateOrEdit(event, args) {
                 var childName = "reviews";
                 if (args[childName] === undefined) {
