@@ -1,5 +1,6 @@
 package co.edu.uniandes.csw.bookstore.entities;
 
+import co.edu.uniandes.csw.crud.api.podam.strategy.DateStrategy;
 import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,20 +13,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import uk.co.jemos.podam.common.PodamExclude;
+import uk.co.jemos.podam.common.PodamStrategyValue;
 
 @Entity
 public class BookEntity extends BaseEntity implements Serializable {
 
     private String isbn;
     private String image;
+    @PodamStrategyValue(DateStrategy.class)
     @Temporal(TemporalType.DATE)
     private Date publishDate;
     private String description;
 
     @ManyToMany
+    @PodamExclude
     private List<AuthorEntity> authors = new ArrayList<>();
 
     @ManyToOne
+    @PodamExclude
     private EditorialEntity editorial;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 public class EditorialEntity extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "editorial")
+    @PodamExclude
     private List<BookEntity> books = new ArrayList<>();
 
     public List<BookEntity> getBooks() {

@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 public class ReviewEntity extends BaseEntity implements Serializable {
@@ -13,6 +14,7 @@ public class ReviewEntity extends BaseEntity implements Serializable {
     private String description;
 
     @ManyToOne
+    @PodamExclude
     private BookEntity book;
 
     public String getSource() {
