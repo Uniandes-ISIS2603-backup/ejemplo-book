@@ -94,7 +94,7 @@ public class BookLogic implements IBookLogic {
     public AuthorEntity addAuthor(Long authorId, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
         AuthorEntity authorEntity = authorPersistence.find(authorId);
-        if (bornBeforePublishDate(authorEntity.getBirthDate(), bookEntity.getPublishDate())) {
+        if (!bornBeforePublishDate(authorEntity.getBirthDate(), bookEntity.getPublishDate())) {
             throw new BusinessLogicException("La fecha de publicación no puede ser anterior a la fecha de nacimiento del autor");
         }
         bookEntity.getAuthors().add(authorEntity);
@@ -114,7 +114,7 @@ public class BookLogic implements IBookLogic {
         BookEntity bookEntity = persistence.find(bookId);
         bookEntity.setAuthors(authors);
         for (AuthorEntity author : authors) {
-            if (bornBeforePublishDate(author.getBirthDate(), bookEntity.getPublishDate())) {
+            if (!bornBeforePublishDate(author.getBirthDate(), bookEntity.getPublishDate())) {
                 throw new BusinessLogicException("La fecha de publicación no puede ser anterior a la fecha de nacimiento del autor");
             }
         }
@@ -127,7 +127,7 @@ public class BookLogic implements IBookLogic {
         }
         return true;
     }
-    
+
     private boolean bornBeforePublishDate(Date birthDate, Date publishDate){
         if (publishDate != null && birthDate != null) {
             if (birthDate.before(publishDate)) {

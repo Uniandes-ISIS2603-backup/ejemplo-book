@@ -85,6 +85,7 @@ public class BookPersistenceTest {
         Assert.assertEquals(newEntity.getIsbn(), entity.getIsbn());
         Assert.assertEquals(newEntity.getImage(), entity.getImage());
         Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
+        Assert.assertEquals(newEntity.getPublishDate(), entity.getPublishDate());
     }
 
     @Test
@@ -111,6 +112,7 @@ public class BookPersistenceTest {
         Assert.assertEquals(entity.getIsbn(), newEntity.getIsbn());
         Assert.assertEquals(entity.getImage(), newEntity.getImage());
         Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
+        Assert.assertEquals(entity.getPublishDate(), newEntity.getPublishDate());
     }
 
     @Test
@@ -135,5 +137,6 @@ public class BookPersistenceTest {
         Assert.assertEquals(newEntity.getIsbn(), resp.getIsbn());
         Assert.assertEquals(newEntity.getImage(), resp.getImage());
         Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
+        Assert.assertEquals(newEntity.getPublishDate(), resp.getPublishDate());
     }
 }
