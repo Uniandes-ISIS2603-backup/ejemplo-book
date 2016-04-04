@@ -1,9 +1,12 @@
 package co.edu.uniandes.csw.bookstore.dtos;
 
+import co.edu.uniandes.csw.crud.api.podam.strategy.DateStrategy;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import uk.co.jemos.podam.common.PodamExclude;
+import uk.co.jemos.podam.common.PodamStrategyValue;
 
 @XmlRootElement
 public class BookDTO {
@@ -12,9 +15,11 @@ public class BookDTO {
     private String name;
     private String isbn;
     private String image;
+    @PodamStrategyValue(DateStrategy.class)
     private Date publishDate;
     private String description;
 
+    @PodamExclude
     private EditorialDTO editorial;
 
     private List<ReviewDTO> reviews = new ArrayList<>();

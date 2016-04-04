@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookstore.dtos;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @XmlRootElement
 public class ReviewDTO {
@@ -13,6 +14,7 @@ public class ReviewDTO {
 
     private String description;
 
+    @PodamExclude
     private BookDTO book;
 
     public Long getId() {

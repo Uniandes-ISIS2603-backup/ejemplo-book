@@ -1,6 +1,8 @@
 package co.edu.uniandes.csw.bookstore.dtos;
 
+import co.edu.uniandes.csw.crud.api.podam.strategy.DateStrategy;
 import java.util.Date;
+import uk.co.jemos.podam.common.PodamStrategyValue;
 
 public class AuthorDTO {
 
@@ -8,6 +10,7 @@ public class AuthorDTO {
 
     private String name;
 
+    @PodamStrategyValue(DateStrategy.class)
     private Date birthDate;
 
     public Long getId() {
