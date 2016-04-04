@@ -1,19 +1,20 @@
 package co.edu.uniandes.csw.bookstore.resources;
 
 import co.edu.uniandes.csw.bookstore.adapters.DateAdapter;
-import co.edu.uniandes.csw.bookstore.converters.AuthorConverter;
-import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
+import co.edu.uniandes.csw.bookstore.converters.EditorialConverter;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
+import co.edu.uniandes.csw.bookstore.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookstore.mappers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookstore.providers.CreatedFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -33,15 +34,16 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 @RunWith(Arquillian.class)
-public class AuthorResourceIT {
+public class EditorialResourceIT {
 
     private final int OK = Status.OK.getStatusCode();
     private final int CREATED = Status.CREATED.getStatusCode();
     private final int NO_CONTENT = Status.NO_CONTENT.getStatusCode();
 
-    private final String authorPath = "authors";
-    private final static List<AuthorDTO> oraculo = new ArrayList<>();
+    private final String editorialPath = "editorials";
     private final String booksPath = "books";
+
+    private final static List<EditorialDTO> oraculo = new ArrayList<>();
     private final static List<BookDTO> oraculoBooks = new ArrayList<>();
 
     private WebTarget target;
@@ -59,9 +61,9 @@ public class AuthorResourceIT {
                         .resolve("co.edu.uniandes.csw.bookstore:bookstore-logic:1.0-SNAPSHOT")
                         .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
-                .addPackage(AuthorResource.class.getPackage())
-                .addPackage(AuthorDTO.class.getPackage())
-                .addPackage(AuthorConverter.class.getPackage())
+                .addPackage(EditorialResource.class.getPackage())
+                .addPackage(EditorialDTO.class.getPackage())
+                .addPackage(EditorialConverter.class.getPackage())
                 .addPackage(EJBExceptionMapper.class.getPackage())
                 .addPackage(DateAdapter.class.getPackage())
                 .addPackage(CreatedFilter.class.getPackage())
@@ -73,9 +75,8 @@ public class AuthorResourceIT {
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
     }
 
-    @Before
-    public void setUpTest() {
-        target = ClientBuilder.newClient().target(deploymentURL.toString()).path(apiPath);
+    private WebTarget createWebTarget() {
+        return ClientBuilder.newClient().target(deploymentURL.toString()).path(apiPath);
     }
 
     @BeforeClass
@@ -85,10 +86,11 @@ public class AuthorResourceIT {
 
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
-            AuthorDTO author = factory.manufacturePojo(AuthorDTO.class);
-            author.setId(i + 1L);
 
-            oraculo.add(author);
+            EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);
+            editorial.setId(i + 1L);
+
+            oraculo.add(editorial);
 
             BookDTO books = factory.manufacturePojo(BookDTO.class);
             books.setId(i + 1L);
@@ -96,62 +98,69 @@ public class AuthorResourceIT {
         }
     }
 
+    @Before
+    public void setUpTest() {
+        target = createWebTarget();
+    }
+
     @Test
     @InSequence(1)
-    public void createAuthorTest() {
-        AuthorDTO author = oraculo.get(0);
-        Response response = target.path(authorPath).request()
-                .post(Entity.entity(author, MediaType.APPLICATION_JSON));
-        AuthorDTO authorTest = (AuthorDTO) response.readEntity(AuthorDTO.class);
-        Assert.assertEquals(author.getId(), authorTest.getId());
-        Assert.assertEquals(author.getName(), authorTest.getName());
-        Assert.assertEquals(author.getBirthDate(), authorTest.getBirthDate());
+    public void createEditorialTest() throws IOException {
+        EditorialDTO editorial = oraculo.get(0);
+
+        Response response = target.path(editorialPath).request()
+                .post(Entity.entity(editorial, MediaType.APPLICATION_JSON));
+
+        EditorialDTO editorialTest = (EditorialDTO) response.readEntity(EditorialDTO.class);
+        Assert.assertEquals(editorial.getId(), editorialTest.getId());
+        Assert.assertEquals(editorial.getName(), editorialTest.getName());
         Assert.assertEquals(CREATED, response.getStatus());
     }
 
     @Test
     @InSequence(2)
-    public void getAuthorById() {
-        AuthorDTO authorTest = target.path(authorPath)
+    public void getEditorialById() {
+
+        EditorialDTO editorialTest = target.path(editorialPath)
                 .path(oraculo.get(0).getId().toString())
-                .request().get(AuthorDTO.class);
-        Assert.assertEquals(authorTest.getId(), oraculo.get(0).getId());
-        Assert.assertEquals(authorTest.getName(), oraculo.get(0).getName());
-        Assert.assertEquals(authorTest.getBirthDate(), oraculo.get(0).getBirthDate());
+                .request().get(EditorialDTO.class);
+        Assert.assertEquals(editorialTest.getId(), oraculo.get(0).getId());
+        Assert.assertEquals(editorialTest.getName(), oraculo.get(0).getName());
     }
 
     @Test
     @InSequence(3)
-    public void listAuthorTest() {
-        Response response = target.path(authorPath)
-                .request().get();
+    public void listEditorialTest() throws IOException {
 
-        List<AuthorDTO> listAuthorTest = response.readEntity(new GenericType<List<AuthorDTO>>() {
-        });
+        Response response = target.path(editorialPath)
+                .request().get();
+        String listEditorial = response.readEntity(String.class);
+        List<EditorialDTO> listEditorialTest = new ObjectMapper().readValue(listEditorial, List.class);
         Assert.assertEquals(OK, response.getStatus());
-        Assert.assertEquals(1, listAuthorTest.size());
+        Assert.assertEquals(1, listEditorialTest.size());
     }
 
     @Test
     @InSequence(4)
-    public void updateAuthorTest() {
-        AuthorDTO author = oraculo.get(0);
-        AuthorDTO authorChanged = factory.manufacturePojo(AuthorDTO.class);
-        author.setName(authorChanged.getName());
-        author.setBirthDate(authorChanged.getBirthDate());
-        Response response = target.path(authorPath).path(author.getId().toString())
-                .request().put(Entity.entity(author, MediaType.APPLICATION_JSON));
-        AuthorDTO authorTest = (AuthorDTO) response.readEntity(AuthorDTO.class);
+    public void updateEditorialTest() throws IOException {
+
+        EditorialDTO editorial = oraculo.get(0);
+
+        EditorialDTO editorialChanged = factory.manufacturePojo(EditorialDTO.class);
+        editorial.setName(editorialChanged.getName());
+        Response response = target.path(editorialPath).path(editorial.getId().toString())
+                .request().put(Entity.entity(editorial, MediaType.APPLICATION_JSON));
+        EditorialDTO editorialTest = (EditorialDTO) response.readEntity(EditorialDTO.class);
         Assert.assertEquals(OK, response.getStatus());
-        Assert.assertEquals(author.getName(), authorTest.getName());
-        Assert.assertEquals(author.getBirthDate(), authorTest.getBirthDate());
+        Assert.assertEquals(editorial.getName(), editorialTest.getName());
     }
 
     @Test
     @InSequence(9)
-    public void deleteAuthorTest() {
-        AuthorDTO author = oraculo.get(0);
-        Response response = target.path(authorPath).path(author.getId().toString())
+    public void deleteEditorialTest() {
+
+        EditorialDTO editorial = oraculo.get(0);
+        Response response = target.path(editorialPath).path(editorial.getId().toString())
                 .request().delete();
         Assert.assertEquals(NO_CONTENT, response.getStatus());
     }
@@ -159,8 +168,9 @@ public class AuthorResourceIT {
     @Test
     @InSequence(5)
     public void addBooksTest() {
+
         BookDTO books = oraculoBooks.get(0);
-        AuthorDTO author = oraculo.get(0);
+        EditorialDTO editorial = oraculo.get(0);
 
         Response response = target.path("books")
                 .request()
@@ -174,7 +184,7 @@ public class AuthorResourceIT {
         Assert.assertEquals(books.getImage(), booksTest.getImage());
         Assert.assertEquals(CREATED, response.getStatus());
 
-        response = target.path(authorPath).path(author.getId().toString())
+        response = target.path(editorialPath).path(editorial.getId().toString())
                 .path(booksPath).path(books.getId().toString())
                 .request()
                 .post(Entity.entity(books, MediaType.APPLICATION_JSON));
@@ -186,28 +196,30 @@ public class AuthorResourceIT {
 
     @Test
     @InSequence(6)
-    public void listBooksTest() {
-        AuthorDTO author = oraculo.get(0);
+    public void listBooksTest() throws IOException {
 
-        Response response = target.path(authorPath)
-                .path(author.getId().toString())
+        EditorialDTO editorial = oraculo.get(0);
+
+        Response response = target.path(editorialPath)
+                .path(editorial.getId().toString())
                 .path(booksPath)
                 .request().get();
 
-        List<BookDTO> booksListTest = response.readEntity(new GenericType<List<BookDTO>>() {
-        });
+        String booksList = response.readEntity(String.class);
+        List<BookDTO> booksListTest = new ObjectMapper().readValue(booksList, List.class);
         Assert.assertEquals(OK, response.getStatus());
         Assert.assertEquals(1, booksListTest.size());
     }
 
     @Test
     @InSequence(7)
-    public void getBooksTest() {
-        BookDTO books = oraculoBooks.get(0);
-        AuthorDTO author = oraculo.get(0);
+    public void getBooksTest() throws IOException {
 
-        BookDTO booksTest = target.path(authorPath)
-                .path(author.getId().toString()).path(booksPath)
+        BookDTO books = oraculoBooks.get(0);
+        EditorialDTO editorial = oraculo.get(0);
+
+        BookDTO booksTest = target.path(editorialPath)
+                .path(editorial.getId().toString()).path(booksPath)
                 .path(books.getId().toString())
                 .request().get(BookDTO.class);
 
@@ -221,10 +233,11 @@ public class AuthorResourceIT {
     @Test
     @InSequence(8)
     public void removeBooksTest() {
-        BookDTO books = oraculoBooks.get(0);
-        AuthorDTO author = oraculo.get(0);
 
-        Response response = target.path(authorPath).path(author.getId().toString())
+        BookDTO books = oraculoBooks.get(0);
+        EditorialDTO editorial = oraculo.get(0);
+
+        Response response = target.path(editorialPath).path(editorial.getId().toString())
                 .path(booksPath).path(books.getId().toString())
                 .request().delete();
         Assert.assertEquals(NO_CONTENT, response.getStatus());
