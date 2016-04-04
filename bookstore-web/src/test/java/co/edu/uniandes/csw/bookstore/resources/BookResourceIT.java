@@ -7,10 +7,7 @@ import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
 import co.edu.uniandes.csw.bookstore.dtos.ReviewDTO;
 import co.edu.uniandes.csw.bookstore.mappers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookstore.providers.CreatedFilter;
-import co.edu.uniandes.csw.bookstore.resources.BookResource;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +58,7 @@ public class BookResourceIT {
         return ShrinkWrap.create(WebArchive.class)
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(Maven.resolver()
-                        .resolve("co.edu.uniandes.csw.bookstore:book-store-logic:0.1.0")
+                        .resolve("co.edu.uniandes.csw.bookstore:bookstore-logic:1.0-SNAPSHOT")
                         .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookResource.class.getPackage())
@@ -111,7 +108,7 @@ public class BookResourceIT {
 
     @Test
     @InSequence(1)
-    public void createBookTest() throws IOException {
+    public void createBookTest() {
         BookDTO book = oraculo.get(0);
         Response response = target.path(bookPath).request()
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
@@ -142,18 +139,19 @@ public class BookResourceIT {
 
     @Test
     @InSequence(3)
-    public void listBookTest() throws IOException {
+    public void listBookTest() {
         Response response = target.path(bookPath)
                 .request().get();
-        String listBook = response.readEntity(String.class);
-        List<BookDTO> listBookTest = new ObjectMapper().readValue(listBook, List.class);
+
+        List<BookDTO> listBookTest = response.readEntity(new GenericType<List<BookDTO>>() {
+        });
         Assert.assertEquals(OK, response.getStatus());
         Assert.assertEquals(1, listBookTest.size());
     }
 
     @Test
     @InSequence(4)
-    public void updateBookTest() throws IOException {
+    public void updateBookTest() {
         BookDTO book = oraculo.get(0);
         BookDTO bookChanged = factory.manufacturePojo(BookDTO.class);
         book.setName(bookChanged.getName());
@@ -186,7 +184,7 @@ public class BookResourceIT {
         AuthorDTO authors = oraculoAuthors.get(0);
         BookDTO book = oraculo.get(0);
 
-        Response response = target.path(authorsPath).request()
+        Response response = target.path("authors").request()
                 .post(Entity.entity(authors, MediaType.APPLICATION_JSON));
 
         AuthorDTO authorsTest = (AuthorDTO) response.readEntity(AuthorDTO.class);
@@ -206,7 +204,7 @@ public class BookResourceIT {
 
     @Test
     @InSequence(6)
-    public void listAuthorsTest() throws IOException {
+    public void listAuthorsTest() {
         BookDTO book = oraculo.get(0);
 
         Response response = target.path(bookPath)
@@ -214,14 +212,15 @@ public class BookResourceIT {
                 .path(authorsPath)
                 .request().get();
 
-        List<AuthorDTO> authorsListTest = response.readEntity(new GenericType<List<AuthorDTO>>() {});
+        List<AuthorDTO> authorsListTest = response.readEntity(new GenericType<List<AuthorDTO>>() {
+        });
         Assert.assertEquals(OK, response.getStatus());
         Assert.assertEquals(1, authorsListTest.size());
     }
 
     @Test
     @InSequence(7)
-    public void getAuthorsTest() throws IOException {
+    public void getAuthorsTest() {
         AuthorDTO authors = oraculoAuthors.get(0);
         BookDTO book = oraculo.get(0);
 
