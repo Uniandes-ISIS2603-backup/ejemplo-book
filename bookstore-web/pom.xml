@@ -13,6 +13,27 @@
         <artifactId>bookstore</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <properties>
+        <browser>firefox</browser> <!-- PhantomJS will be our default browser if no profile is specified-->
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-drone-bom</artifactId>
+                <version>2.0.0.CR1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.selenium</groupId>
+                <artifactId>selenium-bom</artifactId>
+                <version>2.53.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>co.edu.uniandes.csw.bookstore</groupId>
@@ -36,6 +57,13 @@
             <artifactId>shrinkwrap-resolver-depchain</artifactId>
             <scope>test</scope>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.graphene</groupId>
+            <artifactId>graphene-webdriver</artifactId>
+            <version>2.0.3.Final</version>
+            <type>pom</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
