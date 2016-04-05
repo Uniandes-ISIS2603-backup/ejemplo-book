@@ -6,7 +6,6 @@ import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.persistence.AuthorPersistence;
-import co.edu.uniandes.csw.bookstore.persistence.BookPersistence;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +23,6 @@ public class AuthorLogic implements IAuthorLogic {
     @Inject
     IBookLogic bookLogic;
 
-    @Inject
-    private BookPersistence bookPersistence;
-
     @Override
     public List<AuthorEntity> getAuthors() {
         logger.info("Inicia proceso de consultar todos los autores");
@@ -36,12 +32,12 @@ public class AuthorLogic implements IAuthorLogic {
     }
 
     @Override
-    public AuthorEntity getAuthor(Long id) throws BusinessLogicException {
+    public AuthorEntity getAuthor(Long id) {
         logger.log(Level.INFO, "Inicia proceso de consultar autor con id={0}", id);
         AuthorEntity author = persistence.find(id);
         if (author == null) {
             logger.log(Level.SEVERE, "El autor con el id {0} no existe", id);
-            throw new BusinessLogicException("El autor solicitado no existe");
+            throw new IllegalArgumentException("El autor solicitado no existe");
         }
         logger.log(Level.INFO, "Termina proceso de consultar autor con id={0}", id);
         return author;
@@ -73,7 +69,7 @@ public class AuthorLogic implements IAuthorLogic {
     @Override
     public BookEntity addBook(Long bookId, Long authorId) throws BusinessLogicException {
         bookLogic.addAuthor(authorId, bookId);
-        return bookPersistence.find(bookId);
+        return bookLogic.getBook(bookId);
     }
 
     @Override
@@ -83,8 +79,8 @@ public class AuthorLogic implements IAuthorLogic {
 
     @Override
     public List<BookEntity> replaceBooks(List<BookEntity> books, Long authorId) throws BusinessLogicException {
-        List<BookEntity> bookList = bookPersistence.findAll();
-        AuthorEntity author = persistence.find(authorId);
+        List<BookEntity> bookList = bookLogic.getBooks();
+        AuthorEntity author = getAuthor(authorId);
         for (BookEntity book : bookList) {
             if (books.contains(book)) {
                 if (!book.getAuthors().contains(author)) {
@@ -100,12 +96,12 @@ public class AuthorLogic implements IAuthorLogic {
 
     @Override
     public List<BookEntity> getBooks(Long authorId) {
-        return persistence.find(authorId).getBooks();
+        return getAuthor(authorId).getBooks();
     }
 
     @Override
     public BookEntity getBook(Long authorId, Long bookId) {
-        List<BookEntity> books = persistence.find(authorId).getBooks();
+        List<BookEntity> books = getAuthor(authorId).getBooks();
         BookEntity book = new BookEntity();
         book.setId(bookId);
         int index = books.indexOf(book);

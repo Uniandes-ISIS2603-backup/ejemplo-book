@@ -18,7 +18,7 @@ public interface IEditorialLogic {
 
     public List<EditorialEntity> getEditorials();
 
-    public EditorialEntity getEditorial(Long id) throws BusinessLogicException;
+    public EditorialEntity getEditorial(Long id) ;
 
     public EditorialEntity createEditorial(EditorialEntity entity);
 

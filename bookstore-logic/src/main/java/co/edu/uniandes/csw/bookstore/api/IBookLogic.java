@@ -9,7 +9,7 @@ public interface IBookLogic {
 
     public List<BookEntity> getBooks();
 
-    public BookEntity getBook(Long id) throws BusinessLogicException;
+    public BookEntity getBook(Long id) ;
 
     public BookEntity createBook(BookEntity entity) throws BusinessLogicException;
 
