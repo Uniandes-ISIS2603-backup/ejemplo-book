@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -124,15 +125,11 @@ public class EditorialLogicTest {
 
     @Test
     public void getEditorialTest() {
-        try {
-            EditorialEntity entity = data.get(0);
-            EditorialEntity resultEntity = editorialLogic.getEditorial(entity.getId());
-            Assert.assertNotNull(resultEntity);
-            Assert.assertEquals(entity.getId(), resultEntity.getId());
-            Assert.assertEquals(entity.getName(), resultEntity.getName());
-        } catch (BusinessLogicException ex) {
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        EditorialEntity entity = data.get(0);
+        EditorialEntity resultEntity = editorialLogic.getEditorial(entity.getId());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+        Assert.assertEquals(entity.getName(), resultEntity.getName());
     }
 
     @Test
@@ -189,21 +186,17 @@ public class EditorialLogicTest {
 
     @Test
     public void replaceBooksTest() {
-        try {
-            EditorialEntity entity = data.get(0);
-            List<BookEntity> list = booksData.subList(1, 3);
-            editorialLogic.replaceBooks(list, entity.getId());
+        EditorialEntity entity = data.get(0);
+        List<BookEntity> list = booksData.subList(1, 3);
+        editorialLogic.replaceBooks(list, entity.getId());
 
-            entity = editorialLogic.getEditorial(entity.getId());
-            Assert.assertFalse(entity.getBooks().contains(booksData.get(0)));
-            Assert.assertTrue(entity.getBooks().contains(booksData.get(1)));
-            Assert.assertTrue(entity.getBooks().contains(booksData.get(2)));
-        } catch (BusinessLogicException ex) {
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        entity = editorialLogic.getEditorial(entity.getId());
+        Assert.assertFalse(entity.getBooks().contains(booksData.get(0)));
+        Assert.assertTrue(entity.getBooks().contains(booksData.get(1)));
+        Assert.assertTrue(entity.getBooks().contains(booksData.get(2)));
     }
 
-    @Test
+    @Test(expected = EJBException.class)
     public void removeBooksTest() {
         editorialLogic.removeBook(booksData.get(0).getId(), data.get(0).getId());
         BookEntity response = editorialLogic.getBook(data.get(0).getId(), booksData.get(0).getId());

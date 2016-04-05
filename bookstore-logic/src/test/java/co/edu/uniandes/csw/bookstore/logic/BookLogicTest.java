@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -152,18 +153,14 @@ public class BookLogicTest {
 
     @Test
     public void getBookTest() {
-        try {
-            BookEntity entity = data.get(0);
-            BookEntity resultEntity = bookLogic.getBook(entity.getId());
-            Assert.assertNotNull(resultEntity);
-            Assert.assertEquals(entity.getId(), resultEntity.getId());
-            Assert.assertEquals(entity.getName(), resultEntity.getName());
-            Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
-            Assert.assertEquals(entity.getIsbn(), resultEntity.getIsbn());
-            Assert.assertEquals(entity.getImage(), resultEntity.getImage());
-        } catch (BusinessLogicException ex) {
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        BookEntity entity = data.get(0);
+        BookEntity resultEntity = bookLogic.getBook(entity.getId());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+        Assert.assertEquals(entity.getName(), resultEntity.getName());
+        Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
+        Assert.assertEquals(entity.getIsbn(), resultEntity.getIsbn());
+        Assert.assertEquals(entity.getImage(), resultEntity.getImage());
     }
 
     @Test
@@ -244,11 +241,10 @@ public class BookLogicTest {
         }
     }
 
-    @Test
+    @Test(expected = EJBException.class)
     public void removeAuthorsTest() {
         bookLogic.removeAuthor(authorsData.get(0).getId(), data.get(0).getId());
         AuthorEntity response = bookLogic.getAuthor(data.get(0).getId(), authorsData.get(0).getId());
-        Assert.assertNull(response);
     }
 
     private Date getMaxDate() {

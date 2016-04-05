@@ -126,16 +126,12 @@ public class AuthorLogicTest {
 
     @Test
     public void getAuthorTest() {
-        try {
-            AuthorEntity entity = data.get(0);
-            AuthorEntity resultEntity = authorLogic.getAuthor(entity.getId());
-            Assert.assertNotNull(resultEntity);
-            Assert.assertEquals(entity.getId(), resultEntity.getId());
-            Assert.assertEquals(entity.getName(), resultEntity.getName());
-            Assert.assertEquals(entity.getBirthDate(), resultEntity.getBirthDate());
-        } catch (BusinessLogicException ex) {
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        AuthorEntity entity = data.get(0);
+        AuthorEntity resultEntity = authorLogic.getAuthor(entity.getId());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getId(), resultEntity.getId());
+        Assert.assertEquals(entity.getName(), resultEntity.getName());
+        Assert.assertEquals(entity.getBirthDate(), resultEntity.getBirthDate());
     }
 
     @Test
