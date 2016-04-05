@@ -102,12 +102,11 @@ public class AuthorLogic implements IAuthorLogic {
     @Override
     public BookEntity getBook(Long authorId, Long bookId) {
         List<BookEntity> books = getAuthor(authorId).getBooks();
-        BookEntity book = new BookEntity();
-        book.setId(bookId);
+        BookEntity book = bookLogic.getBook(bookId);
         int index = books.indexOf(book);
         if (index >= 0) {
             return books.get(index);
         }
-        return null;
+        throw new IllegalArgumentException("El libro no está asociado al autor");
     }
 }
