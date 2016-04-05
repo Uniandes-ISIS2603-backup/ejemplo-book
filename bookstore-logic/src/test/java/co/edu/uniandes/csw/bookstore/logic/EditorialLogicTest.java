@@ -99,9 +99,12 @@ public class EditorialLogicTest {
     public void createEditorialTest() {
         EditorialEntity entity = factory.manufacturePojo(EditorialEntity.class);
         EditorialEntity result = editorialLogic.createEditorial(entity);
+
+        EditorialEntity resp = em.find(EditorialEntity.class, entity.getId());
+
         Assert.assertNotNull(result);
-        Assert.assertEquals(result.getId(), entity.getId());
-        Assert.assertEquals(result.getName(), entity.getName());
+        Assert.assertEquals(entity.getId(), resp.getId());
+        Assert.assertEquals(entity.getName(), resp.getName());
     }
 
     @Test

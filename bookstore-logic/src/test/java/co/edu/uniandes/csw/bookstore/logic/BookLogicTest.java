@@ -120,13 +120,16 @@ public class BookLogicTest {
             BookEntity entity = factory.manufacturePojo(BookEntity.class);
             entity.setPublishDate(getMaxDate());
             BookEntity result = bookLogic.createBook(entity);
+
+            BookEntity resp = em.find(BookEntity.class, result.getId());
+
             Assert.assertNotNull(result);
-            Assert.assertEquals(result.getId(), entity.getId());
-            Assert.assertEquals(result.getName(), entity.getName());
-            Assert.assertEquals(result.getDescription(), entity.getDescription());
-            Assert.assertEquals(result.getIsbn(), entity.getIsbn());
-            Assert.assertEquals(result.getImage(), entity.getImage());
-            Assert.assertEquals(result.getPublishDate(), entity.getPublishDate());
+            Assert.assertEquals(entity.getId(), resp.getId());
+            Assert.assertEquals(entity.getName(), resp.getName());
+            Assert.assertEquals(entity.getDescription(), resp.getDescription());
+            Assert.assertEquals(entity.getIsbn(), resp.getIsbn());
+            Assert.assertEquals(entity.getImage(), resp.getImage());
+            Assert.assertEquals(entity.getPublishDate(), resp.getPublishDate());
         } catch (BusinessLogicException ex) {
             Assert.fail(ex.getLocalizedMessage());
         }
