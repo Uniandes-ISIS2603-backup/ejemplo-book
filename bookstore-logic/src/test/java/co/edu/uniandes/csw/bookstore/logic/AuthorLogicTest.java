@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -207,11 +208,10 @@ public class AuthorLogicTest {
         }
     }
 
-    @Test
+    @Test(expected = EJBException.class)
     public void removeBooksTest() {
         authorLogic.removeBook(booksData.get(0).getId(), data.get(0).getId());
-        BookEntity response = authorLogic.getBook(data.get(0).getId(), booksData.get(0).getId());
-        Assert.assertNull(response);
+        authorLogic.getBook(data.get(0).getId(), booksData.get(0).getId());
     }
 
     private Date getMaxDate() {
