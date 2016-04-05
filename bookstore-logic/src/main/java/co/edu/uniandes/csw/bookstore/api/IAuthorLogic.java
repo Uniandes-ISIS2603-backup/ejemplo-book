@@ -9,7 +9,7 @@ public interface IAuthorLogic {
 
     public List<AuthorEntity> getAuthors();
 
-    public AuthorEntity getAuthor(Long id) throws BusinessLogicException;
+    public AuthorEntity getAuthor(Long id) ;
 
     public AuthorEntity createAuthor(AuthorEntity entity);
 

@@ -33,12 +33,12 @@ public class BookLogic implements IBookLogic {
     }
 
     @Override
-    public BookEntity getBook(Long id) throws BusinessLogicException {
+    public BookEntity getBook(Long id) {
         logger.log(Level.INFO, "Inicia proceso de consultar libro con id={0}", id);
         BookEntity book = persistence.find(id);
         if (book == null) {
             logger.log(Level.SEVERE, "El libro con el id {0} no existe", id);
-            throw new BusinessLogicException("El libro solicitado no existe");
+            throw new IllegalArgumentException("El libro solicitado no existe");
         }
         logger.log(Level.INFO, "Termina proceso de consultar libro con id={0}", id);
         return book;
@@ -75,25 +75,30 @@ public class BookLogic implements IBookLogic {
 
     @Override
     public List<AuthorEntity> getAuthors(Long bookId) {
-        return persistence.find(bookId).getAuthors();
+        return getBook(bookId).getAuthors();
     }
 
     @Override
     public AuthorEntity getAuthor(Long bookId, Long authorId) {
-        List<AuthorEntity> authors = persistence.find(bookId).getAuthors();
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setId(authorId);
+        List<AuthorEntity> authors = getBook(bookId).getAuthors();
+        AuthorEntity authorEntity = authorPersistence.find(authorId);
+        if (authorEntity == null) {
+            throw new IllegalArgumentException("El autor no existe");
+        }
         int index = authors.indexOf(authorEntity);
         if (index >= 0) {
             return authors.get(index);
         }
-        return null;
+        throw new IllegalArgumentException("El autor no está asociado al libro");
     }
 
     @Override
     public AuthorEntity addAuthor(Long authorId, Long bookId) throws BusinessLogicException {
-        BookEntity bookEntity = persistence.find(bookId);
+        BookEntity bookEntity = getBook(bookId);
         AuthorEntity authorEntity = authorPersistence.find(authorId);
+        if (authorEntity == null) {
+            throw new IllegalArgumentException("El autor no existe");
+        }
         if (!bornBeforePublishDate(authorEntity.getBirthDate(), bookEntity.getPublishDate())) {
             throw new BusinessLogicException("La fecha de publicación no puede ser anterior a la fecha de nacimiento del autor");
         }
@@ -103,15 +108,17 @@ public class BookLogic implements IBookLogic {
 
     @Override
     public void removeAuthor(Long authorId, Long bookId) {
-        BookEntity bookEntity = persistence.find(bookId);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setId(authorId);
+        BookEntity bookEntity = getBook(bookId);
+        AuthorEntity authorEntity = authorPersistence.find(authorId);
+        if (authorEntity == null) {
+            throw new IllegalArgumentException("El autor no existe");
+        }
         bookEntity.getAuthors().remove(authorEntity);
     }
 
     @Override
     public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId) throws BusinessLogicException {
-        BookEntity bookEntity = persistence.find(bookId);
+        BookEntity bookEntity = getBook(bookId);
         bookEntity.setAuthors(authors);
         for (AuthorEntity author : authors) {
             if (!bornBeforePublishDate(author.getBirthDate(), bookEntity.getPublishDate())) {
@@ -128,7 +135,7 @@ public class BookLogic implements IBookLogic {
         return true;
     }
 
-    private boolean bornBeforePublishDate(Date birthDate, Date publishDate){
+    private boolean bornBeforePublishDate(Date birthDate, Date publishDate) {
         if (publishDate != null && birthDate != null) {
             if (birthDate.before(publishDate)) {
                 return true;
