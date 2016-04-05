@@ -99,10 +99,14 @@ public class AuthorLogicTest {
     public void createAuthorTest() {
         AuthorEntity entity = factory.manufacturePojo(AuthorEntity.class);
         AuthorEntity result = authorLogic.createAuthor(entity);
+
+        AuthorEntity resp = em.find(AuthorEntity.class, result.getId());
+
         Assert.assertNotNull(result);
-        Assert.assertEquals(result.getId(), entity.getId());
-        Assert.assertEquals(result.getName(), entity.getName());
-        Assert.assertEquals(result.getBirthDate(), entity.getBirthDate());
+        Assert.assertNotNull(resp);
+        Assert.assertEquals(entity.getId(), resp.getId());
+        Assert.assertEquals(entity.getName(), resp.getName());
+        Assert.assertEquals(entity.getBirthDate(), resp.getBirthDate());
     }
 
     @Test
