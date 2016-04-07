@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -20,7 +19,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -79,7 +77,7 @@ public class AuthorResourceIT {
 
     @Before
     public void setUpTest() {
-        target = ClientBuilder.newClient().register(LoggingFilter.class).target(deploymentURL.toString()).path(apiPath);
+        target = ClientBuilder.newClient().target(deploymentURL.toString()).path(apiPath);
     }
 
     @BeforeClass
