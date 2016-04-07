@@ -9,7 +9,10 @@ import co.edu.uniandes.csw.bookstore.providers.CreatedFilter;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -17,6 +20,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -75,7 +79,7 @@ public class AuthorResourceIT {
 
     @Before
     public void setUpTest() {
-        target = ClientBuilder.newClient().target(deploymentURL.toString()).path(apiPath);
+        target = ClientBuilder.newClient().register(LoggingFilter.class).target(deploymentURL.toString()).path(apiPath);
     }
 
     @BeforeClass
@@ -86,11 +90,13 @@ public class AuthorResourceIT {
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
             AuthorDTO author = factory.manufacturePojo(AuthorDTO.class);
+
             author.setId(i + 1L);
 
             oraculo.add(author);
 
             BookDTO books = factory.manufacturePojo(BookDTO.class);
+            books.setPublishDate(getMaxDate());
             books.setId(i + 1L);
             oraculoBooks.add(books);
         }
@@ -166,6 +172,7 @@ public class AuthorResourceIT {
                 .request()
                 .post(Entity.entity(books, MediaType.APPLICATION_JSON));
 
+        Assert.assertEquals(response.getStatus(), CREATED);
         BookDTO booksTest = (BookDTO) response.readEntity(BookDTO.class);
         Assert.assertEquals(books.getId(), booksTest.getId());
         Assert.assertEquals(books.getName(), booksTest.getName());
@@ -228,5 +235,16 @@ public class AuthorResourceIT {
                 .path(booksPath).path(books.getId().toString())
                 .request().delete();
         Assert.assertEquals(NO_CONTENT, response.getStatus());
+    }
+
+    private static Date getMaxDate() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, 9999);
+        c.set(Calendar.DAY_OF_YEAR, c.getActualMaximum(Calendar.DAY_OF_YEAR));
+        c.set(Calendar.HOUR_OF_DAY, c.getActualMinimum(Calendar.HOUR_OF_DAY));
+        c.set(Calendar.MINUTE, c.getActualMinimum(Calendar.MINUTE));
+        c.set(Calendar.SECOND, c.getActualMinimum(Calendar.SECOND));
+        c.set(Calendar.MILLISECOND, c.getActualMinimum(Calendar.MILLISECOND));
+        return c.getTime();
     }
 }
