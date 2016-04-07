@@ -49,19 +49,14 @@ public class AuthorResource {
      * Obtiene los datos de un objeto de Book a partir de su ID.
      *
      * @param id Identificador del objeto a consultar
-     * @return Instancia de AuthorDTO con los datos del Book consultado y sus
-     * Review (representación full)
+     * @return Instancia de AuthorDTO con los datos del Book consultado y sus Review (representación
+     * full)
      * @generated
      */
     @GET
     @Path("{id: \\d+}")
     public AuthorDTO getAuthor(@PathParam("id") Long id) {
-        try {
-            return AuthorConverter.fullEntity2DTO(authorLogic.getAuthor(id));
-        } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, "El autor no existe", ex);
-            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
-        }
+        return AuthorConverter.fullEntity2DTO(authorLogic.getAuthor(id));
     }
 
     /**
@@ -91,13 +86,8 @@ public class AuthorResource {
     public AuthorDTO updateAuthor(@PathParam("id") Long id, AuthorDTO dto) {
         AuthorEntity entity = AuthorConverter.fullDTO2Entity(dto);
         entity.setId(id);
-        try {
-            AuthorEntity oldEntity = authorLogic.getAuthor(id);
-            entity.setBooks(oldEntity.getBooks());
-        } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, "El autor no existe", ex);
-            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
-        }
+        AuthorEntity oldEntity = authorLogic.getAuthor(id);
+        entity.setBooks(oldEntity.getBooks());
         return AuthorConverter.fullEntity2DTO(authorLogic.updateAuthor(entity));
     }
 
@@ -114,12 +104,10 @@ public class AuthorResource {
     }
 
     /**
-     * Obtiene una colección de objetos de BookDTO asociadas a un objeto de
-     * Author
+     * Obtiene una colección de objetos de BookDTO asociadas a un objeto de Author
      *
      * @param authorId Identificador del objeto de Author
-     * @return Colección de objetos de BookDTO (representación basic) asociadas
-     * al objeto de Author
+     * @return Colección de objetos de BookDTO (representación basic) asociadas al objeto de Author
      * @generated
      */
     @GET
@@ -147,8 +135,7 @@ public class AuthorResource {
      *
      * @param authorId Identificador del objeto de Author
      * @param bookId Identificador del objeto de Book
-     * @return Instancia de BookDTO (representación full) que fue asociada a
-     * Author
+     * @return Instancia de BookDTO (representación full) que fue asociada a Author
      * @generated
      */
     @POST
@@ -166,10 +153,9 @@ public class AuthorResource {
      * Remplaza los objetos de Book asociadas a un objeto de Author
      *
      * @param authorId Identificador del objeto de Author
-     * @param books Colección de objetos de BookDTO (representación minimum) a
-     * asociar a objeto de Author
-     * @return Nueva colección de BookDTO (representación basic) asociada al
-     * objeto de Author
+     * @param books Colección de objetos de BookDTO (representación minimum) a asociar a objeto de
+     * Author
+     * @return Nueva colección de BookDTO (representación basic) asociada al objeto de Author
      * @generated
      */
     @PUT

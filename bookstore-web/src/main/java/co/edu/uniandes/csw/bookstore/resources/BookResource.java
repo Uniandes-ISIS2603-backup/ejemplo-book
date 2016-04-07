@@ -38,8 +38,7 @@ public class BookResource {
     /**
      * Obtiene la lista de los registros de Book.
      *
-     * @return Colección de objetos de BookDTO cada uno con sus respectivos
-     * Review
+     * @return Colección de objetos de BookDTO cada uno con sus respectivos Review
      * @generated
      */
     @GET
@@ -53,21 +52,15 @@ public class BookResource {
      * Obtiene los datos de un objeto de Book a partir de su ID.
      *
      * @param id Identificador del objeto a consultar
-     * @return Instancia de BookDTO con los datos del Book consultado y sus
-     * Review
+     * @return Instancia de BookDTO con los datos del Book consultado y sus Review
      * @generated
      */
     @GET
     @Path("{id: \\d+}")
     public BookDTO getBook(@PathParam("id") Long id) {
         logger.log(Level.INFO, "Se ejecuta método getBook con id={0}", id);
-        try {
-            BookEntity book = bookLogic.getBook(id);
-            return BookConverter.fullEntity2DTO(book);
-        } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
-        }
+        BookEntity book = bookLogic.getBook(id);
+        return BookConverter.fullEntity2DTO(book);
     }
 
     /**
@@ -106,13 +99,8 @@ public class BookResource {
         logger.log(Level.INFO, "Se ejecuta método updateBook con id={0}", id);
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
         entity.setId(id);
-        try {
-            BookEntity oldEntity = bookLogic.getBook(id);
-            entity.setAuthors(oldEntity.getAuthors());
-        } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
-        }
+        BookEntity oldEntity = bookLogic.getBook(id);
+        entity.setAuthors(oldEntity.getAuthors());
         try {
             BookEntity savedBook = bookLogic.updateBook(entity);
             return BookConverter.fullEntity2DTO(savedBook);
@@ -136,8 +124,7 @@ public class BookResource {
     }
 
     /**
-     * Obtiene una colección de objetos de AuthorDTO asociados a un objeto de
-     * Book
+     * Obtiene una colección de objetos de AuthorDTO asociados a un objeto de Book
      *
      * @param bookId Identificador del objeto de Book
      * @return Colección de objetos de AuthorDTO en representación basic
@@ -169,8 +156,7 @@ public class BookResource {
      *
      * @param bookId Identificador del objeto de Book
      * @param authorId Identificador del objeto de Author
-     * @return Objeto de AuthorDTO en representación full que fue asociado a
-     * Book
+     * @return Objeto de AuthorDTO en representación full que fue asociado a Book
      * @generated
      */
     @POST
@@ -189,8 +175,8 @@ public class BookResource {
      * Remplaza los objetos de Author asociados a un objeto de Book
      *
      * @param bookId Identificador del objeto de Book
-     * @param authors Colección de objetos de AuthorDTO en representación
-     * minimum a asociar a objeto de Book
+     * @param authors Colección de objetos de AuthorDTO en representación minimum a asociar a objeto
+     * de Book
      * @return Nueva colección de AuthorDTO en representación Basic
      * @generated
      */

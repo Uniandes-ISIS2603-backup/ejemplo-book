@@ -1,10 +1,9 @@
 package co.edu.uniandes.csw.bookstore.ejbs;
 
+import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.api.IEditorialLogic;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.entities.EditorialEntity;
-import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.bookstore.persistence.BookPersistence;
 import co.edu.uniandes.csw.bookstore.persistence.EditorialPersistence;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,7 +20,7 @@ public class EditorialLogic implements IEditorialLogic {
     private EditorialPersistence persistence;
 
     @Inject
-    private BookPersistence bookPersistence;
+    private IBookLogic bookLogic;
 
     @Override
     public List<EditorialEntity> getEditorials() {
@@ -32,12 +31,12 @@ public class EditorialLogic implements IEditorialLogic {
     }
 
     @Override
-    public EditorialEntity getEditorial(Long id) throws BusinessLogicException {
+    public EditorialEntity getEditorial(Long id)  {
         logger.log(Level.INFO, "Inicia proceso de consultar editorial con id={0}", id);
         EditorialEntity editorial = persistence.find(id);
         if (editorial == null) {
             logger.log(Level.SEVERE, "La editorial con el id {0} no existe", id);
-            throw new BusinessLogicException("La editorial solicitada no existe");
+            throw new IllegalArgumentException("La editorial solicitada no existe");
         }
         logger.log(Level.INFO, "Termina proceso de consultar editorial con id={0}", id);
         return editorial;
@@ -68,24 +67,24 @@ public class EditorialLogic implements IEditorialLogic {
 
     @Override
     public BookEntity addBook(Long bookId, Long editorialId) {
-        EditorialEntity editorialEntity = persistence.find(editorialId);
-        BookEntity bookEntity = bookPersistence.find(bookId);
+        EditorialEntity editorialEntity = getEditorial(editorialId);
+        BookEntity bookEntity = bookLogic.getBook(bookId);
         bookEntity.setEditorial(editorialEntity);
         return bookEntity;
     }
 
     @Override
     public void removeBook(Long bookId, Long editorialId) {
-        EditorialEntity editorialEntity = persistence.find(editorialId);
-        BookEntity book = bookPersistence.find(bookId);
+        EditorialEntity editorialEntity = getEditorial(editorialId);
+        BookEntity book = bookLogic.getBook(bookId);
         book.setEditorial(null);
         editorialEntity.getBooks().remove(book);
     }
 
     @Override
     public List<BookEntity> replaceBooks(List<BookEntity> books, Long editorialId) {
-        EditorialEntity editorial = persistence.find(editorialId);
-        List<BookEntity> bookList = bookPersistence.findAll();
+        EditorialEntity editorial = getEditorial(editorialId);
+        List<BookEntity> bookList = bookLogic.getBooks();
         for (BookEntity book : bookList) {
             if (books.contains(book)) {
                 book.setEditorial(editorial);
@@ -98,18 +97,17 @@ public class EditorialLogic implements IEditorialLogic {
 
     @Override
     public List<BookEntity> getBooks(Long editorialId) {
-        return persistence.find(editorialId).getBooks();
+        return getEditorial(editorialId).getBooks();
     }
 
     @Override
     public BookEntity getBook(Long editorialId, Long bookId) {
-        List<BookEntity> books = persistence.find(editorialId).getBooks();
-        BookEntity book = new BookEntity();
-        book.setId(bookId);
+        List<BookEntity> books = getEditorial(editorialId).getBooks();
+        BookEntity book = bookLogic.getBook(bookId);
         int index = books.indexOf(book);
         if (index >= 0) {
             return books.get(index);
         }
-        return null;
+        throw new IllegalArgumentException("El libro no está asociado a la editorial");
     }
 }

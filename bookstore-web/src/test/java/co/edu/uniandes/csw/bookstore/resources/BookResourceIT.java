@@ -5,12 +5,17 @@ import co.edu.uniandes.csw.bookstore.converters.BookConverter;
 import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
 import co.edu.uniandes.csw.bookstore.dtos.ReviewDTO;
+import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.mappers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookstore.providers.CreatedFilter;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -88,6 +93,7 @@ public class BookResourceIT {
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
             BookDTO book = factory.manufacturePojo(BookDTO.class);
+            book.setPublishDate(getMaxDate());
             book.setId(i + 1L);
             List<ReviewDTO> reviewsList = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
@@ -154,10 +160,12 @@ public class BookResourceIT {
     public void updateBookTest() {
         BookDTO book = oraculo.get(0);
         BookDTO bookChanged = factory.manufacturePojo(BookDTO.class);
+        bookChanged.setPublishDate(getMaxDate());
         book.setName(bookChanged.getName());
         book.setDescription(bookChanged.getDescription());
         book.setIsbn(bookChanged.getIsbn());
         book.setImage(bookChanged.getImage());
+        book.setPublishDate(bookChanged.getPublishDate());
         Response response = target.path(bookPath).path(book.getId().toString())
                 .request().put(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
@@ -244,5 +252,16 @@ public class BookResourceIT {
                 .path(authorsPath).path(authors.getId().toString())
                 .request().delete();
         Assert.assertEquals(NO_CONTENT, response.getStatus());
+    }
+
+    private static Date getMaxDate() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, 9999);
+        c.set(Calendar.DAY_OF_YEAR, c.getActualMaximum(Calendar.DAY_OF_YEAR));
+        c.set(Calendar.HOUR_OF_DAY, c.getActualMinimum(Calendar.HOUR_OF_DAY));
+        c.set(Calendar.MINUTE, c.getActualMinimum(Calendar.MINUTE));
+        c.set(Calendar.SECOND, c.getActualMinimum(Calendar.SECOND));
+        c.set(Calendar.MILLISECOND, c.getActualMinimum(Calendar.MILLISECOND));
+        return c.getTime();
     }
 }
