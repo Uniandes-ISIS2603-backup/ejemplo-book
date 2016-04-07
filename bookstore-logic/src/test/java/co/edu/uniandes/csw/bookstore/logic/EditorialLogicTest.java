@@ -4,16 +4,14 @@ import co.edu.uniandes.csw.bookstore.api.IEditorialLogic;
 import co.edu.uniandes.csw.bookstore.ejbs.EditorialLogic;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
 import co.edu.uniandes.csw.bookstore.entities.EditorialEntity;
-import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.persistence.EditorialPersistence;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -110,12 +108,13 @@ public class EditorialLogicTest {
 
     @Test
     public void getEditorialsTest() {
-        List<EditorialEntity> list = editorialLogic.getEditorials();
-        Assert.assertEquals(data.size(), list.size());
-        for (EditorialEntity entity : list) {
+        List<EditorialEntity> resultList = editorialLogic.getEditorials();
+        List<EditorialEntity> expectedList = em.createQuery("SELECT u from EditorialEntity u").getResultList();
+        Assert.assertEquals(expectedList.size(), resultList.size());
+        for (EditorialEntity expected : expectedList) {
             boolean found = false;
-            for (EditorialEntity storedEntity : data) {
-                if (entity.getId().equals(storedEntity.getId())) {
+            for (EditorialEntity result : resultList) {
+                if (result.getId().equals(expected.getId())) {
                     found = true;
                 }
             }
@@ -125,11 +124,14 @@ public class EditorialLogicTest {
 
     @Test
     public void getEditorialTest() {
-        EditorialEntity entity = data.get(0);
-        EditorialEntity resultEntity = editorialLogic.getEditorial(entity.getId());
-        Assert.assertNotNull(resultEntity);
-        Assert.assertEquals(entity.getId(), resultEntity.getId());
-        Assert.assertEquals(entity.getName(), resultEntity.getName());
+        EditorialEntity result = editorialLogic.getEditorial(data.get(0).getId());
+
+        EditorialEntity expected = em.find(EditorialEntity.class, data.get(0).getId());
+
+        Assert.assertNotNull(result);
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(expected.getId(), result.getId());
+        Assert.assertEquals(expected.getName(), result.getName());
     }
 
     @Test
@@ -143,16 +145,17 @@ public class EditorialLogicTest {
     @Test
     public void updateEditorialTest() {
         EditorialEntity entity = data.get(0);
-        EditorialEntity pojoEntity = factory.manufacturePojo(EditorialEntity.class);
+        EditorialEntity expected = factory.manufacturePojo(EditorialEntity.class);
 
-        pojoEntity.setId(entity.getId());
+        expected.setId(entity.getId());
 
-        editorialLogic.updateEditorial(pojoEntity);
+        editorialLogic.updateEditorial(expected);
 
         EditorialEntity resp = em.find(EditorialEntity.class, entity.getId());
 
-        Assert.assertEquals(pojoEntity.getId(), resp.getId());
-        Assert.assertEquals(pojoEntity.getName(), resp.getName());
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(expected.getId(), resp.getId());
+        Assert.assertEquals(expected.getName(), resp.getName());
     }
 
     @Test
@@ -161,16 +164,23 @@ public class EditorialLogicTest {
         BookEntity bookEntity = booksData.get(0);
         BookEntity response = editorialLogic.getBook(entity.getId(), bookEntity.getId());
 
-        Assert.assertEquals(bookEntity.getId(), response.getId());
-        Assert.assertEquals(bookEntity.getName(), response.getName());
-        Assert.assertEquals(bookEntity.getDescription(), response.getDescription());
-        Assert.assertEquals(bookEntity.getIsbn(), response.getIsbn());
-        Assert.assertEquals(bookEntity.getImage(), response.getImage());
+        BookEntity expected = getEditorialBook(entity.getId(), bookEntity.getId());
+
+        Assert.assertNotNull(expected);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(expected.getId(), response.getId());
+        Assert.assertEquals(expected.getName(), response.getName());
+        Assert.assertEquals(expected.getDescription(), response.getDescription());
+        Assert.assertEquals(expected.getIsbn(), response.getIsbn());
+        Assert.assertEquals(expected.getImage(), response.getImage());
     }
 
     @Test
     public void listBooksTest() {
         List<BookEntity> list = editorialLogic.getBooks(data.get(0).getId());
+        EditorialEntity expected = em.find(EditorialEntity.class, data.get(0).getId());
+
+        Assert.assertNotNull(expected);
         Assert.assertEquals(1, list.size());
     }
 
@@ -180,8 +190,11 @@ public class EditorialLogicTest {
         BookEntity bookEntity = booksData.get(1);
         BookEntity response = editorialLogic.addBook(bookEntity.getId(), entity.getId());
 
+        BookEntity expected = getEditorialBook(entity.getId(), bookEntity.getId());
+
+        Assert.assertNotNull(expected);
         Assert.assertNotNull(response);
-        Assert.assertEquals(bookEntity.getId(), response.getId());
+        Assert.assertEquals(expected.getId(), response.getId());
     }
 
     @Test
@@ -190,16 +203,25 @@ public class EditorialLogicTest {
         List<BookEntity> list = booksData.subList(1, 3);
         editorialLogic.replaceBooks(list, entity.getId());
 
-        entity = editorialLogic.getEditorial(entity.getId());
-        Assert.assertFalse(entity.getBooks().contains(booksData.get(0)));
-        Assert.assertTrue(entity.getBooks().contains(booksData.get(1)));
-        Assert.assertTrue(entity.getBooks().contains(booksData.get(2)));
+        EditorialEntity expected = em.find(EditorialEntity.class, entity.getId());
+
+        Assert.assertNotNull(expected);
+        Assert.assertFalse(expected.getBooks().contains(booksData.get(0)));
+        Assert.assertTrue(expected.getBooks().contains(booksData.get(1)));
+        Assert.assertTrue(expected.getBooks().contains(booksData.get(2)));
     }
 
-    @Test(expected = EJBException.class)
+    @Test(expected = NoResultException.class)
     public void removeBooksTest() {
         editorialLogic.removeBook(booksData.get(0).getId(), data.get(0).getId());
-        BookEntity response = editorialLogic.getBook(data.get(0).getId(), booksData.get(0).getId());
-        Assert.assertNull(response);
+        getEditorialBook(data.get(0).getId(), booksData.get(0).getId());
+    }
+
+    private BookEntity getEditorialBook(Long editorialId, Long bookId) {
+        Query q = em.createQuery("Select DISTINCT b from EditorialEntity e join e.books b where e.id=:editorialId and b.id = :bookId");
+        q.setParameter("bookId", bookId);
+        q.setParameter("editorialId", editorialId);
+
+        return (BookEntity) q.getSingleResult();
     }
 }

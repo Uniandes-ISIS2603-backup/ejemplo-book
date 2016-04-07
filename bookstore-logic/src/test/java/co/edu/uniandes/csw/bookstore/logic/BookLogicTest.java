@@ -13,10 +13,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -120,17 +121,17 @@ public class BookLogicTest {
         try {
             BookEntity entity = factory.manufacturePojo(BookEntity.class);
             entity.setPublishDate(getMaxDate());
-            BookEntity result = bookLogic.createBook(entity);
+            BookEntity created = bookLogic.createBook(entity);
 
-            BookEntity resp = em.find(BookEntity.class, result.getId());
+            BookEntity result = em.find(BookEntity.class, created.getId());
 
             Assert.assertNotNull(result);
-            Assert.assertEquals(entity.getId(), resp.getId());
-            Assert.assertEquals(entity.getName(), resp.getName());
-            Assert.assertEquals(entity.getDescription(), resp.getDescription());
-            Assert.assertEquals(entity.getIsbn(), resp.getIsbn());
-            Assert.assertEquals(entity.getImage(), resp.getImage());
-            Assert.assertEquals(entity.getPublishDate(), resp.getPublishDate());
+            Assert.assertEquals(entity.getId(), result.getId());
+            Assert.assertEquals(entity.getName(), result.getName());
+            Assert.assertEquals(entity.getDescription(), result.getDescription());
+            Assert.assertEquals(entity.getIsbn(), result.getIsbn());
+            Assert.assertEquals(entity.getImage(), result.getImage());
+            Assert.assertEquals(entity.getPublishDate(), result.getPublishDate());
         } catch (BusinessLogicException ex) {
             Assert.fail(ex.getLocalizedMessage());
         }
@@ -138,12 +139,13 @@ public class BookLogicTest {
 
     @Test
     public void getBooksTest() {
-        List<BookEntity> list = bookLogic.getBooks();
-        Assert.assertEquals(data.size(), list.size());
-        for (BookEntity entity : list) {
+        List<BookEntity> resultList = bookLogic.getBooks();
+        List<BookEntity> expectedList = em.createQuery("SELECT u from BookEntity u").getResultList();
+        Assert.assertEquals(expectedList.size(), resultList.size());
+        for (BookEntity expected : expectedList) {
             boolean found = false;
-            for (BookEntity storedEntity : data) {
-                if (entity.getId().equals(storedEntity.getId())) {
+            for (BookEntity result : resultList) {
+                if (result.getId().equals(expected.getId())) {
                     found = true;
                 }
             }
@@ -153,14 +155,16 @@ public class BookLogicTest {
 
     @Test
     public void getBookTest() {
-        BookEntity entity = data.get(0);
-        BookEntity resultEntity = bookLogic.getBook(entity.getId());
-        Assert.assertNotNull(resultEntity);
-        Assert.assertEquals(entity.getId(), resultEntity.getId());
-        Assert.assertEquals(entity.getName(), resultEntity.getName());
-        Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
-        Assert.assertEquals(entity.getIsbn(), resultEntity.getIsbn());
-        Assert.assertEquals(entity.getImage(), resultEntity.getImage());
+        BookEntity result = bookLogic.getBook(data.get(0).getId());
+        BookEntity expected = em.find(BookEntity.class, data.get(0).getId());
+
+        Assert.assertNotNull(expected);
+        Assert.assertNotNull(result);
+        Assert.assertEquals(expected.getId(), result.getId());
+        Assert.assertEquals(expected.getName(), result.getName());
+        Assert.assertEquals(expected.getDescription(), result.getDescription());
+        Assert.assertEquals(expected.getIsbn(), result.getIsbn());
+        Assert.assertEquals(expected.getImage(), result.getImage());
     }
 
     @Test
@@ -200,26 +204,36 @@ public class BookLogicTest {
         AuthorEntity authorEntity = authorsData.get(0);
         AuthorEntity response = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
 
-        Assert.assertEquals(authorEntity.getId(), response.getId());
-        Assert.assertEquals(authorEntity.getName(), response.getName());
-        Assert.assertEquals(authorEntity.getBirthDate(), response.getBirthDate());
+        AuthorEntity expected = getBookAuthor(entity.getId(), authorEntity.getId());
+
+        Assert.assertNotNull(expected);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(expected.getId(), response.getId());
+        Assert.assertEquals(expected.getName(), response.getName());
+        Assert.assertEquals(expected.getBirthDate(), response.getBirthDate());
     }
 
     @Test
     public void listAuthorsTest() {
         List<AuthorEntity> list = bookLogic.getAuthors(data.get(0).getId());
-        Assert.assertEquals(1, list.size());
+        BookEntity expected = em.find(BookEntity.class, data.get(0).getId());
+
+        Assert.assertNotNull(expected);
+        Assert.assertEquals(expected.getAuthors().size(), list.size());
     }
 
     @Test
     public void addAuthorsTest() {
-        BookEntity entity = data.get(0);
-        AuthorEntity authorEntity = authorsData.get(1);
         try {
+            BookEntity entity = data.get(0);
+            AuthorEntity authorEntity = authorsData.get(1);
             AuthorEntity response = bookLogic.addAuthor(authorEntity.getId(), entity.getId());
 
+            AuthorEntity expected = getBookAuthor(entity.getId(), authorEntity.getId());
+
+            Assert.assertNotNull(expected);
             Assert.assertNotNull(response);
-            Assert.assertEquals(authorEntity.getId(), response.getId());
+            Assert.assertEquals(expected.getId(), response.getId());
         } catch (BusinessLogicException ex) {
             Assert.fail(ex.getLocalizedMessage());
         }
@@ -232,19 +246,21 @@ public class BookLogicTest {
             List<AuthorEntity> list = authorsData.subList(1, 3);
             bookLogic.replaceAuthors(list, entity.getId());
 
-            entity = bookLogic.getBook(entity.getId());
-            Assert.assertFalse(entity.getAuthors().contains(authorsData.get(0)));
-            Assert.assertTrue(entity.getAuthors().contains(authorsData.get(1)));
-            Assert.assertTrue(entity.getAuthors().contains(authorsData.get(2)));
+            BookEntity expected = em.find(BookEntity.class, entity.getId());
+
+            Assert.assertNotNull(expected);
+            Assert.assertFalse(expected.getAuthors().contains(authorsData.get(0)));
+            Assert.assertTrue(expected.getAuthors().contains(authorsData.get(1)));
+            Assert.assertTrue(expected.getAuthors().contains(authorsData.get(2)));
         } catch (BusinessLogicException ex) {
             Assert.fail(ex.getLocalizedMessage());
         }
     }
 
-    @Test(expected = EJBException.class)
+    @Test(expected = NoResultException.class)
     public void removeAuthorsTest() {
         bookLogic.removeAuthor(authorsData.get(0).getId(), data.get(0).getId());
-        AuthorEntity response = bookLogic.getAuthor(data.get(0).getId(), authorsData.get(0).getId());
+        getBookAuthor(data.get(0).getId(), authorsData.get(0).getId());
     }
 
     private Date getMaxDate() {
@@ -257,5 +273,13 @@ public class BookLogicTest {
         c.set(Calendar.SECOND, c.getActualMinimum(Calendar.SECOND));
         c.set(Calendar.MILLISECOND, c.getActualMinimum(Calendar.MILLISECOND));
         return c.getTime();
+    }
+
+    private AuthorEntity getBookAuthor(Long bookId, Long authorId) {
+        Query q = em.createQuery("Select DISTINCT a from BookEntity b join b.authors a where b.id = :bookId and a.id=:authorId");
+        q.setParameter("bookId", bookId);
+        q.setParameter("authorId", authorId);
+
+        return (AuthorEntity) q.getSingleResult();
     }
 }

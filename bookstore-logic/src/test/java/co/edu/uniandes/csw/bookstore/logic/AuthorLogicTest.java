@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -46,8 +45,6 @@ public class AuthorLogicTest {
     private List<AuthorEntity> data = new ArrayList<AuthorEntity>();
 
     private List<BookEntity> booksData = new ArrayList<>();
-
-    private static final String GET_BOOK_QUERY = "Select DISTINCT b from AuthorEntity a join a.books b where a.id=:authorId and b.id = :bookId";
 
     @Deployment
     public static JavaArchive createDeployment() {
@@ -119,7 +116,7 @@ public class AuthorLogicTest {
         List<AuthorEntity> resultList = authorLogic.getAuthors();
         List<AuthorEntity> expectedList = em.createQuery("SELECT u from AuthorEntity u").getResultList();
         Assert.assertEquals(expectedList.size(), resultList.size());
-        for (AuthorEntity expected : data) {
+        for (AuthorEntity expected : expectedList) {
             boolean found = false;
             for (AuthorEntity result : resultList) {
                 if (result.getId().equals(expected.getId())) {
@@ -136,6 +133,7 @@ public class AuthorLogicTest {
 
         AuthorEntity expected = em.find(AuthorEntity.class, data.get(0).getId());
 
+        Assert.assertNotNull(expected);
         Assert.assertNotNull(result);
         Assert.assertEquals(expected.getId(), result.getId());
         Assert.assertEquals(expected.getName(), result.getName());
@@ -173,11 +171,7 @@ public class AuthorLogicTest {
         BookEntity bookEntity = booksData.get(0);
         BookEntity response = authorLogic.getBook(entity.getId(), bookEntity.getId());
 
-        Query q = em.createQuery(GET_BOOK_QUERY);
-        q.setParameter("authorId", entity.getId());
-        q.setParameter("bookId", bookEntity.getId());
-
-        BookEntity expected = (BookEntity) q.getSingleResult();
+        BookEntity expected = getAuthorBook(entity.getId(), bookEntity.getId());
 
         Assert.assertNotNull(expected);
         Assert.assertNotNull(response);
@@ -191,7 +185,7 @@ public class AuthorLogicTest {
     @Test
     public void listBooksTest() {
         List<BookEntity> list = authorLogic.getBooks(data.get(0).getId());
-        AuthorEntity expected = (AuthorEntity) em.find(AuthorEntity.class, data.get(0).getId());
+        AuthorEntity expected = em.find(AuthorEntity.class, data.get(0).getId());
 
         Assert.assertNotNull(expected);
         Assert.assertEquals(expected.getBooks().size(), list.size());
@@ -204,10 +198,7 @@ public class AuthorLogicTest {
             BookEntity bookEntity = booksData.get(1);
             BookEntity response = authorLogic.addBook(bookEntity.getId(), entity.getId());
 
-            Query q = em.createQuery(GET_BOOK_QUERY);
-            q.setParameter("authorId", entity.getId());
-            q.setParameter("bookId", bookEntity.getId());
-            BookEntity expected = (BookEntity) q.getSingleResult();
+            BookEntity expected = getAuthorBook(entity.getId(), bookEntity.getId());
 
             Assert.assertNotNull(expected);
             Assert.assertNotNull(response);
@@ -238,16 +229,7 @@ public class AuthorLogicTest {
     @Test(expected = NoResultException.class)
     public void removeBooksTest() {
         authorLogic.removeBook(booksData.get(0).getId(), data.get(0).getId());
-        try {
-            authorLogic.getBook(data.get(0).getId(), booksData.get(0).getId());
-            Assert.fail();
-        } catch (EJBException e) {
-        }
-
-        Query q = em.createQuery(GET_BOOK_QUERY);
-        q.setParameter("authorId", data.get(0).getId());
-        q.setParameter("bookId", booksData.get(0).getId());
-        q.getSingleResult();
+        getAuthorBook(data.get(0).getId(), booksData.get(0).getId());
     }
 
     private Date getMaxDate() {
@@ -260,5 +242,13 @@ public class AuthorLogicTest {
         c.set(Calendar.SECOND, c.getActualMinimum(Calendar.SECOND));
         c.set(Calendar.MILLISECOND, c.getActualMinimum(Calendar.MILLISECOND));
         return c.getTime();
+    }
+
+    private BookEntity getAuthorBook(Long authorId, Long bookId) {
+        Query q = em.createQuery("Select DISTINCT b from AuthorEntity a join a.books b where a.id=:authorId and b.id = :bookId");
+        q.setParameter("bookId", bookId);
+        q.setParameter("authorId", authorId);
+
+        return (BookEntity) q.getSingleResult();
     }
 }
