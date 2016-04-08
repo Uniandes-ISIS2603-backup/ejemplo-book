@@ -1,15 +1,22 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package co.edu.uniandes.csw.bookstore.selenium;
 
 import co.edu.uniandes.csw.bookstore.adapters.DateAdapter;
-import co.edu.uniandes.csw.bookstore.converters.BookConverter;
-import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
+import co.edu.uniandes.csw.bookstore.converters.EditorialConverter;
+import co.edu.uniandes.csw.bookstore.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookstore.mappers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookstore.providers.CreatedFilter;
-import co.edu.uniandes.csw.bookstore.resources.BookResource;
+import co.edu.uniandes.csw.bookstore.resources.EditorialResource;
 import java.io.File;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.GenericArchive;
@@ -18,12 +25,16 @@ import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 @RunWith(Arquillian.class)
-public class BookIT {
+public class EditorialIT {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
@@ -33,9 +44,9 @@ public class BookIT {
                         .resolve("co.edu.uniandes.csw.bookstore:bookstore-logic:1.0-SNAPSHOT")
                         .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
-                .addPackage(BookResource.class.getPackage())
-                .addPackage(BookDTO.class.getPackage())
-                .addPackage(BookConverter.class.getPackage())
+                .addPackage(EditorialResource.class.getPackage())
+                .addPackage(EditorialDTO.class.getPackage())
+                .addPackage(EditorialConverter.class.getPackage())
                 .addPackage(EJBExceptionMapper.class.getPackage())
                 .addPackage(DateAdapter.class.getPackage())
                 .addPackage(CreatedFilter.class.getPackage())
@@ -55,10 +66,19 @@ public class BookIT {
     @ArquillianResource
     private URL deploymentURL;
 
-    @Test
-    public void should_login_successfully() {
-        browser.get(deploymentURL.toExternalForm());
+    private static PodamFactory factory = new PodamFactoryImpl();
 
+    @Before
+    public void loadPage() {
+        browser.get(deploymentURL.toExternalForm() + "#/editorial");
+        waitAjax().withTimeout(5, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void createEditorial() {
+        browser.findElement(By.id("create-editorial")).click();
+        browser.findElement(By.id("name")).sendKeys(factory.manufacturePojo(String.class));
+        browser.findElement(By.id("save-editorial")).click();
         Assert.assertTrue(true);
     }
 }
