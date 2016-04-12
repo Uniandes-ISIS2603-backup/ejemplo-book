@@ -11,13 +11,15 @@ import co.edu.uniandes.csw.bookstore.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookstore.mappers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookstore.providers.CreatedFilter;
 import co.edu.uniandes.csw.bookstore.resources.EditorialResource;
+import co.edu.uniandes.csw.bookstore.selenium.pages.EditorialPage;
 import java.io.File;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import static org.jboss.arquillian.graphene.Graphene.waitAjax;
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import org.jboss.arquillian.graphene.page.InitialPage;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -30,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -69,16 +72,19 @@ public class EditorialIT {
     private static PodamFactory factory = new PodamFactoryImpl();
 
     @Before
-    public void loadPage() {
-        browser.get(deploymentURL.toExternalForm() + "#/editorial");
-        waitAjax().withTimeout(5, TimeUnit.SECONDS);
+    public void loadPage() throws InterruptedException {
+        browser.get(deploymentURL.toExternalForm());
+        Thread.sleep(5000);
     }
 
     @Test
-    public void createEditorial() {
-        browser.findElement(By.id("create-editorial")).click();
-        browser.findElement(By.id("name")).sendKeys(factory.manufacturePojo(String.class));
-        browser.findElement(By.id("save-editorial")).click();
-        Assert.assertTrue(true);
+    @InSequence(1)
+    public void createEditorial(@InitialPage EditorialPage editorialPage) {
+        EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);
+        editorialPage.createEditorial(editorial);
+        waitGui().until().element(By.id("0-name")).is().visible();
+        WebElement name1 = browser.findElement(By.id("0-name"));
+        Assert.assertTrue(name1.isDisplayed());
+        Assert.assertEquals(editorial.getName(), name1.getText());
     }
 }
