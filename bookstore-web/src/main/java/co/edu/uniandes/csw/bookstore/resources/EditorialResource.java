@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EditorialResource {
-    
+
     private static final Logger logger = Logger.getLogger(EditorialResource.class.getName());
 
     @Inject
@@ -55,12 +55,7 @@ public class EditorialResource {
     @GET
     @Path("{id: \\d+}")
     public EditorialDTO getEditorial(@PathParam("id") Long id) {
-        try {
-            return EditorialConverter.fullEntity2DTO(editorialLogic.getEditorial(id));
-        } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, "La editorial no existe", ex);
-            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
-        }
+        return EditorialConverter.fullEntity2DTO(editorialLogic.getEditorial(id));
     }
 
     /**
@@ -90,13 +85,8 @@ public class EditorialResource {
     public EditorialDTO updateEditorial(@PathParam("id") Long id, EditorialDTO dto) {
         EditorialEntity entity = EditorialConverter.fullDTO2Entity(dto);
         entity.setId(id);
-        try {
-            EditorialEntity oldEntity = editorialLogic.getEditorial(id);
-            entity.setBooks(oldEntity.getBooks());
-        } catch (BusinessLogicException ex) {
-            logger.log(Level.SEVERE, "La editorial no existe", ex);
-            throw new WebApplicationException(ex.getLocalizedMessage(), ex, Response.Status.NOT_FOUND);
-        }
+        EditorialEntity oldEntity = editorialLogic.getEditorial(id);
+        entity.setBooks(oldEntity.getBooks());
         return EditorialConverter.fullEntity2DTO(editorialLogic.updateEditorial(entity));
     }
 
@@ -113,8 +103,7 @@ public class EditorialResource {
     }
 
     /**
-     * Obtiene una colección de objetos de BookDTO asociadas a una objeto
-     * de Editorial
+     * Obtiene una colección de objetos de BookDTO asociadas a una objeto de Editorial
      *
      * @param editorialId Identificador de la objeto de Editorial
      * @return Colección de objetos de BookDTO en representación basic
@@ -158,8 +147,8 @@ public class EditorialResource {
      * Remplaza los objetos de Book asociadas a una objeto de Editorial
      *
      * @param editorialId Identificador del objeto de Editorial
-     * @param books Colección de objetos de BookDTO a asociar a objeto de
-     * Editorial en representación minimum
+     * @param books Colección de objetos de BookDTO a asociar a objeto de Editorial en
+     * representación minimum
      * @return Nueva colección de BookDTO en representación Basic
      * @generated
      */
