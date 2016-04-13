@@ -83,7 +83,6 @@ public class EditorialIT {
     public void createEditorial(@InitialPage EditorialPage editorialPage) {
         EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);
         editorialPage.createEditorial(editorial);
-        waitGui().until().element(By.id("refresh-editorial")).is().visible();
         WebElement name1 = browser.findElement(By.id("0-name"));
         Assert.assertTrue(name1.isDisplayed());
         Assert.assertEquals(editorial.getName(), name1.getText());
@@ -94,7 +93,6 @@ public class EditorialIT {
     public void editFirstEditorial(@InitialPage EditorialPage editorialPage) {
         EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);
         editorialPage.editFirstEditorial(editorial);
-        waitGui().until().element(By.id("refresh-editorial")).is().visible();
         WebElement name1 = browser.findElement(By.id("0-name"));
         Assert.assertTrue(name1.isDisplayed());
         Assert.assertEquals(editorial.getName(), name1.getText());
