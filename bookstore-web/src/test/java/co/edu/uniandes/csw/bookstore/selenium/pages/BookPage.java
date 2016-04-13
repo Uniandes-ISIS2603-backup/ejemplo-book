@@ -77,6 +77,6 @@ public class BookPage {
         imageInput.sendKeys(dto.getImage());
 
         saveButton.click();
-        waitGui().until().element(editFirstButton).is().visible();
+        waitGui().until().element(refreshButton).is().visible();
     }
 }

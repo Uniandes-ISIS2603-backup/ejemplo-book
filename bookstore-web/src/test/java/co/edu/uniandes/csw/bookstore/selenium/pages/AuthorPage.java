@@ -62,6 +62,6 @@ public class AuthorPage {
         birthDateToday.click();
 
         saveButton.click();
-        waitGui().until().element(editFirstButton).is().visible();
+        waitGui().until().element(refreshButton).is().visible();
     }
 }

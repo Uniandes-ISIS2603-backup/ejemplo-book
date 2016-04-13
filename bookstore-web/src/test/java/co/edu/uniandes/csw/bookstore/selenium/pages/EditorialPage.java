@@ -53,6 +53,6 @@ public class EditorialPage {
         nameInput.sendKeys(dto.getName());
 
         saveButton.click();
-        waitGui().until().element(editFirstButton).is().visible();
+        waitGui().until().element(refreshButton).is().visible();
     }
 }
