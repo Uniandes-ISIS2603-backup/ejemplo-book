@@ -123,7 +123,6 @@ public class BookResourceIT {
 
         Assert.assertEquals(CREATED, response.getStatus());
 
-        Assert.assertEquals(book.getId(), bookTest.getId());
         Assert.assertEquals(book.getName(), bookTest.getName());
         Assert.assertEquals(book.getDescription(), bookTest.getDescription());
         Assert.assertEquals(book.getIsbn(), bookTest.getIsbn());
