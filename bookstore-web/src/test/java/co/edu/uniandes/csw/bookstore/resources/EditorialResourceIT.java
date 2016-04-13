@@ -112,9 +112,9 @@ public class EditorialResourceIT {
                 .post(Entity.entity(editorial, MediaType.APPLICATION_JSON));
 
         EditorialDTO editorialTest = (EditorialDTO) response.readEntity(EditorialDTO.class);
-        Assert.assertEquals(editorial.getId(), editorialTest.getId());
-        Assert.assertEquals(editorial.getName(), editorialTest.getName());
+
         Assert.assertEquals(CREATED, response.getStatus());
+        Assert.assertEquals(editorial.getName(), editorialTest.getName());
     }
 
     @Test

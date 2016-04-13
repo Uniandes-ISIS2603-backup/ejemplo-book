@@ -107,7 +107,7 @@ public class AuthorResourceIT {
         Response response = target.path(authorPath).request()
                 .post(Entity.entity(author, MediaType.APPLICATION_JSON));
         AuthorDTO authorTest = (AuthorDTO) response.readEntity(AuthorDTO.class);
-        Assert.assertEquals(author.getId(), authorTest.getId());
+
         Assert.assertEquals(author.getName(), authorTest.getName());
         Assert.assertEquals(author.getBirthDate(), authorTest.getBirthDate());
         Assert.assertEquals(CREATED, response.getStatus());
