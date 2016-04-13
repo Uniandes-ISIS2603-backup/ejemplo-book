@@ -35,8 +35,8 @@
         </thead>
         <tbody>
             <tr ng-repeat="record in records">
-                <td>{{record.name}}</td>
-                <td>{{record.birthDate | date}}</td>
+                <td id="{{$index}}-name">{{record.name}}</td>
+                <td id="{{$index}}-birthDate">{{record.birthDate | date}}</td>
                 <td>
                     <button id="{{$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
                     <button id="{{$index}}-delete-btn" class="btn btn-default btn-sm" ng-click="ctrl.deleteRecord(record)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
