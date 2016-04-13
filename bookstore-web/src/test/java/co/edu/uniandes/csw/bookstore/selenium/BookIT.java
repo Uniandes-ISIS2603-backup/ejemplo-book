@@ -11,9 +11,9 @@ import co.edu.uniandes.csw.bookstore.selenium.pages.BookPage;
 import co.edu.uniandes.csw.bookstore.selenium.pages.EditorialPage;
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import org.jboss.arquillian.graphene.page.InitialPage;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -84,7 +84,6 @@ public class BookIT {
         Assert.assertEquals(editorial.getName(), name1.getText());
     }
 
-
     @Test
     @InSequence(2)
     public void createBook(@InitialPage BookPage bookPage) {
@@ -97,4 +96,34 @@ public class BookIT {
         Assert.assertEquals(book.getName(), name1.getText());
     }
 
+    @Test
+    @InSequence(3)
+    public void editFirstBook(@InitialPage BookPage bookPage) {
+        BookDTO editorial = factory.manufacturePojo(BookDTO.class);
+        bookPage.editFirstBook(editorial);
+
+        WebElement name = browser.findElement(By.id("0-name"));
+        WebElement description = browser.findElement(By.id("0-description"));
+        WebElement isbn = browser.findElement(By.id("0-isbn"));
+
+        Assert.assertTrue(name.isDisplayed());
+        Assert.assertTrue(description.isDisplayed());
+        Assert.assertTrue(isbn.isDisplayed());
+
+        Assert.assertEquals(editorial.getName(), name.getText());
+        Assert.assertEquals(editorial.getDescription(), description.getText());
+        Assert.assertEquals(editorial.getIsbn(), isbn.getText());
+    }
+
+    @Test
+    @InSequence(4)
+    public void deleteFirstBook(@InitialPage BookPage bookPage) {
+        By rowCssSelector = By.cssSelector("div.col-md-4.col-sm-6.col-lg-3.well");
+        List<WebElement> books = browser.findElements(rowCssSelector);
+        Assert.assertEquals(1, books.size());
+        bookPage.deleteFirstBook();
+        books = browser.findElements(rowCssSelector);
+
+        Assert.assertTrue(books.isEmpty());
+    }
 }

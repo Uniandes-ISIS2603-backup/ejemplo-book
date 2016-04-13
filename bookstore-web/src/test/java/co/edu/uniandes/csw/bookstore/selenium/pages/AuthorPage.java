@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookstore.selenium.pages;
 
 import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.graphene.page.Location;
@@ -42,7 +43,7 @@ public class AuthorPage {
     public void editFirstAuthor(AuthorDTO dto) {
         waitGui().until().element(editFirstButton).is().visible();
         editFirstButton.click();
-        waitGui().until().element(saveButton).is().visible();
+        waitAjax().until().element(saveButton).is().visible();
         saveAuthor(dto);
     }
 
@@ -62,6 +63,6 @@ public class AuthorPage {
         birthDateToday.click();
 
         saveButton.click();
-        waitGui().until().element(refreshButton).is().visible();
+        waitAjax().until().element(refreshButton).is().visible();
     }
 }

@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookstore.selenium.pages;
 
 import co.edu.uniandes.csw.bookstore.dtos.EditorialDTO;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import org.jboss.arquillian.graphene.page.Location;
 import org.openqa.selenium.WebElement;
@@ -35,7 +36,7 @@ public class EditorialPage {
     public void editFirstEditorial(EditorialDTO dto) {
         waitGui().until().element(editFirstButton).is().visible();
         editFirstButton.click();
-        waitGui().until().element(saveButton).is().visible();
+        waitAjax().until().element(saveButton).is().visible();
 
         saveEditorial(dto);
     }
@@ -43,7 +44,7 @@ public class EditorialPage {
     public void deleteFirstEditorial() {
         waitGui().until().element(deleteFirstButton).is().visible();
         deleteFirstButton.click();
-        waitGui().until().element(deleteFirstButton).is().not().present();
+        waitAjax().until().element(deleteFirstButton).is().not().present();
     }
 
     private void saveEditorial(EditorialDTO dto) {
@@ -53,6 +54,6 @@ public class EditorialPage {
         nameInput.sendKeys(dto.getName());
 
         saveButton.click();
-        waitGui().until().element(refreshButton).is().visible();
+        waitAjax().until().element(refreshButton).is().visible();
     }
 }

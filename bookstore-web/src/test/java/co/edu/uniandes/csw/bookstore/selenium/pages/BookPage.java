@@ -1,11 +1,13 @@
 package co.edu.uniandes.csw.bookstore.selenium.pages;
 
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.graphene.page.Location;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 
 @Location("#/book")
 public class BookPage {
@@ -25,17 +27,17 @@ public class BookPage {
     @FindBy(id = "isbn")
     private WebElement isbnInput;
 
-    @FindBy(id = "name")
+    @FindBy(id = "image")
     private WebElement imageInput;
 
     @FindBy(id = "editorial")
-    private WebElement editorialInput;
+    private Select editorialInput;
 
     @FindBy(id = "publishDate-datepicker")
-    private WebElement datePickerToggle;
+    private WebElement publishDatePopUp;
 
     @FindByJQuery(value = "#publishDate + ul>li:nth-child(2)>span>button:first-child")
-    private WebElement datePickerDate;
+    private WebElement publishDateToday;
 
     @FindBy(id = "save-book")
     private WebElement saveButton;
@@ -54,14 +56,14 @@ public class BookPage {
     public void editFirstBook(BookDTO dto) {
         waitGui().until().element(editFirstButton).is().visible();
         editFirstButton.click();
-        waitGui().until().element(saveButton).is().visible();
+        waitAjax().until().element(saveButton).is().visible();
         saveBook(dto);
     }
 
     public void deleteFirstBook() {
         waitGui().until().element(deleteFirstButton).is().visible();
         deleteFirstButton.click();
-        waitGui().until().element(deleteFirstButton).is().not().present();
+        waitAjax().until().element(deleteFirstButton).is().not().present();
     }
 
     private void saveBook(BookDTO dto) {
@@ -75,8 +77,11 @@ public class BookPage {
         descriptionInput.sendKeys(dto.getDescription());
         isbnInput.sendKeys(dto.getIsbn());
         imageInput.sendKeys(dto.getImage());
+        publishDatePopUp.click();
+        waitGui().until().element(publishDateToday).is().visible();
+        publishDateToday.click();
 
         saveButton.click();
-        waitGui().until().element(refreshButton).is().visible();
+        waitAjax().until().element(refreshButton).is().visible();
     }
 }

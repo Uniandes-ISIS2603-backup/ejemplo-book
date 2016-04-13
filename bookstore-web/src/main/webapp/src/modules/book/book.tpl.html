@@ -28,7 +28,7 @@
         <div ng-repeat="record in records">
             <div class="col-md-4 col-sm-6 col-lg-3 well">
                 <div class="col-md-12">
-                    <div class="img-thumbnail" id="image" ng-if="record.image">
+                    <div class="img-thumbnail" id="{{$index}}-image" ng-if="record.image">
                         <a ng-href="{{record.image}}" target="_blank"><img class="img-responsive" style="height: 20vmax;" ng-src="{{record.image}}" alt="{{record.image}}"></a>
                     </div>
                 </div>
