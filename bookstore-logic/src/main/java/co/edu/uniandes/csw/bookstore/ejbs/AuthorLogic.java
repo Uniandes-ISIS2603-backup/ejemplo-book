@@ -79,15 +79,15 @@ public class AuthorLogic implements IAuthorLogic {
 
     @Override
     public List<BookEntity> replaceBooks(List<BookEntity> books, Long authorId) throws BusinessLogicException {
-        List<BookEntity> bookList = bookLogic.getBooks();
         AuthorEntity author = getAuthor(authorId);
-        for (BookEntity book : bookList) {
-            if (books.contains(book)) {
-                if (!book.getAuthors().contains(author)) {
-                    bookLogic.addAuthor(authorId, book.getId());
-                }
-            } else {
+        for (BookEntity book : author.getBooks()) {
+            if (!books.contains(book)) {
                 bookLogic.removeAuthor(authorId, book.getId());
+            }
+        }
+        for (BookEntity book : books) {
+            if (!book.getAuthors().contains(author)) {
+                bookLogic.addAuthor(authorId, book.getId());
             }
         }
         author.setBooks(books);
