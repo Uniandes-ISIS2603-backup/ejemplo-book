@@ -94,6 +94,34 @@
                 return $http.delete(context + "/" + bookId + "/authors/" + authorId);
             };
 
+            this.getPrizes = function (bookId) {
+                return $http.get(context + "/" + bookId + "/prizes");
+            };
+
+            this.getPrize = function (bookId, prizeId) {
+                return $http.get(context + "/" + bookId + "/prizes/" + prizeId);
+            };
+
+            this.createPrize = function (bookId, prize) {
+                return $http.post(context + "/" + bookId + "/prizes", prize);
+            };
+
+            this.updatePrize = function (bookId, prizeId, prize) {
+                return $http.put(context + "/" + bookId + "/prizes/" + prizeId, prize);
+            };
+            
+            this.deletePrize = function (bookId, prizeId) {
+                return $http.delete(context + "/" + bookId + "/prizes/" + prizeId);
+            };
+            
+            this.savePrize = function(bookId, prize){
+                if(prize.id){
+                    return this.updatePrize(bookId, prize.id, prize);
+                }else{
+                    return this.createPrize(bookId, prize);
+                }
+            };
+
         }]);
 
 

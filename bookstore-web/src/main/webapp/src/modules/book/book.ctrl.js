@@ -8,7 +8,8 @@
 
     var mod = ng.module("bookModule");
 
-    mod.controller("bookCtrl", ["$scope", "bookService", "editorialService", "authorService", "$modal", function ($scope, svc, editorialSvc, authorSvc, $modal) {
+    mod.controller("bookCtrl", ["$scope", "bookService", "editorialService", "records",
+        function ($scope, svc, editorialSvc, records) {
             //Se almacenan todas las alertas
             $scope.alerts = [];
             $scope.currentRecord = {
@@ -30,7 +31,7 @@
                         description: '' /*Tipo String*/
                     }] /*Colección de registros de Review*/
             };
-            $scope.records = [];
+            $scope.records = records;
 
             $scope.today = function () {
                 $scope.value = new Date();
@@ -159,13 +160,6 @@
             editorialSvc.fetchRecords().then(function (response) {
                 $scope.editorials = response.data;
             });
-
-            /*
-             * Funcion fetchRecords consulta todos los registros del módulo book en base de datos
-             * para desplegarlo en el template de la lista.
-             */
-            this.fetchRecords();
-
 
             function updateReview(event, args) {
                 $scope.currentRecord.reviews = args;
