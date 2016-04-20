@@ -3,10 +3,13 @@ package co.edu.uniandes.csw.bookstore.resources;
 import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.converters.AuthorConverter;
 import co.edu.uniandes.csw.bookstore.converters.BookConverter;
+import co.edu.uniandes.csw.bookstore.converters.PrizeConverter;
 import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
+import co.edu.uniandes.csw.bookstore.dtos.PrizeDTO;
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
+import co.edu.uniandes.csw.bookstore.entities.PrizeEntity;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import java.util.List;
@@ -204,5 +207,80 @@ public class BookResource {
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public void removeAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
         bookLogic.removeAuthor(bookId, authorId);
+    }
+
+    /**
+     * Obtiene una colección de objetos de PrizeDTO asociados a un objeto de Book
+     *
+     * @param bookId Identificador del objeto de Book
+     * @return Colección de objetos de PrizeDTO en representación basic
+     * @generated
+     */
+    @GET
+    @Path("{bookId: \\d+}/prizes")
+    public List<PrizeDTO> listPrizes(@PathParam("bookId") Long bookId) {
+        List<PrizeEntity> prizes = bookLogic.getPrizes(bookId);
+        return PrizeConverter.listEntity2DTO(prizes);
+    }
+
+    /**
+     * Obtiene un objeto de Prize asociada a un objeto de Book
+     *
+     * @param bookId Identificador del objeto de Book
+     * @param prizeId Identificador del objeto de Prize
+     * @generated
+     */
+    @GET
+    @Path("{bookId: \\d+}/prizes/{prizeId: \\d+}")
+    public PrizeDTO getPrizes(@PathParam("bookId") Long bookId, @PathParam("prizeId") Long prizeId) {
+        PrizeEntity prize = bookLogic.getPrize(bookId, prizeId);
+        return PrizeConverter.fullEntity2DTO(prize);
+    }
+
+    /**
+     * Asocia un Prize existente a un Book
+     *
+     * @param bookId Identificador del objeto de Book
+     * @param prizeId Identificador del objeto de Prize
+     * @return Objeto de PrizeDTO en representación full que fue asociado a Book
+     * @generated
+     */
+    @POST
+    @Path("{bookId: \\d+}/prizes")
+    public PrizeDTO addPrizes(@PathParam("bookId") Long bookId, PrizeDTO prize) {
+        PrizeEntity entity = PrizeConverter.fullDTO2Entity(prize);
+        entity = bookLogic.createPrize(bookId, entity);
+        return PrizeConverter.fullEntity2DTO(entity);
+    }
+
+    /**
+     * Remplaza los objetos de Prize asociados a un objeto de Book
+     *
+     * @param bookId Identificador del objeto de Book
+     * @param prizes Colección de objetos de PrizeDTO en representación minimum a asociar a objeto
+     * de Book
+     * @return Nueva colección de PrizeDTO en representación Basic
+     * @generated
+     */
+    @PUT
+    @Path("{bookId: \\d+}/prizes/{prizeId: \\d+}")
+    public PrizeDTO replacePrizes(@PathParam("bookId") Long bookId, @PathParam("prizeId") Long prizeId, PrizeDTO prize) {
+        PrizeEntity newPrize = PrizeConverter.fullDTO2Entity(prize);
+        newPrize.setId(prizeId);
+        newPrize = bookLogic.updatePrize(bookId, newPrize);
+        return PrizeConverter.fullEntity2DTO(newPrize);
+    }
+
+    /**
+     * Desasocia un Prize existente de un Book existente
+     *
+     * @param bookId Identificador del objeto de Book
+     * @param prizeId Identificador del objeto de Prize
+     * @generated
+     */
+    @DELETE
+    @Path("{bookId: \\d+}/prizes/{prizeId: \\d+}")
+    public void removePrizes(@PathParam("bookId") Long bookId, @PathParam("prizeId") Long prizeId) {
+        bookLogic.deletePrize(bookId, prizeId);
     }
 }

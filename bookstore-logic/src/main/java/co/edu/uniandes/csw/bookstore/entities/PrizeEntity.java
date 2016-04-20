@@ -3,37 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.edu.uniandes.csw.bookstore.dtos;
+package co.edu.uniandes.csw.bookstore.entities;
 
+import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
+import java.io.Serializable;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-@XmlRootElement
-public class PrizeDTO {
-
-    private Long id;
-
-    private String name;
-
+@Entity
+public class PrizeEntity extends BaseEntity implements Serializable {
+    
     private String organization;
-
+    
+    @Temporal(TemporalType.DATE)
     private Date date;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @ManyToOne
+    private BookEntity book;
 
     /**
      * @return the organization
@@ -61,5 +50,19 @@ public class PrizeDTO {
      */
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    /**
+     * @return the book
+     */
+    public BookEntity getBook() {
+        return book;
+    }
+
+    /**
+     * @param book the book to set
+     */
+    public void setBook(BookEntity book) {
+        this.book = book;
     }
 }

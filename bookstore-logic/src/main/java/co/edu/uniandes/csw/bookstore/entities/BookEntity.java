@@ -30,6 +30,9 @@ public class BookEntity extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PrizeEntity> prizes = new ArrayList<>();
 
     /**
      * @return the isbn
@@ -109,5 +112,19 @@ public class BookEntity extends BaseEntity implements Serializable {
 
     public void setReviews(List<ReviewEntity> reviews) {
         this.reviews = reviews;
+    }
+
+    /**
+     * @return the prizes
+     */
+    public List<PrizeEntity> getPrizes() {
+        return prizes;
+    }
+
+    /**
+     * @param prizes the prizes to set
+     */
+    public void setPrizes(List<PrizeEntity> prizes) {
+        this.prizes = prizes;
     }
 }

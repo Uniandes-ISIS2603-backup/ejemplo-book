@@ -3,9 +3,11 @@ package co.edu.uniandes.csw.bookstore.ejbs;
 import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
+import co.edu.uniandes.csw.bookstore.entities.PrizeEntity;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookstore.persistence.AuthorPersistence;
 import co.edu.uniandes.csw.bookstore.persistence.BookPersistence;
+import co.edu.uniandes.csw.bookstore.persistence.PrizePersistence;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +25,9 @@ public class BookLogic implements IBookLogic {
 
     @Inject
     private AuthorPersistence authorPersistence;
+
+    @Inject
+    private PrizePersistence prizePersistence;
 
     @Override
     public List<BookEntity> getBooks() {
@@ -142,5 +147,44 @@ public class BookLogic implements IBookLogic {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<PrizeEntity> getPrizes(Long bookId) {
+        return getBook(bookId).getPrizes();
+    }
+
+    @Override
+    public PrizeEntity getPrize(Long bookId, Long prizeId) {
+        List<PrizeEntity> prizes = getBook(bookId).getPrizes();
+        PrizeEntity prize = prizePersistence.find(prizeId);
+        if (prize == null) {
+            throw new IllegalArgumentException("El premio no existe");
+        }
+        int index = prizes.indexOf(prize);
+        if (index >= 0) {
+            return prizes.get(index);
+        }
+        throw new IllegalArgumentException("El premio no está asociado al libro");
+    }
+
+    @Override
+    public PrizeEntity createPrize(Long bookId, PrizeEntity prize) {
+        BookEntity book = getBook(bookId);
+        prize.setBook(book);
+        return prizePersistence.create(prize);
+    }
+
+    @Override
+    public void deletePrize(Long bookId, Long prizeId) {
+        PrizeEntity old = getPrize(bookId, prizeId);
+        prizePersistence.delete(old.getId());
+    }
+
+    @Override
+    public PrizeEntity updatePrize(Long bookId, PrizeEntity prize) {
+        PrizeEntity old = getPrize(bookId, prize.getId());
+        prize.setBook(old.getBook());
+        return prizePersistence.update(prize);
     }
 }
