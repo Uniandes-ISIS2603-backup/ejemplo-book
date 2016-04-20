@@ -6,6 +6,7 @@
         "editorialModule",
         "authorModule",
         "reviewModule",
+        "prizeModule",
 //        "bookMock",
 //        "editorialMock",
 //        "authorMock",

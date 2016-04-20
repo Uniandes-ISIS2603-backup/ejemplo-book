@@ -1,6 +1,6 @@
 (function (ng) {
 
-    var mod = ng.module("bookModule");
+    var mod = ng.module("prizeModule", ['bookModule']);
 
     mod.controller("prizesCtrl", ["$scope", "bookService",
         function ($scope, bookSvc) {
