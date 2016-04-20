@@ -8,6 +8,21 @@
             $scope.records = [];
             $scope.alerts = [];
 
+            $scope.today = function () {
+                $scope.value = new Date();
+            };
+
+            $scope.clear = function () {
+                $scope.value = null;
+            };
+
+            $scope.open = function ($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                $scope.opened = true;
+            };
+
             //Alertas
             this.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
@@ -49,7 +64,7 @@
             }
 
             $scope.$on("post-edit", onEdit);
-            
+
             this.createRecord = function () {
                 this.editMode = true;
                 $scope.currentRecord = {};

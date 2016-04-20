@@ -28,12 +28,16 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Organization</th>
+                <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="record in records">
                 <td id="{{$index}}-name">{{record.name}}</td>
+                <td id="{{$index}}-organization">{{record.organization}}</td>
+                <td id="{{$index}}-date">{{record.date | date}}</td>
                 <td>
                     <button id="{{$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
                     <button id="{{$index}}-delete-btn" class="btn btn-default btn-sm" ng-click="ctrl.deleteRecord(record)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
@@ -55,6 +59,23 @@
                 <label for="name" class="col-md-2 control-label">Name</label>
                 <div class="col-md-10">
                     <input id="name" name="name" class="form-control" type="text" ng-model="currentRecord.name" required />
+                </div>
+            </div>
+            <div class="form-group col-md-12" ng-class="{'has-success': form.organization.$valid && form.organization.$dirty, 'has-error': form.organization.$invalid && (form.organization.$dirty || form.$submitted)}" >
+                <label for="organization" class="col-md-2 control-label">Organization</label>
+                <div class="col-md-10">
+                    <input id="organization" name="organization" class="form-control" type="text" ng-model="currentRecord.organization" required />
+                </div>
+            </div>
+            <div class="form-group col-md-12" ng-class="{'has-success': !form.date.$error.required && form.date.$dirty, 'has-error': form.date.$error.required && (form.date.$dirty || form.$submitted)}">
+                <label for="date" class="col-md-2 control-label">Date</label>
+                <div class="col-md-10">
+                    <p class="input-group">
+                        <input type="text" id="date" name="date" class="form-control" ng-model="currentRecord.date" datepicker-popup is-open="opened" readonly required />
+                        <span class="input-group-btn">
+                            <button type="button" id="date-datepicker" class="btn btn-default" ng-click="open($event)"><span class="glyphicon glyphicon-calendar"></span></button>
+                        </span>
+                    </p>
                 </div>
             </div>
         </fieldset>
