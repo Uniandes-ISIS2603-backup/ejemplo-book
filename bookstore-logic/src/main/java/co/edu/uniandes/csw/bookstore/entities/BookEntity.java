@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class BookEntity extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrizeEntity> prizes = new ArrayList<>();
 
@@ -127,4 +128,26 @@ public class BookEntity extends BaseEntity implements Serializable {
     public void setPrizes(List<PrizeEntity> prizes) {
         this.prizes = prizes;
     }
+
+    /**
+     * @return the prizes
+     */
+    public PrizeEntity getPrize(Long prizeId) {
+        List<PrizeEntity> prizes = getPrizes();
+        Iterator<PrizeEntity> i = prizes.iterator();
+        boolean find = false;
+        while (i.hasNext() && !find) {
+            if (i.next().getId() == prizeId) {
+                find = true;
+            } else {
+                find = false;
+            }
+        }
+        if (find) {
+            return i.next();
+        } else {
+            return null;
+        }
+    }
 }
+

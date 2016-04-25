@@ -28,14 +28,6 @@ public interface IBookLogic {
 
     public List<AuthorEntity> replaceAuthors(List<AuthorEntity> authors, Long bookId) throws BusinessLogicException;
 
-    public List<PrizeEntity> getPrizes(Long bookId);
-
-    public PrizeEntity getPrize(Long bookId, Long prizeId);
-
-    public PrizeEntity createPrize(Long bookId, PrizeEntity prize);
-
-    public void deletePrize(Long bookId, Long prizeId);
-
-    public PrizeEntity updatePrize(Long bookId, PrizeEntity prize);
+    
 
 }

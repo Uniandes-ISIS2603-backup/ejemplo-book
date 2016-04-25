@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Stateless
 public class PrizePersistence {
@@ -22,16 +23,13 @@ public class PrizePersistence {
     @PersistenceContext(unitName = "BookStorePU")
     protected EntityManager em;
 
-    public PrizeEntity find(Long id) {
-        logger.log(Level.INFO, "Consultando premio con id={0}", id);
-        return em.find(PrizeEntity.class, id);
+    public PrizeEntity find(Long bookId, Long prizeId) {
+        TypedQuery<PrizeEntity> q = em.createQuery("select p from PrizeEntity p where (p.book.id = :bookId) and (p.id = :prizeId)", PrizeEntity.class);
+        q.setParameter("bookId", bookId);
+        q.setParameter("prizeId", prizeId);
+        return q.getSingleResult();
     }
 
-    public List<PrizeEntity> findAll() {
-        logger.info("Consultando todos los premios");
-        Query q = em.createQuery("select u from PrizeEntity u");
-        return q.getResultList();
-    }
 
     public PrizeEntity create(PrizeEntity entity) {
         logger.info("Creando un premio nuevo");
