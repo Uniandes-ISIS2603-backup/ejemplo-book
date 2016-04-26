@@ -3,13 +3,10 @@ package co.edu.uniandes.csw.bookstore.resources;
 import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.converters.AuthorConverter;
 import co.edu.uniandes.csw.bookstore.converters.BookConverter;
-import co.edu.uniandes.csw.bookstore.converters.PrizeConverter;
 import co.edu.uniandes.csw.bookstore.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookstore.dtos.BookDTO;
-import co.edu.uniandes.csw.bookstore.dtos.PrizeDTO;
 import co.edu.uniandes.csw.bookstore.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookstore.entities.BookEntity;
-import co.edu.uniandes.csw.bookstore.entities.PrizeEntity;
 import co.edu.uniandes.csw.bookstore.providers.StatusCreated;
 import co.edu.uniandes.csw.bookstore.exceptions.BusinessLogicException;
 import java.util.List;
@@ -104,6 +101,7 @@ public class BookResource {
         entity.setId(id);
         BookEntity oldEntity = bookLogic.getBook(id);
         entity.setAuthors(oldEntity.getAuthors());
+        entity.setPrizes(oldEntity.getPrizes());
         try {
             BookEntity savedBook = bookLogic.updateBook(entity);
             return BookConverter.fullEntity2DTO(savedBook);

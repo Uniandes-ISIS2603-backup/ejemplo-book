@@ -1,15 +1,10 @@
 package co.edu.uniandes.csw.bookstore.resources;
 
-import co.edu.uniandes.csw.bookstore.api.IBookLogic;
 import co.edu.uniandes.csw.bookstore.api.IPrizeLogic;
 import co.edu.uniandes.csw.bookstore.converters.PrizeConverter;
-
 import co.edu.uniandes.csw.bookstore.dtos.PrizeDTO;
-
 import co.edu.uniandes.csw.bookstore.entities.PrizeEntity;
-
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -32,13 +27,9 @@ public class PrizeResource {
 
     @Inject
     private IPrizeLogic prizeLogic;
-    
-    @Inject
-    private IBookLogic bookLogic;
 
     /**
-     * Obtiene una colección de objetos de PrizeDTO asociados a un objeto de
-     * Book
+     * Obtiene una colección de objetos de PrizeDTO asociados a un objeto de Book
      *
      * @param bookId Identificador del objeto de Book
      * @return Colección de objetos de PrizeDTO en representación basic
@@ -82,8 +73,8 @@ public class PrizeResource {
      * Remplaza los objetos de Prize asociados a un objeto de Book
      *
      * @param bookId Identificador del objeto de Book
-     * @param prizes Colección de objetos de PrizeDTO en representación minimum
-     * a asociar a objeto de Book
+     * @param prizes Colección de objetos de PrizeDTO en representación minimum a asociar a objeto
+     * de Book
      * @return Nueva colección de PrizeDTO en representación Basic
      * @generated
      */
@@ -92,7 +83,7 @@ public class PrizeResource {
     public PrizeDTO updatePrize(@PathParam("bookId") Long bookId, @PathParam("prizeId") Long prizeId, PrizeDTO prize) {
         PrizeEntity newPrize = PrizeConverter.fullDTO2Entity(prize);
         newPrize.setId(prizeId);
-     //   newPrize = bookLogic.updatePrize(bookId, newPrize);
+        newPrize = prizeLogic.updatePrize(bookId, newPrize);
         return PrizeConverter.fullEntity2DTO(newPrize);
     }
 
@@ -106,6 +97,6 @@ public class PrizeResource {
     @DELETE
     @Path("{prizeId: \\d+}")
     public void deletePrize(@PathParam("bookId") Long bookId, @PathParam("prizeId") Long prizeId) {
-  //      bookLogic.deletePrize(bookId, prizeId);
+        prizeLogic.deletePrize(bookId, prizeId);
     }
 }

@@ -26,9 +26,6 @@ public class BookLogic implements IBookLogic {
     @Inject
     private AuthorPersistence authorPersistence;
 
-    @Inject
-    private PrizePersistence prizePersistence;
-
     @Override
     public List<BookEntity> getBooks() {
         logger.info("Inicia proceso de consultar todos los libros");
