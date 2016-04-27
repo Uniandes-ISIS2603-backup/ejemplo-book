@@ -1,3 +1,5 @@
 /bookstore-web/target/
 /bookstore-web/nb-configuration.xml
 /bookstore-logic/target/
+/bookstore-logic/nbproject/
+/bookstore-logic/derby.log

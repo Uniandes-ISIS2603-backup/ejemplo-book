@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 public class BookEntity extends BaseEntity implements Serializable {
@@ -24,15 +25,19 @@ public class BookEntity extends BaseEntity implements Serializable {
     private String description;
 
     @ManyToMany
+    @PodamExclude
     private List<AuthorEntity> authors = new ArrayList<>();
 
     @ManyToOne
+    @PodamExclude
     private EditorialEntity editorial;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @PodamExclude
     private List<ReviewEntity> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @PodamExclude
     private List<PrizeEntity> prizes = new ArrayList<>();
 
     /**
