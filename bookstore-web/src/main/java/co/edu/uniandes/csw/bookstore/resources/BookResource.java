@@ -207,5 +207,8 @@ public class BookResource {
         bookLogic.removeAuthor(bookId, authorId);
     }
 
-    
+    @Path("{bookId: \\d+}/prizes")
+    public Class<PrizeResource> getPrizeResource(){
+        return PrizeResource.class;
+    }
 }
