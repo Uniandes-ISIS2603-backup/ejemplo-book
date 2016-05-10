@@ -7,7 +7,7 @@
 
     var mod = ng.module("prizeModule");
 
-    mod.service("prizeService", ["$http", "prizeContext", "bookId", "$log", function ($http, context, bookId, $log) {
+    mod.service("prizeService", ["$http", "prizeContext", "$log", function ($http, context, $log) {
         
 
             this.getPrizes = function (bookId) {

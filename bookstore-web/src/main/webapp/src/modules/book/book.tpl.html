@@ -122,6 +122,8 @@
         </div>
     </div>
     <!-- Aquí se necesita el template de la selección de los autores al libro -->
-    <div ng-include="'src/modules/book/book.authors.html'">
+    <div ng-show="tab === 'authors'">
+        <div ng-include="'src/modules/book/book.authors.html'">
+        </div>
     </div>
 </div>
