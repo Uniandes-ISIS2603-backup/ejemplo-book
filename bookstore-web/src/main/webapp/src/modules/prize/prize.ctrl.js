@@ -1,9 +1,9 @@
 (function (ng) {
 
-    var mod = ng.module("prizeModule", ['bookModule']);
+    var mod = ng.module("prizeModule");
 
-    mod.controller("prizesCtrl", ["$scope", "bookService",
-        function ($scope, bookSvc) {
+    mod.controller("prizeCtrl", ["$scope", "prizeService",
+        function ($scope, prizeSvc) {
             $scope.currentRecord = {};
             $scope.records = [];
             $scope.alerts = [];
@@ -57,7 +57,7 @@
                 $scope.refId = args.id;
                 if (args.id) {
                     $scope.records = [];
-                    bookSvc.getPrizes(args.id).then(function (response) {
+                    prizeSvc.getPrizes(args.id).then(function (response) {
                         $scope.records = response.data;
                     }, responseError);
                 }
@@ -71,7 +71,7 @@
             };
 
             this.editRecord = function (record) {
-                return bookSvc.getPrize($scope.refId, record.id).then(function (response) {
+                return prizeSvc.getPrize($scope.refId, record.id).then(function (response) {
                     $scope.currentRecord = response.data;
                     self.editMode = true;
                     return response;
@@ -79,7 +79,7 @@
             };
 
             this.fetchRecords = function () {
-                return bookSvc.getPrizes($scope.refId).then(function (response) {
+                return prizeSvc.getPrizes($scope.refId).then(function (response) {
                     $scope.records = response.data;
                     $scope.currentRecord = {};
                     self.editMode = false;
@@ -88,13 +88,13 @@
             };
 
             this.saveRecord = function () {
-                return bookSvc.savePrize($scope.refId, $scope.currentRecord).then(function () {
+                return prizeSvc.savePrize($scope.refId, $scope.currentRecord).then(function () {
                     self.fetchRecords();
                 }, responseError);
             };
 
             this.deleteRecord = function (record) {
-                return bookSvc.deletePrize($scope.refId, record.id).then(function () {
+                return prizeSvc.deletePrize($scope.refId, record.id).then(function () {
                     self.fetchRecords();
                 }, responseError);
             };
